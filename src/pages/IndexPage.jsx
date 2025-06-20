@@ -13,7 +13,7 @@ const IndexPage = () => {
             { showModal ? <Modal children={ showModal } onClose={ () => setShowModal(null) } /> : ""  }
 
             <div className={`bg-gray-200 h-screen ${ showModal ? "blur-xs" : ""}`}>
-                <div className="pt-12 pb-12 mb-12 bg-gradient-to-b from-orange-900 to-gray-200">
+                <div className="pt-6 pb-12 mb-12 bg-gradient-to-b from-orange-900 to-gray-200">
                     <img src={ logo } className="ml-16 w-25" />
                 </div>
                 <div className="flex">

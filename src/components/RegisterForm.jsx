@@ -28,12 +28,12 @@ const RegisterForm = () => {
 
     return (
         <>
-            <form ref={ formRef } onSubmit={ register }>
+            <form ref={ formRef } onSubmit={ register } >
                 <div className="flex flex-col items-center mb-2">
                     <h1 className="text-2xl font-semibold">Registrarse</h1>
                     <p className="text-orange-900 text-md">Formulario de registro</p>
                 </div>
-                <div className="flex flex-col justify-center">
+                <div className="bg-gray-200 rounded-lg flex flex-col justify-center h-80 my-6 overflow-y-scroll pt-70 px-4">
                     <label className="mb-2 text-lg font-semibold">Nombre</label>
                     <input className="mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Nombre" name="name" type="text" />
 
@@ -45,6 +45,16 @@ const RegisterForm = () => {
 
                     <label className="mb-2 text-lg font-semibold">Contraseña</label>
                     <input className="mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" name="pass" type="password" />
+		    
+                    <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
+                    <select className="mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" name="role">
+                        <option value="0">Seleccionar un rol</option>
+                        <option value="1">AAA</option>
+                        <option value="1">SSS</option>
+                    </select>
+
+		            <label className="mb-2 text-lg font-semibold">Email</label>
+                    <input className="mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Email" name="email" type="email" />
                 </div>
                 <div className="flex flex-col items-center">
                     { !badInput ? "" : <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">Por favor, rellenar todos los campos</div> }

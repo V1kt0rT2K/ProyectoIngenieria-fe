@@ -27,12 +27,12 @@ const LoginForm = () => {
                     <h1 className="text-2xl font-semibold">Inicio de sesion</h1>
                     <p className="text-orange-900 text-md">Inicia sesion con tus credenciales</p>
                 </div>
-                <div className="flex flex-col justify-center">
-                    <label className="mb-2 text-lg font-semibold">Email</label>
-                    <input value="a@a.com" name="email" className="mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Email" type="email" />
+                <div className="bg-gray-200 px-4 pt-4 my-4 rounded-lg flex flex-col justify-center">
+                    <label className="mb-2 text-lg font-semibold">Nombre de usuario</label>
+                    <input name="email" className="bg-gray-200 mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Nombre de usuario" type="text" />
 
                     <label className="mb-2 text-lg font-semibold">Contraseña</label>
-                    <input value="a" name="pass" className="mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
+                    <input name="pass" className="bg-gray-200 mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
                 </div>
                 <div className="flex flex-col items-center">
                     { !badInput ? "" : <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">Por favor, rellenar todos los campos</div> }

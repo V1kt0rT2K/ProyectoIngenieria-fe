@@ -14,31 +14,31 @@ const router = createBrowserRouter(
         <Route index element={ <HomePage title="Inicio" /> } />
       </Route>
 
-      <Route path="/inventario" element={ <MainLayout title="Inventario" /> } >
+      <Route path="inventario" element={ <MainLayout title="Inventario" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="/proveedores" element={ <MainLayout title="Proveedores" /> } >
+      <Route path="proveedores" element={ <MainLayout title="Proveedores" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="/compras" element={ <MainLayout title="Compras" /> } >
+      <Route path="compras" element={ <MainLayout title="Compras" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="/informes" element={ <MainLayout title="Informes" /> } >
+      <Route path="informes" element={ <MainLayout title="Informes" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="/usuarios" element={ <MainLayout title="Usuarios" /> } >
+      <Route path="usuarios" element={ <MainLayout title="Usuarios" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="/ventas" element={ <MainLayout title="Ventas" /> } >
+      <Route path="ventas" element={ <MainLayout title="Ventas" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="/clientes" element={ <MainLayout title="Clientes" /> } >
+      <Route path="clientes" element={ <MainLayout title="Clientes" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 

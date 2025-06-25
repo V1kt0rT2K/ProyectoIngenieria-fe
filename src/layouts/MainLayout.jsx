@@ -9,7 +9,9 @@ const MainLayout = ({ title }) => {
                 <SideBar />
                 <div className="flex flex-col flex-grow">
                     <TopBar title={ title } />
-                    <Outlet />
+                    <div className="flex justify-center items-center flex-grow bg-orange-100">
+                        <Outlet />
+                    </div>
                 </div>
             </div>
         </>

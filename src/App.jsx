@@ -1,6 +1,7 @@
 import { Outlet, Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
 import IndexPage from "./pages/IndexPage";
 import HomePage from "./pages/HomePage";
+import UsersPage from "./pages/UsersPage";
 import MainLayout from "./layouts/MainLayout";
 import "./index.css";
 
@@ -31,7 +32,7 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="usuarios" element={ <MainLayout title="Usuarios" /> } >
-        <Route index element={ <HomePage />}/>
+        <Route index element={ <UsersPage />}/>
       </Route>
 
       <Route path="ventas" element={ <MainLayout title="Ventas" /> } >

@@ -1,16 +1,11 @@
 import { MoonLoader } from "react-spinners";
 
-const override = {
-    display: "block",
-    margin: "50px auto"
-};
-
-const Spinner = ({ loading }) => {
+const Spinner = ({ loading, size, margin }) => {
     return (
         <MoonLoader
             loading = { loading }
-            cssOverride={ override }
-            size = { 150 }
+            cssOverride={{ display: "block", margin: margin ?? "50px auto"}}
+            size = { size ?? 150 }
         />
     )
 }

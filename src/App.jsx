@@ -3,8 +3,9 @@ import IndexPage from "./pages/IndexPage";
 import HomePage from "./pages/HomePage";
 import UsersPage from "./pages/UsersPage";
 import MainLayout from "./layouts/MainLayout";
-import "./index.css";
 import UsersRequestsPage from "./pages/UsersRequestsPage";
+import UserRequestPage from "./pages/UserRequestPage";
+import "./index.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,7 +35,10 @@ const router = createBrowserRouter(
 
       <Route path="usuarios" element={ <MainLayout title="Usuarios" /> } >
         <Route index element={ <UsersPage />}/>
-        <Route path="solicitudes" element={ <UsersRequestsPage />}/>
+        <Route path="solicitudes" >
+          <Route index element={ <UsersRequestsPage />} />
+          <Route path="solicitud" element={ <UserRequestPage />} />
+        </Route>
       </Route>
 
       <Route path="ventas" element={ <MainLayout title="Ventas" /> } >

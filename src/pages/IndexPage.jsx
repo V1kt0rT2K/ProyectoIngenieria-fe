@@ -18,10 +18,10 @@ const IndexPage = () => {
                 </div>
                 <div className="flex">
                     <div className="mx-24">
-                        <p className="text-5xl font-extrabold mb-12 text-orange-900">Sea bienvenido al sistema</p>
-                        <p className="text-xl font-bold text-black">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut ullam, fugit veniam iusto sunt labore asperiores ducimus itaque unde veritatis? Veniam ducimus architecto sit cum voluptatem aspernatur eos harum similique?</p>                        
-                        <button onClick={() => setShowModal(<LoginForm />)} className="transition duration-600 ease-in-out hover:bg-orange-900 hover:cursor-pointer mr-6 text-xl my-12 bg-orange-800 rounded-md py-2 px-3 font-extrabold text-white shadow-lg">Iniciar sesion</button>
-                        <button onClick={() => setShowModal(<RegisterForm />)} className="transition duration-600 ease-in-out hover:bg-orange-900 hover:cursor-pointer text-xl my-12 bg-orange-800 rounded-md py-2 px-3 font-extrabold text-white shadow-lg">Registrarse</button>
+                        <p className="text-5xl font-bold mb-12 text-orange-900">Sea bienvenido al sistema</p>
+                        <p className="text-xl font-semibold text-black">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut ullam, fugit veniam iusto sunt labore asperiores ducimus itaque unde veritatis? Veniam ducimus architecto sit cum voluptatem aspernatur eos harum similique?</p>                        
+                        <button onClick={() => setShowModal(<LoginForm />)} className="transition duration-600 ease-in-out hover:bg-orange-800 hover:cursor-pointer mr-6 text-xl my-12 bg-orange-700 rounded-md py-2 px-3 font-semibold text-white shadow-lg">Iniciar sesion</button>
+                        <button onClick={() => setShowModal(<RegisterForm />)} className="transition duration-600 ease-in-out hover:bg-orange-800 hover:cursor-pointer text-xl my-12 bg-orange-700 rounded-md py-2 px-3 font-semibold text-white shadow-lg">Registrarse</button>
                     </div>
                     <img src={ image } className="ml-24 mr-0 w-100" />
                 </div>

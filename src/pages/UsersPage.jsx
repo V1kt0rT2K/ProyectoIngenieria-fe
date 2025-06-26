@@ -5,96 +5,96 @@ import UserOptions from "../components/UserOptions";
 
 const usersList = [
     {
-        id: 11,
-        fullName: "Ricardo Antonio Salgado Núñez",
-        idNumber: "555444333222",
-        role: "Técnico de bioseguridad",
-        date: "03/02/2023",
-        email: "ricardo.salgado@empresa.com",
-        username: "rsalgado"
+        id: 21,
+        fullName: "Sofía Margarita Ramos García",
+        idNumber: "123123123123",
+        role: "Jefa de control de calidad",
+        date: "11/04/2023",
+        email: "sofia.ramos@empresa.com",
+        username: "sramos"
     },
     {
-        id: 12,
-        fullName: "Valeria Nohemí Hernández Osorio",
-        idNumber: "101010101010",
-        role: "Operadora de granja",
-        date: "08/06/2024",
-        email: "valeria.hdz@gmail.com",
-        username: "vhernandez"
+        id: 22,
+        fullName: "Francisco Javier Núñez Herrera",
+        idNumber: "456456456456",
+        role: "Encargado de planta",
+        date: "06/08/2022",
+        email: "francisco.nunez@gmail.com",
+        username: "fnunez"
     },
     {
-        id: 13,
-        fullName: "Javier Esteban Cruz Mejía",
-        idNumber: "222333444555",
-        role: "Supervisor de producción",
-        date: "22/12/2022",
-        email: "javier.cruz@hotmail.com",
-        username: "jcruz"
+        id: 23,
+        fullName: "Andrea Beatriz Molina Flores",
+        idNumber: "789789789789",
+        role: "Asistente técnica",
+        date: "23/01/2023",
+        email: "andrea.molina@correo.com",
+        username: "amolina"
     },
     {
-        id: 14,
-        fullName: "Camila Alejandra Díaz Romero",
-        idNumber: "333444555666",
-        role: "Auxiliar de laboratorio",
-        date: "15/09/2023",
-        email: "camila.diaz@laboratorio.com",
-        username: "cdiaz"
+        id: 24,
+        fullName: "Fernando Luis Palacios Castro",
+        idNumber: "147147147147",
+        role: "Coordinador de distribución",
+        date: "14/10/2023",
+        email: "fernando.palacios@empresa.com",
+        username: "fpalacios"
     },
     {
-        id: 15,
-        fullName: "Manuel Ignacio Torres Herrera",
-        idNumber: "111333555777",
-        role: "Encargado de incubadora",
-        date: "12/05/2022",
-        email: "manuel.torres@empresa.com",
-        username: "mtorres"
+        id: 25,
+        fullName: "Paola Milena Ortiz López",
+        idNumber: "258258258258",
+        role: "Supervisora de personal",
+        date: "19/03/2024",
+        email: "paola.ortiz@gmail.com",
+        username: "portiz"
     },
     {
-        id: 16,
-        fullName: "Isabel Cristina Morales Paz",
-        idNumber: "789456123789",
-        role: "Especialista en sanidad animal",
-        date: "26/07/2023",
-        email: "isabel.morales@gmail.com",
-        username: "imorales"
+        id: 26,
+        fullName: "Héctor David Rivas Molina",
+        idNumber: "369369369369",
+        role: "Técnico en climatización",
+        date: "28/07/2022",
+        email: "hector.rivas@correo.com",
+        username: "hrivas"
     },
     {
-        id: 17,
-        fullName: "Marco Tulio Aguilar Rivera",
-        idNumber: "654321987654",
-        role: "Supervisor de transporte",
-        date: "09/03/2024",
-        email: "marco.aguilar@correo.com",
-        username: "maguilar"
+        id: 27,
+        fullName: "Juliana Patricia Mejía Herrera",
+        idNumber: "741741741741",
+        role: "Auxiliar de documentación",
+        date: "02/12/2023",
+        email: "juliana.mejia@empresa.com",
+        username: "jmejia"
     },
     {
-        id: 18,
-        fullName: "Karen Julissa Pérez Lara",
-        idNumber: "852369741258",
-        role: "Encargada de recursos humanos",
-        date: "04/11/2022",
-        email: "karen.perez@empresa.com",
-        username: "kperez"
+        id: 28,
+        fullName: "Mauricio Alejandro Rosales Díaz",
+        idNumber: "852852852852",
+        role: "Responsable de seguridad industrial",
+        date: "30/05/2024",
+        email: "mauricio.rosales@gmail.com",
+        username: "mrosales"
     },
     {
-        id: 19,
-        fullName: "Oscar Armando Rivera Cálix",
-        idNumber: "951357456123",
-        role: "Técnico electromecánico",
-        date: "18/01/2023",
-        email: "oscar.rivera@gmail.com",
-        username: "orivera"
+        id: 29,
+        fullName: "Diana Carolina Peña Aguirre",
+        idNumber: "963963963963",
+        role: "Especialista en nutrición animal",
+        date: "12/02/2023",
+        email: "diana.pena@empresa.com",
+        username: "dpena"
     },
     {
-        id: 20,
-        fullName: "Daniela Paola Castillo Reyes",
-        idNumber: "741963852741",
-        role: "Asistente de gestión ambiental",
-        date: "29/06/2024",
-        email: "daniela.castillo@empresa.com",
-        username: "dcastillo"
+        id: 30,
+        fullName: "Álvaro Enrique Castillo Torres",
+        idNumber: "159159159159",
+        role: "Encargado de bodega",
+        date: "07/09/2023",
+        email: "alvaro.castillo@correo.com",
+        username: "acastillo"
     }
-];
+]
 
 const UsersPage = () => {
     const [input, setInput] = useState("");
@@ -120,12 +120,12 @@ const UsersPage = () => {
                 <div className="flex flex-col items-start">
                     <Link to="solicitudes" className="text-white rounded-md bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario (0)</Link>
                     <div className="flex w-full">
-                        <input ref={ inputRef } onInput={() => setInput( inputRef.current.value )} className="focus:outline-none flex-grow border-1 border-solid border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
+                        <input ref={ inputRef } onInput={() => setInput( inputRef.current.value )} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
                         <button onClick={ clearInput } className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>
                     </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Usuarios activos</p>
-                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-solid border-orange-700" }`}>
+                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700" }`}>
                     {
                         loading
                             ? <Spinner loading={ loading } />
@@ -134,10 +134,10 @@ const UsersPage = () => {
                                     <table className="flex-grow w-full table-fixed justify-self-center">
                                         <thead>
                                             <tr>
-                                                <th className="border border-orange-900 w-55 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
-                                                <th className="border border-orange-900 w-55 px-5 bg-orange-700 text-white text-md">Rol asignado</th>
-                                                <th className="border border-orange-900 w-45 px-5 bg-orange-700 text-white text-md">Fecha de creacion</th>
-                                                <th className="border border-orange-900 w-35 px-5 bg-orange-700 text-white"></th>
+                                                <th className="border border-orange-900 w-72 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
+                                                <th className="border border-orange-900 w-56 px-5 bg-orange-700 text-white text-md">Rol asignado</th>
+                                                <th className="border border-orange-900 w-44 px-5 bg-orange-700 text-white text-md">Fecha de creacion</th>
+                                                <th className="border border-orange-900 w-36 px-5 bg-orange-700 text-white"></th>
                                                 <th className="border border-orange-900 w-40 px-5 bg-orange-700 text-white"></th>
                                             </tr>
                                         </thead>
@@ -153,7 +153,9 @@ const UsersPage = () => {
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                                             <button className="text-white rounded-md bg-orange-800 px-3 py-1 text-md hover:cursor-pointer font-semibold">Actividad</button>
                                                         </td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5"><UserOptions /></td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                                            <UserOptions user={ user } />
+                                                        </td>
                                                     </tr>
                                                 )
                                             }

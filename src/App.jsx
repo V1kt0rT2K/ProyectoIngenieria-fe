@@ -2,10 +2,11 @@ import { Outlet, Route, createBrowserRouter, createRoutesFromElements, RouterPro
 import IndexPage from "./pages/IndexPage";
 import HomePage from "./pages/HomePage";
 import UsersPage from "./pages/UsersPage";
-import MainLayout from "./layouts/MainLayout";
 import UsersRequestsPage from "./pages/UsersRequestsPage";
 import UserRequestPage from "./pages/UserRequestPage";
+import MainLayout from "./layouts/MainLayout";
 import "./index.css";
+import UserInfoPage from "./pages/UserInfoPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
           <Route index element={ <UsersRequestsPage />} />
           <Route path="solicitud" element={ <UserRequestPage />} />
         </Route>
+        <Route path="usuario" element={ <UserInfoPage /> } />
       </Route>
 
       <Route path="ventas" element={ <MainLayout title="Ventas" /> } >

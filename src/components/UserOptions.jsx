@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const UserOptions = ({ name }) => {
+const UserOptions = ({ user }) => {
     const [expand, setExpand] = useState(false);
     const menuRef = useRef(null);
 
@@ -27,7 +28,21 @@ const UserOptions = ({ name }) => {
                         <>
                             <div ref={ menuRef } className="border-1 border-solid border-orange-700 absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-orange-800 shadow-lg ring-1 ring-black/5 focus:outline-hidden" aria-orientation="vertical" aria-labelledby="menu-button">
                                 <div className="py-1" role="none">
-                                    <a className="block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900">Ver detalles</a>
+                                    <Link
+                                        to="usuario"
+                                        state={{
+                                            id: user.id,
+                                            username: user.username,
+                                            fullName: user.fullName,
+                                            idNumber: user.idNumber,
+                                            role: user.role,
+                                            date: user.date,
+                                            email: user.email
+                                        }}
+                                        className="block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+                                    >
+                                        Ver detalles
+                                    </Link>
                                     <a className="block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900">Eliminar</a>
                                 </div>
                             </div>

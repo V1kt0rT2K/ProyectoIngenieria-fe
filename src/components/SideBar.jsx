@@ -10,7 +10,7 @@ const SideBar = () => {
 
 	return (
 		<nav className="space-y-4 flex flex-col h-screen w-60 bg-orange-800 text-xl font-semibold text-white pt-8">
-			<button onClick={exit} className="hover:cursor-pointer ml-4 mb-12 self-start">Salir</button>
+			<button onClick={exit} className="hover:cursor-pointer ml-4 mb-6 self-start">Salir</button>
 
 			<NavLink className={linkClass} to="/inicio">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">

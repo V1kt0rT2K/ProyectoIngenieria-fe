@@ -118,14 +118,14 @@ const UsersPage = () => {
         <>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
-                    <Link to="solicitudes" className="text-white rounded-md bg-orange-700 px-3 py-1 text-md font-semibold mb-6 hover:cursor-pointer">Solicitudes de crear usuario (12)</Link>
+                    <Link to="solicitudes" className="text-white rounded-md bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario (0)</Link>
                     <div className="flex w-full">
                         <input ref={ inputRef } onInput={() => setInput( inputRef.current.value )} className="focus:outline-none flex-grow border-1 border-solid border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
                         <button onClick={ clearInput } className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>
                     </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Usuarios activos</p>
-                <div style={{ width: "75vw" }} className={`mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border-1 border-solid border-orange-700" }`}>
+                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-solid border-orange-700" }`}>
                     {
                         loading
                             ? <Spinner loading={ loading } />
@@ -134,11 +134,11 @@ const UsersPage = () => {
                                     <table className="flex-grow w-full table-fixed justify-self-center">
                                         <thead>
                                             <tr>
-                                                <th className="w-55 py-2 px-5 border-solid border-1 border-orange-900 bg-orange-700 text-white text-md">Nombre de usuario</th>
-                                                <th className="w-55 px-5 border-solid border-1 border-orange-900 bg-orange-700 text-white text-md">Rol asignado</th>
-                                                <th className="w-45 px-5 border-solid border-1 border-orange-900 bg-orange-700 text-white text-md">Fecha de creacion</th>
-                                                <th className="w-35 px-5 border-solid border-1 border-orange-900 bg-orange-700 text-white"></th>
-                                                <th className="w-40 px-5 border-solid border-1 border-orange-900 bg-orange-700 text-white"></th>
+                                                <th className="border border-orange-900 w-55 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
+                                                <th className="border border-orange-900 w-55 px-5 bg-orange-700 text-white text-md">Rol asignado</th>
+                                                <th className="border border-orange-900 w-45 px-5 bg-orange-700 text-white text-md">Fecha de creacion</th>
+                                                <th className="border border-orange-900 w-35 px-5 bg-orange-700 text-white"></th>
+                                                <th className="border border-orange-900 w-40 px-5 bg-orange-700 text-white"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -147,15 +147,13 @@ const UsersPage = () => {
                                                 .filter(user => input === "" ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
                                                 .map((user, idx) =>
                                                     <tr key={ idx }>
-                                                        <td className="border-solid border-1 border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.fullName }</td>
-                                                        <td className="border-solid border-1 border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.role }</td>
-                                                        <td className="border-solid border-1 border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.date }</td>
-                                                        <td className="border-solid border-1 border-orange-900 bg-orange-200 py-4 px-5">
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.fullName }</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.role }</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.date }</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                                             <button className="text-white rounded-md bg-orange-800 px-3 py-1 text-md hover:cursor-pointer font-semibold">Actividad</button>
                                                         </td>
-                                                        <td className="border-solid border-1 border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <UserOptions />
-                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5"><UserOptions /></td>
                                                     </tr>
                                                 )
                                             }

@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import UsersPage from "./pages/UsersPage";
 import UsersRequestsPage from "./pages/UsersRequestsPage";
 import UserRequestPage from "./pages/UserRequestPage";
+import UserActivityPage from "./pages/UserActivityPage";
 import MainLayout from "./layouts/MainLayout";
 import "./index.css";
 import UserInfoPage from "./pages/UserInfoPage";
@@ -14,40 +15,41 @@ const router = createBrowserRouter(
 
       <Route index element={ <IndexPage /> } />
 
-      <Route path="inicio" element={ <MainLayout title="Inicio" /> } >
+      <Route path="home" element={ <MainLayout title="Inicio" /> } >
         <Route index element={ <HomePage title="Inicio" /> } />
       </Route>
 
-      <Route path="inventario" element={ <MainLayout title="Inventario" /> } >
+      <Route path="inventory" element={ <MainLayout title="Inventario" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="proveedores" element={ <MainLayout title="Proveedores" /> } >
+      <Route path="providers" element={ <MainLayout title="Proveedores" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="compras" element={ <MainLayout title="Compras" /> } >
+      <Route path="purchases" element={ <MainLayout title="Compras" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="informes" element={ <MainLayout title="Informes" /> } >
+      <Route path="reports" element={ <MainLayout title="Informes" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="usuarios" element={ <MainLayout title="Usuarios" /> } >
+      <Route path="users" element={ <MainLayout title="Usuarios" /> } >
         <Route index element={ <UsersPage />}/>
-        <Route path="solicitudes" >
+        <Route path="requests" >
           <Route index element={ <UsersRequestsPage />} />
-          <Route path="solicitud" element={ <UserRequestPage />} />
+          <Route path="user_request" element={ <UserRequestPage />} />
         </Route>
-        <Route path="usuario" element={ <UserInfoPage /> } />
+        <Route path="user_information" element={ <UserInfoPage /> } />
+        <Route path="user_activity" element={ <UserActivityPage /> } />
       </Route>
 
-      <Route path="ventas" element={ <MainLayout title="Ventas" /> } >
+      <Route path="sales" element={ <MainLayout title="Ventas" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 
-      <Route path="clientes" element={ <MainLayout title="Clientes" /> } >
+      <Route path="clients" element={ <MainLayout title="Clientes" /> } >
         <Route index element={ <HomePage />}/>
       </Route>
 

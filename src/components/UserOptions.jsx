@@ -7,8 +7,8 @@ const UserOptions = ({ user }) => {
 
     useEffect(() => {
         const menu = menuRef.current;
-        menu && menu.addEventListener("mouseleave", () => setExpand(false));
-    }, [expand])
+        menuRef.current && menu.addEventListener("mouseleave", () => setExpand(false));
+    }, [expand]);
 
     return (
         <>
@@ -26,10 +26,10 @@ const UserOptions = ({ user }) => {
                     expand
                     && (
                         <>
-                            <div ref={ menuRef } className="border-1 border-solid border-orange-700 absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-orange-800 shadow-lg ring-1 ring-black/5 focus:outline-hidden" aria-orientation="vertical" aria-labelledby="menu-button">
+                            <div ref={ menuRef } className="border-1 border-solid border-orange-700 absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-orange-800 shadow-lg ring-1 ring-black/5 focus:outline-hidden" aria-orientation="vertical" aria-labelledby="menu-button">
                                 <div className="py-1" role="none">
                                     <Link
-                                        to="usuario"
+                                        to="user_information"
                                         state={{
                                             id: user.id,
                                             username: user.username,
@@ -39,11 +39,20 @@ const UserOptions = ({ user }) => {
                                             date: user.date,
                                             email: user.email
                                         }}
-                                        className="block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+                                        className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
                                     >
                                         Ver detalles
                                     </Link>
-                                    <a className="block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900">Eliminar</a>
+                                    <Link
+                                        to="user_activity"
+                                        state={{ id: user.id, username: user.username }}
+                                        className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+                                    >
+                                        Actividad
+                                    </Link>
+                                    <button className="w-full block px-4 py-2 font-semibold text-md text-white bg-red-700 hover:cursor-pointer hover:bg-orange-900">
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
                         </>

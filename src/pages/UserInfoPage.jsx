@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import BackButton from "../components/BackButton";
 import { useRef, useState } from "react";
+import BackButton from "../components/BackButton";
 
 const UserInfoPage = () => {
     const fieldsRef = useRef(null);

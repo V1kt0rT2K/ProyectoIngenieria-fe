@@ -22,7 +22,7 @@ const LoginForm = () => {
         setValidating(true);
 
         setTimeout(() => {
-            navigate("/inicio")
+            navigate("/home")
             setValidating(false);
         }, 1000);
     }

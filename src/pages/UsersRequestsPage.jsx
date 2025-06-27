@@ -117,7 +117,7 @@ const UsersRequestsPage = () => {
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.role }</td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                                             <Link
-                                                                to="solicitud"
+                                                                to="user_request"
                                                                 state={{
                                                                     id: user.id,
                                                                     fullName: user.fullName,

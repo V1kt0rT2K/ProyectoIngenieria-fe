@@ -29,12 +29,6 @@ const UsersRequestsPage = () => {
 
                         <label className="mt-2 text-md text-orange-900">Rol de usuario</label>
                         <input disabled value={ role } className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-
-                        <label className="mt-2 text-md text-orange-900">Fecha de creacion de solicitud</label>
-                        <input disabled value={ date } className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-
-                        <label className="mt-2 text-md text-orange-900">Email</label>
-                        <input disabled value={ email } className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
                     </div>
                 </div>
                 <div className="flex justify-center space-x-2 mt-3 mb-1">

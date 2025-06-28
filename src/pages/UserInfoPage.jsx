@@ -68,7 +68,7 @@ const UserInfoPage = () => {
                             onChange={e => setValues({ ...values, ...{ date: e.target.value }})}
                             disabled
                             className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
-                            type="date"
+                            type="text"
                         />
 
                         <label className="mt-2 text-md text-orange-900">Email</label>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Configuration from "../Configuration";
 
 const RegisterForm = () => {
-    const [errorMsg, setErrorMsg] = useState({ state: false, msg: "" });
+    const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
     const [sentRequest, setSentRequest] = useState(false);
     const [sendingRequest, setSendingRequest] = useState(false);
 
@@ -46,7 +46,7 @@ const RegisterForm = () => {
         obj["idRole"] = roleRef.current.value;
         obj["job"] = "ADMIN";
 
-        setErrorMsg({ state: false, msg: "" });
+        setErrorMsg({ state: false, msg: null });
         setSendingRequest(true);
 
         const res = await fetch(`${Configuration.API_BASE_URL}/user/register`, {
@@ -69,7 +69,6 @@ const RegisterForm = () => {
 
         formRef.current.querySelectorAll("input").forEach(input => input.value = "");
         roleRef.current.value = 0;
-
         setTimeout(() => setSentRequest(false), 5000);
     }
 
@@ -80,7 +79,7 @@ const RegisterForm = () => {
                     <h1 className="text-2xl font-semibold">Registrarse</h1>
                     <p className="text-orange-900 text-md">Formulario de registro</p>
                 </div>
-                <div className="overflow-y-auto bg-gray-200 rounded h-96">
+                <div className="overflow-y-auto bg-gray-200 rounded h-80">
                     <div className="flex flex-col justify-center my-4 px-4">
                         <div className="flex">
                             <div>
@@ -89,7 +88,7 @@ const RegisterForm = () => {
                             </div>
                             <div>
                                 <label className="mb-2 text-lg font-semibold">Segundo nombre</label>
-                                <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Segundo nombre" name="secondName" type="text" />
+                                <input className="focus:outline-none mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Segundo nombre" name="secondName" type="text" />
                             </div>
                         </div>
                         <div className="flex">
@@ -116,7 +115,7 @@ const RegisterForm = () => {
                         <input className="focus:outline-none  mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" name="password" type="password" />
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
-                        <select ref={ roleRef } className="focus:outline-none bg-white mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" name="role">
+                        <select ref={ roleRef } className="focus:outline-none bg-white mb-6 px-2 py-1 rounded-md" name="role">
                             <option key="0" value={ 0 }>Seleccionar un rol</option>
                             {
                                 !loading
@@ -126,7 +125,7 @@ const RegisterForm = () => {
                     </div>
                 </div>
                 <div className="flex flex-col items-center mt-4">
-                    { errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">{ errorMsg.msg }</div> }
+                    { errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-semibold text-white">{ errorMsg.msg }</div> }
                     { sendingRequest && <div className="mb-4 bg-yellow-700 rounded-md px-4 py-1 font-bold text-white">Procesando informacion...</div> }
                     { sentRequest && <div className="mb-4 bg-green-600 rounded-md px-4 py-1 font-bold text-white">Se ha enviado la solicitud de registro</div> }
                     <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded-lg shadow-lg" value="Registrarse" type="submit" />

@@ -4,99 +4,6 @@ import Spinner from "../components/Spinner";
 import UserOptions from "../components/UserOptions";
 import Configuration from "../Configuration";
 
-const usersList = [
-    {
-        id: 21,
-        fullName: "Sofía Margarita Ramos García",
-        idNumber: "123123123123",
-        role: "Jefa de control de calidad",
-        date: "11/04/2023",
-        email: "sofia.ramos@empresa.com",
-        username: "sramos"
-    },
-    {
-        id: 22,
-        fullName: "Francisco Javier Núñez Herrera",
-        idNumber: "456456456456",
-        role: "Encargado de planta",
-        date: "06/08/2022",
-        email: "francisco.nunez@gmail.com",
-        username: "fnunez"
-    },
-    {
-        id: 23,
-        fullName: "Andrea Beatriz Molina Flores",
-        idNumber: "789789789789",
-        role: "Asistente técnica",
-        date: "23/01/2023",
-        email: "andrea.molina@correo.com",
-        username: "amolina"
-    },
-    {
-        id: 24,
-        fullName: "Fernando Luis Palacios Castro",
-        idNumber: "147147147147",
-        role: "Coordinador de distribución",
-        date: "14/10/2023",
-        email: "fernando.palacios@empresa.com",
-        username: "fpalacios"
-    },
-    {
-        id: 25,
-        fullName: "Paola Milena Ortiz López",
-        idNumber: "258258258258",
-        role: "Supervisora de personal",
-        date: "19/03/2024",
-        email: "paola.ortiz@gmail.com",
-        username: "portiz"
-    },
-    {
-        id: 26,
-        fullName: "Héctor David Rivas Molina",
-        idNumber: "369369369369",
-        role: "Técnico en climatización",
-        date: "28/07/2022",
-        email: "hector.rivas@correo.com",
-        username: "hrivas"
-    },
-    {
-        id: 27,
-        fullName: "Juliana Patricia Mejía Herrera",
-        idNumber: "741741741741",
-        role: "Auxiliar de documentación",
-        date: "02/12/2023",
-        email: "juliana.mejia@empresa.com",
-        username: "jmejia"
-    },
-    {
-        id: 28,
-        fullName: "Mauricio Alejandro Rosales Díaz",
-        idNumber: "852852852852",
-        role: "Responsable de seguridad industrial",
-        date: "30/05/2024",
-        email: "mauricio.rosales@gmail.com",
-        username: "mrosales"
-    },
-    {
-        id: 29,
-        fullName: "Diana Carolina Peña Aguirre",
-        idNumber: "963963963963",
-        role: "Especialista en nutrición animal",
-        date: "12/02/2023",
-        email: "diana.pena@empresa.com",
-        username: "dpena"
-    },
-    {
-        id: 30,
-        fullName: "Álvaro Enrique Castillo Torres",
-        idNumber: "159159159159",
-        role: "Encargado de bodega",
-        date: "07/09/2023",
-        email: "alvaro.castillo@correo.com",
-        username: "acastillo"
-    }
-]
-
 const UsersPage = () => {
     const [input, setInput] = useState("");
     const [users, setUsers] = useState([]);
@@ -109,10 +16,19 @@ const UsersPage = () => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            setUsers(usersList);
-            setLoading(false);
-        }, 100);
+        const getUsers = async () => {
+            try {
+                const res = await fetch(`${Configuration.API_BASE_URL}/user/get/all`);
+                const data = await res.json();
+                setUsers(data);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        getUsers();
     }, []);
 
     return (
@@ -147,9 +63,15 @@ const UsersPage = () => {
                                                 .filter(user => input === "" ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
                                                 .map((user, idx) =>
                                                     <tr key={ idx }>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.fullName }</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.role }</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.date }</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            { user.fullName }
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            { user.role }
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            { user.date.match(/\d+-\d+-\d+/g) }
+                                                        </td>
 
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                                             <UserOptions user={ user } />

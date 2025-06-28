@@ -1,30 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from 'react';
 import Spinner from "./Spinner";
+import Configuration from "../Configuration";
 
 const LoginForm = () => {
     const navigate = useNavigate();
-    const [badInput, setBadInput] = useState(false);
+    const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
     const [validating, setValidating] = useState(false);
     const formRef = useRef(null);
 
-    const login = (e) => {
+    const login = async (e) => {
         e.preventDefault();
 
         const formData = new FormData(formRef.current);
 
+        let obj = {};
+
         for (let [key, val] of formData.entries()) {
             if (!val) {
-                setBadInput(true);
+                setErrorMsg({ state: true, msg: "Por favor, rellenar todos los campos" });
                 return;
             }
+            obj[key] = val;
         }
+
+        setErrorMsg({ state: false, msg: null });
         setValidating(true);
 
-        setTimeout(() => {
-            navigate("/home")
-            setValidating(false);
-        }, 1000);
+        const res = await fetch(`${Configuration.API_BASE_URL}/user/login`, {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(obj)
+        });
+
+        setValidating(false);
+
+        if (!res.ok) {
+            setErrorMsg({ state: true, msg: await res.text() });
+            return;
+        }
+
+        navigate("/home")
     }
 
     return (
@@ -35,14 +54,14 @@ const LoginForm = () => {
                     <p className="text-orange-900 text-md">Inicia sesion con tus credenciales</p>
                 </div>
                 <div className="bg-gray-200 px-4 pt-4 my-4 rounded-lg flex flex-col justify-center">
-                    <label className="mb-2 text-lg font-semibold">Nombre de usuario</label>
-                    <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Nombre de usuario" type="text" />
+                    <label className="mb-2 text-lg font-semibold">Email</label>
+                    <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Email" type="email" />
 
                     <label className="mb-2 text-lg font-semibold">Contraseña</label>
-                    <input name="pass" className="focus:outline-none mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
+                    <input name="password" className="focus:outline-none mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
                 </div>
                 <div className="flex flex-col items-center">
-                    { badInput && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">Por favor, rellenar todos los campos</div> }
+                    { errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">{ errorMsg.msg }</div> }
                     {
                         validating
                         && (

@@ -30,8 +30,8 @@ const LoginForm = () => {
         const res = await fetch(`${Configuration.API_BASE_URL}/user/login`, {
             method: "POST",
             headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json"
+                "Accept": "application/json",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(obj)
         });
@@ -39,11 +39,11 @@ const LoginForm = () => {
         setValidating(false);
 
         if (!res.ok) {
-            setErrorMsg({ state: true, msg: await res.text() });
+            setErrorMsg({ state: true, msg: (await res.json()).meta.message });
             return;
         }
 
-        navigate("/home")
+        navigate("/home");
     }
 
     return (
@@ -61,13 +61,13 @@ const LoginForm = () => {
                     <input name="password" className="focus:outline-none mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
                 </div>
                 <div className="flex flex-col items-center">
-                    { errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">{ errorMsg.msg }</div> }
+                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">{errorMsg.msg}</div>}
                     {
                         validating
                         && (
                             <>
                                 <div className="flex items-center justify-center mb-2">
-                                    <Spinner loading={ true } size={ 15 } margin={ 2 } />
+                                    <Spinner loading={true} size={15} margin={2} />
                                     <span className="ml-2 text-leading text-orange-900">Validando usuario...</span>
                                 </div>
                             </>

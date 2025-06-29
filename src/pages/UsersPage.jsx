@@ -35,17 +35,17 @@ const UsersPage = () => {
         <>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
-                    <Link to="requests" className="text-white rounded-md bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario (0)</Link>
+                    <Link to="requests" className="text-white rounded-md bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario</Link>
                     <div className="flex w-full">
-                        <input ref={ inputRef } onInput={() => setInput( inputRef.current.value )} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
-                        <button onClick={ clearInput } className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>
+                        <input ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
+                        <button onClick={clearInput} className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>
                     </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Usuarios activos</p>
-                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200" }`}>
+                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>
                     {
                         loading
-                            ? <Spinner loading={ loading } />
+                            ? <Spinner loading={loading} />
                             : (
                                 <>
                                     <table className="flex-grow w-full table-fixed justify-self-center">
@@ -60,24 +60,24 @@ const UsersPage = () => {
                                         <tbody>
                                             {
                                                 users
-                                                .filter(user => input === "" ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
-                                                .map((user, idx) =>
-                                                    <tr key={ idx }>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            { user.fullName }
-                                                        </td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            { user.role }
-                                                        </td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            { user.date.match(/\d+-\d+-\d+/g) }
-                                                        </td>
+                                                    .filter(user => input === "" ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
+                                                    .map((user, idx) =>
+                                                        <tr key={idx}>
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                                {`${user.firstName} ${user.secondName} ${user.lastName} ${user.secondLastName}`}
+                                                            </td>
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                                {user.roleName}
+                                                            </td>
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                                {user.date.match(/\d+-\d+-\d+/g)}
+                                                            </td>
 
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <UserOptions user={ user } />
-                                                        </td>
-                                                    </tr>
-                                                )
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                                                <UserOptions user={user} />
+                                                            </td>
+                                                        </tr>
+                                                    )
                                             }
                                         </tbody>
                                     </table>

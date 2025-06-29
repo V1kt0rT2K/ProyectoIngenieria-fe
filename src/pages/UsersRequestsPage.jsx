@@ -28,11 +28,11 @@ const UsersRequestsPage = () => {
         <>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
                 <BackButton />
-                <p className="mb-2 text-lg text-orange-800 font-semibold underline">Solicitudes de crear usuarios</p>
-                <div className={`rounded flex ${loading ? "" : "border border-solid border-orange-700" } overflow-y-scroll mb-6`}>
+                <p className="mb-2 text-lg text-orange-800 font-semibold underline">Solicitudes pendientes</p>
+                <div className={`rounded flex ${loading ? "" : "border border-solid border-orange-700"} overflow-y-scroll mb-6`}>
                     {
                         loading
-                            ? <Spinner loading={ loading } />
+                            ? <Spinner loading={loading} />
                             : (
                                 <>
                                     <table className="flex-grow table-fixed justify-self-center">
@@ -46,28 +46,28 @@ const UsersRequestsPage = () => {
                                         <tbody>
                                             {
                                                 requests
-                                                .map((user, idx) =>
-                                                    <tr key={ idx }>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.fullName }</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{ user.role }</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <Link
-                                                                to="user_request"
-                                                                state={{
-                                                                    id: user.id,
-                                                                    fullName: user.fullName,
-                                                                    idNumber: user.idNumber,
-                                                                    role: user.role,
-                                                                    date: user.date,
-                                                                    email: user.email
-                                                                }}
-                                                                className="text-white rounded-md bg-orange-800 px-3 py-1 text-md font-semibold hover:cursor-pointer"
-                                                            >
-                                                                Ver solicitud
-                                                            </Link>
-                                                        </td>
-                                                    </tr>
-                                                )
+                                                    .map((user, idx) =>
+                                                        <tr key={idx}>
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{user.fullName}</td>
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{user.role}</td>
+                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                                                <Link
+                                                                    to="user_request"
+                                                                    state={{
+                                                                        id: user.id,
+                                                                        fullName: user.fullName,
+                                                                        idNumber: user.idNumber,
+                                                                        role: user.role,
+                                                                        date: user.date,
+                                                                        email: user.email
+                                                                    }}
+                                                                    className="text-white rounded-md bg-orange-800 px-3 py-1 text-md font-semibold hover:cursor-pointer"
+                                                                >
+                                                                    Ver solicitud
+                                                                </Link>
+                                                            </td>
+                                                        </tr>
+                                                    )
                                             }
                                         </tbody>
                                     </table>

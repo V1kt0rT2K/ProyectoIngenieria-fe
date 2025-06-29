@@ -52,8 +52,8 @@ const RegisterForm = () => {
         const res = await fetch(`${Configuration.API_BASE_URL}/user/register`, {
             method: "POST",
             headers: {
-              "Accept": "application/json",
-              "Content-Type": "application/json"
+                "Accept": "application/json",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(obj)
         });
@@ -115,19 +115,19 @@ const RegisterForm = () => {
                         <input className="focus:outline-none  mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" name="password" type="password" />
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
-                        <select ref={ roleRef } className="focus:outline-none bg-white mb-6 px-2 py-1 rounded-md" name="role">
-                            <option key="0" value={ 0 }>Seleccionar un rol</option>
+                        <select ref={roleRef} className="focus:outline-none bg-white mb-6 px-2 py-1 rounded-md" name="role">
+                            <option key="0" value={0}>Seleccionar un rol</option>
                             {
                                 !loading
-                                && userRoles.map((role, idx) => <option key={ idx } value={ role.idRole }>{ role.roleName }</option> )
+                                && userRoles.map((role, idx) => <option key={idx} value={role.idRole}>{role.roleName}</option>)
                             }
                         </select>
                     </div>
                 </div>
                 <div className="flex flex-col items-center mt-4">
-                    { errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-semibold text-white">{ errorMsg.msg }</div> }
-                    { sendingRequest && <div className="mb-4 bg-yellow-700 rounded-md px-4 py-1 font-bold text-white">Procesando informacion...</div> }
-                    { sentRequest && <div className="mb-4 bg-green-600 rounded-md px-4 py-1 font-bold text-white">Se ha enviado la solicitud de registro</div> }
+                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-semibold text-white">{errorMsg.msg}</div>}
+                    {sendingRequest && <div className="mb-4 bg-yellow-700 rounded-md px-4 py-1 font-bold text-white">Procesando informacion...</div>}
+                    {sentRequest && <div className="mb-4 bg-green-600 rounded-md px-4 py-1 font-bold text-white">Se ha enviado la solicitud de registro</div>}
                     <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded-lg shadow-lg" value="Registrarse" type="submit" />
                 </div>
             </form>

@@ -2,8 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useRef, useState } from 'react';
 import Spinner from "./Spinner";
 import Configuration from "../Configuration";
+import { useAuth } from "../provider/AuthProvider";
 
 const LoginForm = () => {
+    const { setToken } = useAuth();
+
     const navigate = useNavigate();
     const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
     const [validating, setValidating] = useState(false);
@@ -42,8 +45,9 @@ const LoginForm = () => {
             setErrorMsg({ state: true, msg: (await res.json()).meta.message });
             return;
         }
-
-        navigate("/home");
+        
+        setToken("test");
+        navigate("/home", { replace: true });
     }
 
     return (

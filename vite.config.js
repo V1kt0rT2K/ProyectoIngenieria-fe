@@ -6,8 +6,6 @@ export default defineConfig({
     plugins: [react()],
     server: {
         port: 9000,
-    },
-    server:{
         allowedHosts: ['proyectoingenieria-fe.onrender.com']
     }
-})
+});

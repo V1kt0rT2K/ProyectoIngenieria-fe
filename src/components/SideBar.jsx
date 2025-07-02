@@ -1,16 +1,20 @@
 import { NavLink, useNavigate } from "react-router-dom"
+import { useAuth } from "../provider/AuthProvider";
 
 const SideBar = () => {
+	const { setToken } = useAuth();
+
 	const navigate = useNavigate();
 	const linkClass = ({ isActive }) => isActive ? "pl-6 py-3 bg-orange-900 flex items-center" : "pl-6 py-3 hover:bg-orange-900 flex items-center"
 
-	const exit = () => {
-		navigate("/");
+	const logout = () => {
+		setToken();
+		navigate("/", { replace: true });
 	}
 
 	return (
 		<nav className="space-y-4 flex flex-col h-screen w-60 bg-orange-800 text-xl font-semibold text-white pt-8">
-			<button onClick={exit} className="hover:cursor-pointer ml-4 mb-6 self-start">Salir</button>
+			<button onClick={logout} className="hover:cursor-pointer ml-4 mb-6 self-start">Salir</button>
 
 			<NavLink className={linkClass} to="/home">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">

@@ -2,9 +2,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
 
 const ProtectedRoute = () => {
-    const { token } = useAuth();
+    const { session } = useAuth();
 
-    return token ? <Outlet /> : <Navigate to="/" />
+    return session ? <Outlet /> : <Navigate to="/" />
 };
 
 export default ProtectedRoute;

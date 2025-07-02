@@ -81,41 +81,29 @@ const RegisterForm = () => {
                 </div>
                 <div className="overflow-y-auto bg-gray-200 rounded h-80">
                     <div className="flex flex-col justify-center my-4 px-4">
-                        <div className="flex">
-                            <div>
-                                <label className="mb-2 text-lg font-semibold">Primer nombre</label>
-                                <input className="focus:outline-none mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Primer nombre" name="firstName" type="text" />
-                            </div>
-                            <div>
-                                <label className="mb-2 text-lg font-semibold">Segundo nombre</label>
-                                <input className="focus:outline-none mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Segundo nombre" name="secondName" type="text" />
-                            </div>
-                        </div>
-                        <div className="flex">
-                            <div>
-                                <label className="mb-2 text-lg font-semibold">Primer apellido</label>
-                                <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Primer apellido" name="lastName" type="text" />
-                            </div>
-                            <div>
-                                <label className="mb-2 text-lg font-semibold">Segundo apellido</label>
-                                <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Segundo apellido" name="secondLastName" type="text" />
-                            </div>
-                        </div>
+                        <label className="mb-2 text-lg font-semibold">Primer nombre</label>
+                        <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Primer nombre" name="firstName" type="text" />
+                        <label className="mb-2 text-lg font-semibold">Segundo nombre</label>
+                        <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Segundo nombre" name="secondName" type="text" />
+                        <label className="mb-2 text-lg font-semibold">Primer apellido</label>
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Primer apellido" name="lastName" type="text" />
+                        <label className="mb-2 text-lg font-semibold">Segundo apellido</label>
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Segundo apellido" name="secondLastName" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Numero de identidad</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Numero de identidad" name="identityNumber" type="text" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Numero de identidad" name="identityNumber" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Nombre de usuario</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Nombre de usuario" name="username" type="text" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Nombre de usuario" name="username" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Email</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Email" name="email" type="email" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Email" name="email" type="email" />
 
                         <label className="mb-2 text-lg font-semibold">Contraseña</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" name="password" type="password" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded-md" placeholder="Contraseña" name="password" type="password" />
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
-                        <select ref={roleRef} className="focus:outline-none bg-white mb-6 px-2 py-1 rounded-md" name="role">
+                        <select ref={roleRef} className="border border-gray-400 focus:outline-none bg-white mb-6 px-2 py-1 rounded-md" name="role">
                             <option key="0" value={0}>Seleccionar un rol</option>
                             {
                                 !loading

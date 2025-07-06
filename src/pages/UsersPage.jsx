@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import UserOptions from "../components/UserOptions";
 import Configuration from "../Configuration";
+import UserService from "../utils/service/UserService";
 
 const UsersPage = () => {
     const [input, setInput] = useState("");
@@ -17,17 +18,22 @@ const UsersPage = () => {
 
     useEffect(() => {
         const getUsers = async () => {
-            try {
-                const res = await fetch(`${Configuration.API_BASE_URL}/user/get/all`);
-                const data = await res.json();
-                setUsers(data);
-            } catch (err) {
-                console.log(err);
-            } finally {
+            // try {
+            //     const res = await fetch(`${Configuration.API_BASE_URL}/user/get/all`);
+            //     const data = await res.json();
+            //     setUsers(data);
+            // } catch (err) {
+            //     console.log(err);
+            // } finally {
+            //     setLoading(false);
+            // }
+            UserService.getAllUsers(1,15,0).then(response =>{
+                if(!response.hasError){
+                    setUsers(response.data);
+                }
                 setLoading(false);
-            }
+            })
         }
-
         getUsers();
     }, []);
 
@@ -53,7 +59,7 @@ const UsersPage = () => {
                                             <tr>
                                                 <th className="border border-orange-900 w-72 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
                                                 <th className="border border-orange-900 w-60 px-5 bg-orange-700 text-white text-md">Rol asignado</th>
-                                                <th className="border border-orange-900 w-36 px-5 bg-orange-700 text-white text-md">Fecha de creacion</th>
+                                                {/* <th className="border border-orange-900 w-36 px-5 bg-orange-700 text-white text-md">Fecha de creacion</th> */}
                                                 <th className="border border-orange-900 w-32 px-5 bg-orange-700 text-white"></th>
                                             </tr>
                                         </thead>
@@ -64,14 +70,15 @@ const UsersPage = () => {
                                                     .map((user, idx) =>
                                                         <tr key={idx}>
                                                             <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                                {`${user.firstName} ${user.secondName} ${user.lastName} ${user.secondLastName}`}
+                                                                {`${user.Person.firstName} ${user.Person.secondName} 
+                                                                ${user.Person.lastName} ${user.Person.secondLastName}`}
                                                             </td>
                                                             <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                                {user.roleName}
+                                                                {user.UserRole.roleName}
                                                             </td>
-                                                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                                 {user.date.match(/\d+-\d+-\d+/g)}
-                                                            </td>
+                                                            </td> */}
 
                                                             <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                                                 <UserOptions user={user} />

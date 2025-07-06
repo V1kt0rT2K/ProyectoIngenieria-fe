@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from 'react';
 import Spinner from "./Spinner";
-import Configuration from "../Configuration";
 import { useAuth } from "../provider/AuthProvider";
+import AuthService from "../utils/service/authService";
 
 const LoginForm = () => {
     const { setToken } = useAuth();
@@ -30,24 +30,20 @@ const LoginForm = () => {
         setErrorMsg({ state: false, msg: null });
         setValidating(true);
 
-        const res = await fetch(`${Configuration.API_BASE_URL}/user/login`, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(obj)
-        });
-
-        setValidating(false);
-
-        if (!res.ok) {
-            setErrorMsg({ state: true, msg: (await res.json()).meta.message });
-            return;
-        }
+        AuthService.loginUser(obj).then((response)=>{
+            setValidating(false);
+            console.log(response);
+            if(!response.hasError){
+                setToken("test");
+                navigate("/home", { replace: true });
+                return;
+            }else{
+                setErrorMsg({state: true, msg: response.meta.message});
+                return;
+            }
+        });   
         
-        setToken("test");
-        navigate("/home", { replace: true });
+        console.log("Alo");
     }
 
     return (

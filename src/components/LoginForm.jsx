@@ -41,19 +41,20 @@ const LoginForm = () => {
 
         setValidating(false);
 
+        const jsonResponse = await res.json();
+
         if (!res.ok) {
-            setErrorMsg({ state: true, msg: (await res.json()).meta.message });
+            setErrorMsg({ state: true, msg: jsonResponse.meta.message });
             return;
         }
 
-				const data = await res.json();
+        setSession(JSON.stringify({
+            idUser: jsonResponse.data.idUser,
+            idRole: jsonResponse.data.idRole,
+            emailUser: jsonResponse.data.email,
+            token: "test"
+        }));
 
-				setSession(JSON.stringify({
-					idUser: data.data.idUser,
-					idRole: data.data.idRole,
-					token: "test"
-				}));
-				
         navigate("/home", { replace: true });
     }
 

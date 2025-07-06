@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import BackButton from "../components/BackButton";
+import BackButton from "../../components/BackButton";
 
 const UserActivityPage = () => {
     const location = useLocation();

@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import BackButton from "../components/BackButton";
-import Spinner from "../components/Spinner";
-import Configuration from "../Configuration";
+import BackButton from "../../components/BackButton";
+import Spinner from "../../components/Spinner";
+import Configuration from "../../Configuration";
 
 const UserInfoPage = () => {
   const fieldsRef = useRef(null);

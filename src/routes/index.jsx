@@ -1,12 +1,21 @@
 import { Outlet, Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
 import IndexPage from "../pages/IndexPage";
-import HomePage from "../pages/HomePage";
-import UsersPage from "../pages/UsersPage";
-import UsersRequestsPage from "../pages/UsersRequestsPage";
-import UserRequestPage from "../pages/UserRequestPage";
-import UserActivityPage from "../pages/UserActivityPage";
+
 import MainLayout from "../layouts/MainLayout";
-import UserInfoPage from "../pages/UserInfoPage";
+
+import HomePage from "../pages/HomePage";
+
+import UsersPage from "../pages/users/UsersPage";
+import UsersRequestsPage from "../pages/users/UsersRequestsPage";
+import UserRequestPage from "../pages/users/UserRequestPage";
+import UserActivityPage from "../pages/users/UserActivityPage";
+import UserInfoPage from "../pages/users/UserInfoPage";
+
+import InventoryPage from "../pages/inventory/InventoryPage";
+import NewMeatTypePage from "../pages/inventory/NewMeatTypePage";
+import NewLotPage from "../pages/inventory/NewLotPage";
+import LotInfoPage from "../pages/inventory/LotInfoPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const Routes = () => {
@@ -22,7 +31,11 @@ const Routes = () => {
                     </Route>
 
                     <Route path="inventory" element={<MainLayout title="Inventario" />} >
-                        <Route index element={<HomePage />} />
+                        <Route index element={<InventoryPage />} />
+
+                        <Route path="new_meat_type" element={<NewMeatTypePage />} />
+                        <Route path="lot_information" element={<LotInfoPage />} />
+                        <Route path="new_lot" element={<NewLotPage />} />
                     </Route>
 
                     <Route path="providers" element={<MainLayout title="Proveedores" />} >

@@ -3,25 +3,25 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
-    const [token, setToken_] = useState(localStorage.getItem("token"));
+    const [session, setSession_] = useState(localStorage.getItem("session"));
 
-    const setToken = (newToken) => {
-        setToken_(newToken);
+    const setSession = (newSession) => {
+        setSession_(newSession);
     };
 
     useEffect(() => {
-        if (token) {
-            localStorage.setItem("token", token);
+        if (session) {
+            localStorage.setItem("session", session);
         } else {
-            localStorage.removeItem("token");
+            localStorage.removeItem("session");
         }
-    }, [token]);
+    }, [session]);
 
     const contextValue = useMemo(
         () => ({
-            token,
-            setToken
-        }), [token]
+            session,
+            setSession
+        }), [session]
     );
 
     return (

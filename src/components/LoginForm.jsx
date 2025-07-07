@@ -5,7 +5,7 @@ import { useAuth } from "../provider/AuthProvider";
 import AuthService from "../utils/service/authService";
 
 const LoginForm = () => {
-    const { setToken } = useAuth();
+    const { setSession } = useAuth();
 
     const navigate = useNavigate();
     const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
@@ -55,10 +55,10 @@ const LoginForm = () => {
                 </div>
                 <div className="bg-gray-200 px-4 pt-4 my-4 rounded-lg flex flex-col justify-center">
                     <label className="mb-2 text-lg font-semibold">Email</label>
-                    <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border-1 border-gray-400 rounded-md" placeholder="Email" type="email" />
+                    <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Email" type="email" />
 
                     <label className="mb-2 text-lg font-semibold">Contraseña</label>
-                    <input name="password" className="focus:outline-none mb-6 px-2 py-1 border-1 border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
+                    <input name="password" className="focus:outline-none mb-6 px-2 py-1 border border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
                 </div>
                 <div className="flex flex-col items-center">
                     {errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">{errorMsg.msg}</div>}

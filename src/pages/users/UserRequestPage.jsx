@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import BackButton from "../components/BackButton";
-import Configuration from "../Configuration";
-import Spinner from "../components/Spinner";
+import BackButton from "../../components/BackButton";
+import Configuration from "../../Configuration";
+import Spinner from "../../components/Spinner";
 
 const UsersRequestsPage = () => {
 	const location = useLocation();

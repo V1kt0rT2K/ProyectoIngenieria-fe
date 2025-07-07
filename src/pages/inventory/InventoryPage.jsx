@@ -162,7 +162,7 @@ const InventoryPage = () => {
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start mb-6">
                     <div className="flex w-full space-x-24 h-8 justify-between">
-                        <select className="py-1 px-3 bg-orange-200 rounded-md text-leading text-orange-700 border border-orange-700 hover:cursor-pointer">
+                        <select className="py-1 px-3 bg-orange-200 rounded text-leading text-orange-700 border border-orange-700 hover:cursor-pointer">
                             <option key={0} onClick={() => { setCategory(null); setAddNew(null); }}>Escoja una categoria</option>
                             {
                                 categories.map((cat, idx) =>

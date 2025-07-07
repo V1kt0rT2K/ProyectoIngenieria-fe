@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef, useState } from 'react';
 import Spinner from "./Spinner";
 import { useAuth } from "../provider/AuthProvider";
-import AuthService from "../utils/service/authService";
+import AuthService from "../utils/service/AuthService";
 
 const LoginForm = () => {
     const { setSession } = useAuth();
@@ -30,19 +30,25 @@ const LoginForm = () => {
         setErrorMsg({ state: false, msg: null });
         setValidating(true);
 
-        AuthService.loginUser(obj).then((response)=>{
+        AuthService.loginUser(obj).then((response) => {
             setValidating(false);
             console.log(response);
-            if(!response.hasError){
-                setToken("test");
+            if (!response.hasError) {
+                setSession(JSON.stringify({
+                    idUser: response.data.idUser,
+                    idRole: response.data.idRole,
+                    emailUser: response.data.email,
+                    token: "test"
+                }));
+
                 navigate("/home", { replace: true });
                 return;
-            }else{
-                setErrorMsg({state: true, msg: response.meta.message});
+            } else {
+                setErrorMsg({ state: true, msg: response.meta.message });
                 return;
             }
-        });   
-        
+        });
+
         console.log("Alo");
     }
 
@@ -53,15 +59,15 @@ const LoginForm = () => {
                     <h1 className="text-2xl font-semibold">Inicio de sesion</h1>
                     <p className="text-orange-900 text-md">Inicia sesion con tus credenciales</p>
                 </div>
-                <div className="bg-gray-200 px-4 pt-4 my-4 rounded-lg flex flex-col justify-center">
+                <div className="bg-gray-200 px-4 pt-4 my-4 rounded flex flex-col justify-center">
                     <label className="mb-2 text-lg font-semibold">Email</label>
-                    <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Email" type="email" />
+                    <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Email" type="email" />
 
                     <label className="mb-2 text-lg font-semibold">Contraseña</label>
-                    <input name="password" className="focus:outline-none mb-6 px-2 py-1 border border-gray-400 rounded-md" placeholder="Contraseña" type="password" />
+                    <input name="password" className="focus:outline-none mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Contraseña" type="password" />
                 </div>
                 <div className="flex flex-col items-center">
-                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-bold text-white">{errorMsg.msg}</div>}
+                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded px-4 py-1 font-bold text-white">{errorMsg.msg}</div>}
                     {
                         validating
                         && (
@@ -73,7 +79,7 @@ const LoginForm = () => {
                             </>
                         )
                     }
-                    <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded-lg shadow-lg" value="Iniciar sesion" type="submit" />
+                    <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded shadow-lg" value="Iniciar sesion" type="submit" />
                 </div>
             </form>
         </>

@@ -215,13 +215,13 @@ const UserInfoPage = () => {
                 <>
                   <button
                     onClick={() => handleMode(true)}
-                    className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-green-700"
+                    className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-green-700"
                   >
                     Guardar
                   </button>
                   <button
                     onClick={() => handleMode(false)}
-                    className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-red-700"
+                    className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700"
                   >
                     Cancelar
                   </button>
@@ -231,11 +231,11 @@ const UserInfoPage = () => {
                 <>
                   <button
                     onClick={() => handleMode(false)}
-                    className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-yellow-600"
+                    className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-yellow-600"
                   >
                     Editar
                   </button>
-                  <button className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-red-700">
+                  <button className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700">
                     Eliminar
                   </button>
                 </>

@@ -61,7 +61,7 @@ const UsersRequestsPage = () => {
                                                                         date: user.date,
                                                                         email: user.email
                                                                     }}
-                                                                    className="text-white rounded-md bg-orange-800 px-3 py-1 text-md font-semibold hover:cursor-pointer"
+                                                                    className="text-white rounded bg-orange-800 px-3 py-1 text-md font-semibold hover:cursor-pointer"
                                                                 >
                                                                     Ver solicitud
                                                                 </Link>

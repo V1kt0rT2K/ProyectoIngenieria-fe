@@ -20,8 +20,8 @@ const IndexPage = () => {
                     <div className="mx-24">
                         <p className="text-5xl font-bold mb-12 text-orange-900">Sea bienvenido al sistema</p>
                         <p className="text-xl font-semibold text-black">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut ullam, fugit veniam iusto sunt labore asperiores ducimus itaque unde veritatis? Veniam ducimus architecto sit cum voluptatem aspernatur eos harum similique?</p>
-                        <button onClick={() => setShowModal(<LoginForm />)} className="transition duration-600 ease-in-out hover:bg-orange-800 hover:cursor-pointer mr-6 text-xl my-12 bg-orange-700 rounded-md py-2 px-3 font-semibold text-white shadow-lg">Iniciar sesion</button>
-                        <button onClick={() => setShowModal(<RegisterForm />)} className="transition duration-600 ease-in-out hover:bg-orange-800 hover:cursor-pointer text-xl my-12 bg-orange-700 rounded-md py-2 px-3 font-semibold text-white shadow-lg">Registrarse</button>
+                        <button onClick={() => setShowModal(<LoginForm />)} className="transition duration-600 ease-in-out hover:bg-orange-800 hover:cursor-pointer mr-6 text-xl my-12 bg-orange-700 rounded py-2 px-3 font-semibold text-white shadow-lg">Iniciar sesion</button>
+                        <button onClick={() => setShowModal(<RegisterForm />)} className="transition duration-600 ease-in-out hover:bg-orange-800 hover:cursor-pointer text-xl my-12 bg-orange-700 rounded py-2 px-3 font-semibold text-white shadow-lg">Registrarse</button>
                     </div>
                     <img style={{ maxWidth: "30vw" }} src={image} className="block ml-24 mr-0 w-auto h-auto" />
                 </div>

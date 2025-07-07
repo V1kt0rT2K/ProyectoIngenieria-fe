@@ -104,8 +104,8 @@ const UsersRequestsPage = () => {
 						!sent
 						&& (
 							<>
-								<button onClick={() => handleRequest(true, 1)} className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-green-700">Aceptar</button>
-								<button onClick={() => handleRequest(false, 3)} className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-red-700">Rechazar</button>
+								<button onClick={() => handleRequest(true, 1)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-green-700">Aceptar</button>
+								<button onClick={() => handleRequest(false, 3)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700">Rechazar</button>
 							</>
 						)
 					}

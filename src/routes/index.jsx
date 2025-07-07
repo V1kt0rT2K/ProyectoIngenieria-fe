@@ -16,6 +16,9 @@ import NewMeatTypePage from "../pages/inventory/NewMeatTypePage";
 import NewLotPage from "../pages/inventory/NewLotPage";
 import LotInfoPage from "../pages/inventory/LotInfoPage";
 
+import PurchasesPage from "../pages/purchases/PurchasesPage";
+import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const Routes = () => {
@@ -43,7 +46,9 @@ const Routes = () => {
                     </Route>
 
                     <Route path="purchases" element={<MainLayout title="Compras" />} >
-                        <Route index element={<HomePage />} />
+                        <Route index element={<PurchasesPage />} />
+
+                        <Route path="purchase_information" element={<PurchaseInfoPage />} />
                     </Route>
 
                     <Route path="reports" element={<MainLayout title="Informes" />} >

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import BackButton from "../components/BackButton";
-import Configuration from "../Configuration";
+import Spinner from "../../components/Spinner";
+import BackButton from "../../components/BackButton";
+import Configuration from "../../Configuration";
 
 const UsersRequestsPage = () => {
     const [requests, setRequests] = useState([]);

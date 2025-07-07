@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import UserOptions from "../components/UserOptions";
-import Configuration from "../Configuration";
+import Spinner from "../../components/Spinner";
+import UserOptions from "../../components/UserOptions";
+import Configuration from "../../Configuration";
 
 const UsersPage = () => {
     const [input, setInput] = useState("");

@@ -36,6 +36,8 @@ const NotificationsButton = () => {
         const menu = menuRef.current;
         menu && menu.addEventListener("mouseleave", () => setExpand(false));
 
+        setNotifications(notificaciones);
+
         setTimeout(() => setLoading(false), 2000);
     }, [expand]);
 
@@ -52,7 +54,7 @@ const NotificationsButton = () => {
                     && (
                         <>
                             <div ref={menuRef} className="border-1 border-solid border-orange-700 absolute right-0 z-10 mt-2 w-64 origin-top-right rounded bg-orange-800 shadow-lg ring-1 ring-black/5 focus:outline-hidden" aria-orientation="vertical" aria-labelledby="menu-button">
-                                <div className="px-3 py-1 text-white" role="none">
+                                <div className="px-4 py-2 text-white" role="none">
                                     <p className="font-semibold">Notificaciones</p>
                                     {
                                         loading
@@ -60,7 +62,7 @@ const NotificationsButton = () => {
                                             : (
                                                 <div style={{ maxHeight: "35vh" }} className="space-y-2 overflow-y-scroll text-orange-100">
                                                     {
-                                                        notificaciones.map(item =>
+                                                        notifications.map(item =>
                                                             <>
                                                                 <hr className="mr-4" />
                                                                 <div className="flex justify-between items-center">

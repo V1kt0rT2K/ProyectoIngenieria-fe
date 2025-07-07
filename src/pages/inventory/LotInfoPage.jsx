@@ -41,7 +41,7 @@ const LotInfoPage = () => {
                         </div>
                     </div>
                     <p className="mt-12 text-xl font-semibold text-orange-800 underline">Información animal</p>
-                    <table className="flex-grow w-full table-fixed justify-self-center mt-4">
+                    <table className="flex-grow w-full table-auto justify-self-center mt-4">
                         <thead>
                             <tr>
                                 <th className="border border-orange-900 px-5 bg-orange-700 text-white">No. cerdo</th>

@@ -5,7 +5,7 @@ import UserOptions from "../../components/UserOptions";
 import UserService from "../../utils/service/UserService";
 
 const UsersPage = () => {
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState(null);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const inputRef = useRef(null);
@@ -53,7 +53,7 @@ const UsersPage = () => {
                             ? <Spinner loading={loading} />
                             : (
                                 <>
-                                    <table className="flex-grow w-full table-fixed justify-self-center">
+                                    <table className="flex-grow w-full table-auto justify-self-center">
                                         <thead>
                                             <tr>
                                                 <th className="border border-orange-900 w-72 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
@@ -65,7 +65,7 @@ const UsersPage = () => {
                                         <tbody>
                                             {
                                                 users
-                                                    .filter(user => input === "" ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
+                                                    .filter(user => !input ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
                                                     .map((user, idx) =>
                                                         <tr key={idx}>
                                                             <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">

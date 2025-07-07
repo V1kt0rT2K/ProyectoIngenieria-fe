@@ -35,7 +35,7 @@ const UsersRequestsPage = () => {
                             ? <Spinner loading={loading} />
                             : (
                                 <>
-                                    <table className="flex-grow table-fixed justify-self-center">
+                                    <table className="flex-grow table-auto justify-self-center">
                                         <thead>
                                             <tr>
                                                 <th className="w-96 py-2 px-5 border border-orange-900 bg-orange-700 text-white text-md">Nombre completo</th>

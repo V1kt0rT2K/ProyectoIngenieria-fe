@@ -12,7 +12,7 @@ const reorder = (obj) => {
 const InventoryTable = ({ columns, data, to }) => {
     return (
         <>
-            <table className="flex-grow w-full table-fixed justify-self-center">
+            <table className="flex-grow w-full table-auto justify-self-center">
                 <thead>
                     <tr>
                         {columns.map(col => <th className="border border-orange-900 py-2 px-5 bg-orange-700 text-white text-md">{col}</th>)}

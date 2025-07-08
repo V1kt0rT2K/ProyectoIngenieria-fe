@@ -11,7 +11,7 @@ const DropDown = ({ links }) => {
 
     return (
         <>
-            <div className="relative inline-block text-left">
+            <div className="inline-block text-left">
                 <div>
                     <button onClick={() => setExpand(expand => !expand)} className="space-x-2 hover:cursor-pointer bg-orange-800 inline-flex w-full justify-center items-center rounded px-3 py-1 text-md font-semibold text-white" aria-expanded="true" aria-haspopup="true">
                         Opciones

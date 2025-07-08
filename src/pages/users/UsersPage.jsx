@@ -20,26 +20,23 @@ const UsersTable = ({users}) => {
                 </thead>
                 <tbody>
                     {
-                        users
-                        //.filter(user => input === "" ? true : (new RegExp(`.*${input}.*`, "i")).test(user.fullName))
-                            .map((user, idx) =>
-                                <tr key={idx}>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        {`${user.Person.firstName} ${user.Person.secondName} 
-                                        ${user.Person.lastName} ${user.Person.secondLastName}`}
-                                    </td>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        {user.UserRole.roleName}
-                                    </td>
-                                    {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        {user.date.match(/\d+-\d+-\d+/g)}
-                                    </td> */}
+                        users.map((user, idx) =>
+                            <tr key={idx}>
+                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                    {user.Person.fullName}
+                                </td>
+                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                    {user.UserRole.roleName}
+                                </td>
+                                {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                    {user.date.match(/\d+-\d+-\d+/g)}
+                                </td> */}
 
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                        <UserOptions user={user} />
-                                    </td>
-                                </tr>
-                            )
+                                <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                    <UserOptions user={user} />
+                                </td>
+                            </tr>
+                        )
                     }
                 </tbody>
             </table>
@@ -54,11 +51,10 @@ const UsersPage = () => {
     const [page, setPage] = useState("1");
     const [size, setSize] = useState("15");
 
+    
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentData = useRef([]);
-    //const inputRef = useRef(null);
-    //const sort = useRef("0");
 
     const clearInput = () => {
         setInput("");

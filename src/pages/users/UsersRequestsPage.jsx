@@ -22,17 +22,14 @@ const UsersRequestsTable = ({requests}) => {
                                 .map((request, idx) =>
                                     <tr key={idx}>
                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                            {request.User.Person.firstName}
-                                            {request.User.Person.secondName}
-                                            {request.User.Person.lastName}
-                                            {request.User.Person.secondLastName}
+                                            {request.User.Person.fullName}
                                         </td>
-                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{user.UserRole.roleName}</td>
+                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{request.UserRole.roleName}</td>
                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                             <Link
                                                 to="user_request"
                                                 state={{
-                                                    id: request.idUserRequest
+                                                    idUserRequest: request.idUserRequest
                                                 }}
                                                 className="text-white rounded bg-orange-800 px-3 py-1 text-md font-semibold hover:cursor-pointer"
                                             >

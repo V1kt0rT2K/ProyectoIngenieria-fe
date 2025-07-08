@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import Configuration from "../Configuration";
+import PublicService from "../utils/service/PublicService";
+import AuthService from "../utils/service/AuthService";
 
 const RegisterForm = () => {
     const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
@@ -13,18 +14,14 @@ const RegisterForm = () => {
     const roleRef = useRef(null);
 
     useEffect(() => {
-        const getUserRoles = async () => {
-            try {
-                const res = await fetch(`${Configuration.API_BASE_URL}/roles/get/all`);
-                const data = await res.json();
-                setUserRoles(data);
-            } catch (err) {
-                console.log(err);
-            } finally {
-                setLoading(false);
+        
+        PublicService.getUserRoles().then(response =>{
+            if(!response.hasError){
+                setUserRoles(response.data);
             }
-        }
-        getUserRoles();
+            setLoading(false);
+        });
+        
     }, []);
 
     const register = async (e) => {
@@ -43,33 +40,27 @@ const RegisterForm = () => {
             obj[key] = val;
         };
 
-        obj["idRole"] = roleRef.current.value;
-        obj["job"] = "ADMIN";
-
         setErrorMsg({ state: false, msg: null });
         setSendingRequest(true);
 
-        const res = await fetch(`${Configuration.API_BASE_URL}/user/register`, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(obj)
+        const payload = {
+            ...obj,
+            idRole : roleRef.current.value
+        };
+
+        AuthService.registerUser(payload).then(response=>{
+            console.log(response);
+            if(!response.hasError){
+                formRef.current.querySelectorAll("input").forEach(input => input.value = "");
+                roleRef.current.value = 0;
+                setTimeout(() => setSentRequest(false), 5000);
+            }else{
+                setErrorMsg({state:true, msg:response.meta.message});
+            }
+
+            setSendingRequest(false);
+            setSentRequest(true);
         });
-
-        setSendingRequest(false);
-
-        if (!res.ok) {
-            setErrorMsg({ state: true, msg: await res.text() });
-            return;
-        }
-
-        setSentRequest(true);
-
-        formRef.current.querySelectorAll("input").forEach(input => input.value = "");
-        roleRef.current.value = 0;
-        setTimeout(() => setSentRequest(false), 5000);
     }
 
     return (
@@ -101,6 +92,9 @@ const RegisterForm = () => {
 
                         <label className="mb-2 text-lg font-semibold">Contraseña</label>
                         <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Contraseña" name="password" type="password" />
+
+                        <label className="mb-2 text-lg font-semibold">Cargo</label>
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Cargo" name="job" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
                         <select ref={roleRef} className="border border-gray-400 focus:outline-none bg-white mb-6 px-2 py-1 rounded" name="role">

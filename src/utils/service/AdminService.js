@@ -33,6 +33,37 @@ class AdminService {
         return await result.json();
     }
 
+    static async getUserRequestsById(idUserRequest) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/requests/get/${idUserRequest}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
+    static async manageUserRequest(payload) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/requests/manage`, 
+        {
+            method: "PUT",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        return await result.json();
+    }
+
     static async searchUsers(searchParam) {
         
         const result = await fetch(`

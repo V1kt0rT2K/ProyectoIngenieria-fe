@@ -1,54 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import BackButton from "../../components/BackButton";
-import Configuration from "../../Configuration";
 import Spinner from "../../components/Spinner";
+import AdminService from "../../utils/service/AdminService";
+
+
+
+const UserRequestInfo = ({requestData}) => {
+
+	return(
+		<>
+			<div className="bg-orange-200 rounded overflow-y-auto">
+				<div className="pb-4 px-2 pr-6 ml-2 flex flex-col justify-center mt-2">
+					<label className="text-md text-orange-900">Nombre completo</label>
+					<input disabled value={requestData.User?.Person.fullName} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
+
+					<label className="mt-2 text-md text-orange-900">Numero de identidad</label>
+					<input disabled value={requestData.User?.Person.identityNumber} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
+
+					<label className="mt-2 text-md text-orange-900">Rol de usuario</label>
+					<input disabled value={requestData.UserRole?.roleName} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
+
+					<label className="mt-2 text-md text-orange-900">Fecha de creacion de solicitud</label>
+					<input disabled value={requestData.generationDate} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
+
+					<label className="mt-2 text-md text-orange-900">Email</label>
+					<input disabled value={requestData.email} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
+				</div>
+			</div>
+		</>
+	);
+}
 
 const UsersRequestsPage = () => {
 	const location = useLocation();
-	const { id, fullName, role, date, email, idNumber } = location.state;
+	const [requestData, setRequestData] = useState({});
 
 	const [loading, setLoading] = useState({});
 	const [msg, setMsg] = useState({});
 	const [sent, setSent] = useState(false);
 
-	const handleRequest = async (enabled, status) => {
-		const accept = status === 1;
+	useEffect(() =>{
+		console.log(location.state.idUserRequest);
+		AdminService.getUserRequestsById(location.state.idUserRequest).then(response=>{
+			if(!response.hasError){
+				setRequestData(response.data);
+			}
+		});
 
+	},[]);
+
+	const handleRequest = async (idStatus) => {
 		setMsg({});
 		setLoading(true);
-		setLoading({ state: true, msg: accept ? "Aceptando solictud..." : "Rechazando solicitud..." });
+		setLoading({ state: true, msg: idStatus == 1 ? "Aceptando solictud..." : "Rechazando solicitud..." });
 
-		try {
-			const res = await fetch(`${Configuration.API_BASE_URL}/user/put/status`, {
-				method: "PUT",
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					id: id,
-					enabled: enabled,
-					status: status
-				})
-			});
-
-			if (!res.ok) {
-				throw new Error();
+		const payload = {
+			idUserRequest : location.state.idUserRequest,
+			idStatus : idStatus
+		};
+		AdminService.manageUserRequest(payload).then(response => {
+			if(!response.hasError){
+				setMsg({state:true, msg:"Actualización realizada con éxito."});
 			}
-
-			setMsg({
-				show: true,
-				color: "text-green-700",
-				msg: accept ? "Solicitud aceptada." : "Solicitud rechazada."
-			});
-
-			setSent(true);
-		} catch (err) {
-			setMsg({ show: true, color: "text-red-600", msg: "No se pudo realizar la operacion." });
-		} finally {
+			else{
+				setMsg({state:true, msg:response.meta.message});
+			}
 			setLoading(false);
-		}
+		});
+
+		requestData.idStatus = idStatus;
+
 	}
 
 	return (
@@ -78,36 +100,18 @@ const UsersRequestsPage = () => {
 					}
 
 				</div>
-				<div className="bg-orange-200 rounded overflow-y-auto">
-					<div className="pb-4 px-2 pr-6 ml-2 flex flex-col justify-center mt-2">
-						<label className="text-md text-orange-900">Nombre completo</label>
-						<input disabled value={fullName} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
 
-						<label className="mt-2 text-md text-orange-900">Numero de identidad</label>
-						<input disabled value={idNumber} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-
-						<label className="mt-2 text-md text-orange-900">Rol de usuario</label>
-						<input disabled value={role} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-
-						<label className="mt-2 text-md text-orange-900">Fecha de creacion de solicitud</label>
-						<input disabled value={date} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-
-						<label className="mt-2 text-md text-orange-900">Email</label>
-						<input disabled value={email} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-
-						<label className="mt-2 text-md text-orange-900">Rol de usuario</label>
-						<input disabled value={role} className="focus:outline-none flex-grow rounded py-1 px-3 text-md" />
-					</div>
-				</div>
+				<UserRequestInfo requestData={requestData}/>
+					
 				<div className="flex justify-center space-x-2 mt-3 mb-1">
 					{
-						!sent
-						&& (
+						requestData.idStatus == 2 ?
+						(
 							<>
-								<button onClick={() => handleRequest(true, 1)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-green-700">Aceptar</button>
-								<button onClick={() => handleRequest(false, 3)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700">Rechazar</button>
+								<button onClick={() => handleRequest(1)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-green-700">Aceptar</button>
+								<button onClick={() => handleRequest(3)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700">Rechazar</button>
 							</>
-						)
+						) : ("")
 					}
 				</div>
 			</div>

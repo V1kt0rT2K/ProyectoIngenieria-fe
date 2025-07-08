@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import Spinner from "../../components/Spinner";
 import UserOptions from "../../components/UserOptions";
-import UserService from "../../utils/service/UserService";
+import AdminService from "../../utils/service/AdminService";
 
 const UsersTable = ({users}) => {
     
@@ -65,17 +65,9 @@ const UsersPage = () => {
         inputRef.current.value = "";
     }
 
-    // const getDataFiltered = () =>{
-    //     UserService.getAllUsers(page,size,sort.current).then(response=>{
-    //         if(!response.hasError){
-    //             setUsers(response.data.data);
-    //         }
-    //     });
-    // };
-
     useEffect(() => {
 
-        UserService.getAllUsers(page,size,sort).then(response =>{
+        AdminService.getAllUsers(page,size,sort).then(response =>{
             if(!response.hasError){
                 setUsers(response.data.data);
                 currentData.current = response.data.data;
@@ -89,7 +81,7 @@ const UsersPage = () => {
 
     useEffect(() => {
 
-        UserService.getAllUsers(page,size,sort).then(response =>{
+        AdminService.getAllUsers(page,size,sort).then(response =>{
             if(!response.hasError){
                 setUsers(response.data.data);
                 currentData.current = response.data.data;
@@ -102,20 +94,21 @@ const UsersPage = () => {
     }, [page,size,sort]);
 
     useEffect(() => {
-        if(searchBox === ""){
-            setUsers(currentData.current);
-        }else{
-            UserService.searchUsers(searchBox).then(response =>{
-                if(!response.hasError){
-                    setUsers(response.data);
+        const timeOut = setTimeout(() => {
+                if(searchBox === ""){
+                    setUsers(currentData.current);
                 }else{
-                    setUsers([]);
+                    AdminService.searchUsers(searchBox).then(response =>{
+                        if(!response.hasError){
+                            setUsers(response.data);
+                        }else{
+                            setUsers([]);
+                        }
+                    });
                 }
-            });
-        }
+            }, 500);
 
-        console.log("searchBox");
-        
+        return () => clearTimeout(timeOut);
     },[searchBox]);
 
     return (

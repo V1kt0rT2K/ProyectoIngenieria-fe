@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import BackButton from "../components/BackButton";
-import Spinner from "../components/Spinner";
-import Configuration from "../Configuration";
+import BackButton from "../../components/BackButton";
+import Spinner from "../../components/Spinner";
+import Configuration from "../../Configuration";
 
 const UserInfoPage = () => {
   const fieldsRef = useRef(null);
@@ -215,13 +215,13 @@ const UserInfoPage = () => {
                 <>
                   <button
                     onClick={() => handleMode(true)}
-                    className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-green-700"
+                    className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-green-700"
                   >
                     Guardar
                   </button>
                   <button
                     onClick={() => handleMode(false)}
-                    className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-red-700"
+                    className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700"
                   >
                     Cancelar
                   </button>
@@ -231,11 +231,11 @@ const UserInfoPage = () => {
                 <>
                   <button
                     onClick={() => handleMode(false)}
-                    className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-yellow-600"
+                    className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-yellow-600"
                   >
                     Editar
                   </button>
-                  <button className="hover:cursor-pointer rounded-md text-md text-white font-semibold px-3 py-1 bg-red-700">
+                  <button className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700">
                     Eliminar
                   </button>
                 </>

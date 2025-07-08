@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import UserOptions from "../components/UserOptions";
-import UserService from "../utils/service/UserService";
+
+import Spinner from "../../components/Spinner";
+import UserOptions from "../../components/UserOptions";
+import UserService from "../../utils/service/UserService";
 
 const UsersTable = ({users}) => {
     
@@ -52,6 +53,7 @@ const UsersPage = () => {
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState("1");
     const [size, setSize] = useState("15");
+
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const currentData = useRef([]);
@@ -120,7 +122,7 @@ const UsersPage = () => {
         <>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
-                    <Link to="requests" className="text-white rounded-md bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario</Link>
+                    <Link to="requests" className="text-white rounded bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario</Link>
                     <div className="flex w-full">
                         <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
                         <button onClick={clearInput} className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>

@@ -48,7 +48,6 @@ const LoginForm = () => {
                 return;
             }
         });
-
         console.log("Alo");
     }
 
@@ -61,10 +60,12 @@ const LoginForm = () => {
                 </div>
                 <div className="bg-gray-200 px-4 pt-4 my-4 rounded flex flex-col justify-center">
                     <label className="mb-2 text-lg font-semibold">Email</label>
+
                     <input name="email" className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Email" type="email" />
 
                     <label className="mb-2 text-lg font-semibold">Contraseña</label>
                     <input name="password" className="focus:outline-none mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Contraseña" type="password" />
+
                 </div>
                 <div className="flex flex-col items-center">
                     {errorMsg.state && <div className="mb-4 bg-red-500 rounded px-4 py-1 font-bold text-white">{errorMsg.msg}</div>}

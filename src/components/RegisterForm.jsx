@@ -73,6 +73,7 @@ const RegisterForm = () => {
                 <div className="overflow-y-auto bg-gray-200 rounded h-80">
                     <div className="flex flex-col justify-center my-4 px-4">
                         <label className="mb-2 text-lg font-semibold">Primer nombre</label>
+
                         <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Primer nombre" name="firstName" type="text" />
                         <label className="mb-2 text-lg font-semibold">Segundo nombre</label>
                         <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Segundo nombre" name="secondName" type="text" />
@@ -98,6 +99,7 @@ const RegisterForm = () => {
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
                         <select ref={roleRef} className="border border-gray-400 focus:outline-none bg-white mb-6 px-2 py-1 rounded" name="role">
+
                             <option key="0" value={0}>Seleccionar un rol</option>
                             {
                                 !loading

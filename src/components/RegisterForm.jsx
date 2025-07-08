@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import Configuration from "../Configuration";
+import PublicService from "../utils/service/PublicService";
+import AuthService from "../utils/service/AuthService";
 
 const RegisterForm = () => {
     const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
@@ -13,18 +14,14 @@ const RegisterForm = () => {
     const roleRef = useRef(null);
 
     useEffect(() => {
-        const getUserRoles = async () => {
-            try {
-                const res = await fetch(`${Configuration.API_BASE_URL}/roles/get/all`);
-                const data = await res.json();
-                setUserRoles(data);
-            } catch (err) {
-                console.log(err);
-            } finally {
-                setLoading(false);
+        
+        PublicService.getUserRoles().then(response =>{
+            if(!response.hasError){
+                setUserRoles(response.data);
             }
-        }
-        getUserRoles();
+            setLoading(false);
+        });
+        
     }, []);
 
     const register = async (e) => {
@@ -43,33 +40,27 @@ const RegisterForm = () => {
             obj[key] = val;
         };
 
-        obj["idRole"] = roleRef.current.value;
-        obj["job"] = "ADMIN";
-
         setErrorMsg({ state: false, msg: null });
         setSendingRequest(true);
 
-        const res = await fetch(`${Configuration.API_BASE_URL}/user/register`, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(obj)
+        const payload = {
+            ...obj,
+            idRole : roleRef.current.value
+        };
+
+        AuthService.registerUser(payload).then(response=>{
+            console.log(response);
+            if(!response.hasError){
+                formRef.current.querySelectorAll("input").forEach(input => input.value = "");
+                roleRef.current.value = 0;
+                setTimeout(() => setSentRequest(false), 5000);
+            }else{
+                setErrorMsg({state:true, msg:response.meta.message});
+            }
+
+            setSendingRequest(false);
+            setSentRequest(true);
         });
-
-        setSendingRequest(false);
-
-        if (!res.ok) {
-            setErrorMsg({ state: true, msg: await res.text() });
-            return;
-        }
-
-        setSentRequest(true);
-
-        formRef.current.querySelectorAll("input").forEach(input => input.value = "");
-        roleRef.current.value = 0;
-        setTimeout(() => setSentRequest(false), 5000);
     }
 
     return (
@@ -82,28 +73,33 @@ const RegisterForm = () => {
                 <div className="overflow-y-auto bg-gray-200 rounded h-80">
                     <div className="flex flex-col justify-center my-4 px-4">
                         <label className="mb-2 text-lg font-semibold">Primer nombre</label>
-                        <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Primer nombre" name="firstName" type="text" />
+
+                        <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Primer nombre" name="firstName" type="text" />
                         <label className="mb-2 text-lg font-semibold">Segundo nombre</label>
-                        <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Segundo nombre" name="secondName" type="text" />
+                        <input className="focus:outline-none mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Segundo nombre" name="secondName" type="text" />
                         <label className="mb-2 text-lg font-semibold">Primer apellido</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Primer apellido" name="lastName" type="text" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Primer apellido" name="lastName" type="text" />
                         <label className="mb-2 text-lg font-semibold">Segundo apellido</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Segundo apellido" name="secondLastName" type="text" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Segundo apellido" name="secondLastName" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Numero de identidad</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Numero de identidad" name="identityNumber" type="text" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Numero de identidad" name="identityNumber" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Nombre de usuario</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Nombre de usuario" name="username" type="text" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Nombre de usuario" name="username" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Email</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded-md" placeholder="Email" name="email" type="email" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border-solid border border-gray-400 rounded" placeholder="Email" name="email" type="email" />
 
                         <label className="mb-2 text-lg font-semibold">Contraseña</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded-md" placeholder="Contraseña" name="password" type="password" />
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Contraseña" name="password" type="password" />
+
+                        <label className="mb-2 text-lg font-semibold">Cargo</label>
+                        <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Cargo" name="job" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
-                        <select ref={roleRef} className="border border-gray-400 focus:outline-none bg-white mb-6 px-2 py-1 rounded-md" name="role">
+                        <select ref={roleRef} className="border border-gray-400 focus:outline-none bg-white mb-6 px-2 py-1 rounded" name="role">
+
                             <option key="0" value={0}>Seleccionar un rol</option>
                             {
                                 !loading
@@ -113,10 +109,10 @@ const RegisterForm = () => {
                     </div>
                 </div>
                 <div className="flex flex-col items-center mt-4">
-                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded-md px-4 py-1 font-semibold text-white">{errorMsg.msg}</div>}
-                    {sendingRequest && <div className="mb-4 bg-yellow-700 rounded-md px-4 py-1 font-bold text-white">Procesando informacion...</div>}
-                    {sentRequest && <div className="mb-4 bg-green-600 rounded-md px-4 py-1 font-bold text-white">Se ha enviado la solicitud de registro</div>}
-                    <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded-lg shadow-lg" value="Registrarse" type="submit" />
+                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded px-4 py-1 font-semibold text-white">{errorMsg.msg}</div>}
+                    {sendingRequest && <div className="mb-4 bg-yellow-700 rounded px-4 py-1 font-bold text-white">Procesando informacion...</div>}
+                    {sentRequest && <div className="mb-4 bg-green-600 rounded px-4 py-1 font-bold text-white">Se ha enviado la solicitud de registro</div>}
+                    <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded shadow-lg" value="Registrarse" type="submit" />
                 </div>
             </form>
         </>

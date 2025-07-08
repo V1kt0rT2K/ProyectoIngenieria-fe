@@ -1,5 +1,12 @@
 import { NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../provider/AuthProvider";
+import { navLinks, linkClass } from "./NavLinks";
+
+const Roles = {
+	ADMINISTRATOR: 1,
+	CASHIER: 2,
+	WAREHOUSE_MANAGER: 3,
+};
 
 const Roles = {
 	ADMINISTRATOR :1,
@@ -11,12 +18,12 @@ const SideBar = () => {
 	const { session, setSession } = useAuth();
 
 	const navigate = useNavigate();
-	const linkClass = ({ isActive }) => isActive ? "pl-6 py-3 bg-orange-900 flex items-center" : "pl-6 py-3 hover:bg-orange-900 flex items-center"
 
 	const logout = () => {
 		setSession();
 		navigate("/", { replace: true });
 	}
+
 
 	const navLinks = {
 		INVENTORY: (
@@ -80,6 +87,7 @@ const SideBar = () => {
 		),
 	};
 
+
 	let barElements = [];
 
 	switch (JSON.parse(session).idRole) {
@@ -105,7 +113,9 @@ const SideBar = () => {
 				<span className="ml-4">Inicio</span>
 			</NavLink>
 
-			{ barElements }
+
+			{barElements}
+
 		</nav>
 	);
 }

@@ -8,12 +8,6 @@ const Roles = {
 	WAREHOUSE_MANAGER: 3,
 };
 
-const Roles = {
-	ADMINISTRATOR :1,
-	CASHIER: 2,
-	WAREHOUSE_MANAGER: 3,
-};
-
 const SideBar = () => {
 	const { session, setSession } = useAuth();
 

@@ -5,8 +5,10 @@ import Spinner from "../../components/Spinner";
 import UserOptions from "../../components/UserOptions";
 import AdminService from "../../utils/service/AdminService";
 
-const UsersTable = ({users}) => {
-    
+const N_TOTAL_ROWS = 200;
+
+const UsersTable = ({ users }) => {
+
     return (
         <>
             <table className="flex-grow w-full table-fixed justify-self-center">
@@ -48,13 +50,12 @@ const UsersTable = ({users}) => {
 const UsersPage = () => {
     const [searchBox, setSearchBox] = useState("");
     const [sort, setSort] = useState("0");
-    const [page, setPage] = useState("1");
-    const [size, setSize] = useState("15");
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(15);
 
-    
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const currentData = useRef([]);
+    const [currentData, setCurrentData] = useState([]);
 
     const clearInput = () => {
         setInput("");
@@ -62,50 +63,35 @@ const UsersPage = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
+        AdminService.getAllUsers(page, size, sort).then(response => {
+            setUsers([]);
 
-        AdminService.getAllUsers(page,size,sort).then(response =>{
-            if(!response.hasError){
+            if (!response.hasError) {
                 setUsers(response.data.data);
-                currentData.current = response.data.data;
+                setCurrentData(response.data.data);
             }
             setLoading(false);
         });
-        
-        console.log("useEffect por defecto");
-        
-    }, []);
-
-    useEffect(() => {
-
-        AdminService.getAllUsers(page,size,sort).then(response =>{
-            if(!response.hasError){
-                setUsers(response.data.data);
-                currentData.current = response.data.data;
-            }
-            setLoading(false);
-        });
-
-        console.log("useEffect por filtros");
-        
-    }, [page,size,sort]);
+    }, [page, size, sort]);
 
     useEffect(() => {
         const timeOut = setTimeout(() => {
-                if(searchBox === ""){
-                    setUsers(currentData.current);
-                }else{
-                    AdminService.searchUsers(searchBox).then(response =>{
-                        if(!response.hasError){
-                            setUsers(response.data);
-                        }else{
-                            setUsers([]);
-                        }
-                    });
-                }
-            }, 500);
+            if (searchBox === "") {
+                setUsers(currentData);
+            } else {
+                AdminService.searchUsers(searchBox).then(response => {
+                    if (!response.hasError) {
+                        setUsers(response.data);
+                    } else {
+                        setUsers([]);
+                    }
+                });
+            }
+        }, 500);
 
         return () => clearTimeout(timeOut);
-    },[searchBox]);
+    }, [searchBox]);
 
     return (
         <>
@@ -117,7 +103,7 @@ const UsersPage = () => {
                         <button onClick={clearInput} className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>
                     </div>
                     <div>
-                        <select onChange={e =>{setSort(e.target.value)}} value={sort}>
+                        <select onChange={e => { setSort(e.target.value) }} value={sort}>
                             <option value="0">Descendente</option>
                             <option value="1">Ascendente</option>
                         </select>
@@ -129,10 +115,27 @@ const UsersPage = () => {
                         loading
                             ? <Spinner loading={loading} />
                             : (
-                                <UsersTable users = {users}/>
+                                <UsersTable users={users} />
                             )
                     }
                 </div>
+                {
+                    !loading
+                    && (
+                        <div className="flex justify-center space-x-4">
+                            {
+                                [...Array(Math.floor(N_TOTAL_ROWS / size)).keys()].map(n =>
+                                    <button
+                                        className={`text-orange-800 ${page == n + 1 ? "font-extrabold bg-orange-400 rounded px-1" : ""}`}
+                                        onClick={() => { setPage(n + 1); console.log(page)}}
+                                    >
+                                        {n + 1}
+                                    </button>
+                                )
+                            }
+                        </div>
+                    )
+                }
             </div>
         </>
     );

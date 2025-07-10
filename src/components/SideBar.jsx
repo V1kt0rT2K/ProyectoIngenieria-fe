@@ -3,12 +3,6 @@ import { useAuth } from "../provider/AuthProvider";
 import { navLinks, linkClass } from "./NavLinks";
 
 const Roles = {
-	ADMINISTRATOR: 1,
-	CASHIER: 2,
-	WAREHOUSE_MANAGER: 3,
-};
-
-const Roles = {
 	ADMINISTRATOR :1,
 	CASHIER: 2,
 	WAREHOUSE_MANAGER: 3,

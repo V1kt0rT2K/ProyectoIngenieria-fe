@@ -1,4 +1,3 @@
-import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
@@ -9,9 +8,7 @@ const UserInfoPage = () => {
   const roleRef = useRef(null);
   const enabledRef = useRef(null);
 
-  const location = useLocation();
-
-  const [values, setValues] = useState(location.state);
+  const [values, setValues] = useState(null);
   const firstValues = { ...location.state };
 
   const [checked, setChecked] = useState(firstValues.enabled);

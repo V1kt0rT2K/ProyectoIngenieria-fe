@@ -4,7 +4,8 @@ const reorder = (obj) => {
     if (!obj["id"]) {
         return obj;
     }
-    const { id: _, ...ordered} = obj;
+
+    const { id: _, ...ordered } = obj;
     ordered["id"] = obj["id"];
     return ordered;
 };

@@ -90,11 +90,11 @@ useEffect(() => {
             case Categories.LOT:
                 setColumnsTable(
                             [
-                                { label: "No. de lote", field: "id" },
-                                { label: "Cerdos restantes", field: "cantidad" },
-                                { label: "Peso estimado", field: "peso" },
-                                { label: "Fecha de Ingreso", field: "fecha" },
-                                { label: "Etapa", field: "etapa" },
+                                { label: "No. de lote", field: "idSwineBatch" },
+                                { label: "Cerdos restantes", field: "swineQuantityRemaining" },
+                                { label: "Peso estimado", field: "estimatedWeight" },
+                                { label: "Fecha de Ingreso", field: "generationDate" },
+                                { label: "Etapa", field: "Stage.stageName" },
                                 ]
                 );
                 setAddNew("new_lot");
@@ -102,8 +102,14 @@ useEffect(() => {
                 
 
 
+                await SwineBatchService.getSwineBatch().then(response =>{
+                    if(!response.hasError && response.data){
+                        console.log(response);
+                        setInventory(response.data);
+                    }
+                });
 
-                inv = await fetchLotesSwine();
+                //await fetchLotesSwine();
 
                 break;
 
@@ -118,7 +124,7 @@ useEffect(() => {
                 break;
         }
 
-        setInventory(inv);
+        //setInventory(inv);
         setTimeout(() => setLoading(false), 1000);
     };
 
@@ -136,15 +142,15 @@ useEffect(() => {
                             onChange={(e) => setCategory(e.target.value)}
                             value={category}
                             >
-    <option value="">Escoja una categoria</option>
-    {
-        categories.map((cat, idx) =>
-            <option key={idx} value={cat}>
-                {cat}
-            </option>
-        )
-    }
-</select>
+                            <option value="">Escoja una categoria</option>
+                            {
+                                categories.map((cat, idx) =>
+                                    <option key={idx} value={cat}>
+                                        {cat}
+                                    </option>
+                                )
+                            }
+                        </select>
 
                         {
                             category
@@ -184,9 +190,10 @@ useEffect(() => {
                                         ) : (
                                             <InventoryTable
                                                 columns={columnsTable}
-                                                data={inventory.filter(item =>
-                                                    !input ? true : (new RegExp(`.*${input}.*`, "i")).test(item.tipo)
-                                                )}
+                                                data = {inventory}
+                                                // data={inventory.filter(item =>
+                                                //     !input ? true : (new RegExp(`.*${input}.*`, "i")).test(item.tipo)
+                                                // )}
                                                 to={toDetails}
                                             />
     )
@@ -197,32 +204,38 @@ useEffect(() => {
         </>
     );
 };
-const fetchLotesSwine = async () => {
-    try {
-        const response = await SwineBatchService.getswinebatch().then;
+// const fetchLotesSwine = async () => {
+//     try {
+//         await SwineBatchService.getSwineBatch().then(response =>{
+//             if(!response.hasError && response.data){
+//                 console.log(response);
+//                 setInventory(response.data);
+//             }
+//         });
 
-        if (!response.hasError && response.data) {
-            const mappedData = await Promise.all(
-                response.data.map(async (item) => {
-                    const stage = await StageService.getStagebyid(item.idStage);
-                    console.log(stage);
-                    return {
-                        id: item.idSwineBatch,
-                        cantidad: item.swineQuantityRemaining,
-                        peso: item.estimatedWeight,
-                        fecha: new Date(item.generationDate).toLocaleDateString(),
-                        etapa: stage?.data.stageName || "Desconocida"
-                    };
-                })
-            );
+//         // if (!response.hasError && response.data) {
+//         //     const mappedData = await Promise.all(
+//         //         response.data.map(async (item) => {
+//         //             const stage = await StageService.getStagebyid(item.idStage);
+//         //             console.log(stage);
+//         //             return {
+//         //                 id: item.idSwineBatch,
+//         //                 cantidad: item.swineQuantityRemaining,
+//         //                 peso: item.estimatedWeight,
+//         //                 fecha: new Date(item.generationDate).toLocaleDateString(),
+//         //                 etapa: stage?.data.stageName || "Desconocida"
+//         //             };
+//         //         })
+//         //     );
 
-            return mappedData;
-        }
-    } catch (error) {
-        console.error("Error al cargar lotes de cerdos", error);
-        return [];
-    }
-};/*
+//         //     return mappedData;
+//         // }
+//     } catch (error) {
+//         console.error("Error al cargar lotes de cerdos", error);
+//         return [];
+//     }
+// };
+/*
 const fetchLotesConcentrado = async () => { 
     try{
 

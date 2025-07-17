@@ -3,7 +3,7 @@ import Configuration from "../../Configuration";
 class SwineBatchService {
     constructor(){}
 
-    static async getswinebatch() {
+    static async getSwineBatch() {
         
         const result = await fetch(`
             ${Configuration.API_BASE_URL}/stock/swinebatch/get/all`, 

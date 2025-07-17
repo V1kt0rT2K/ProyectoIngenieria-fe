@@ -1,6 +1,16 @@
 import InventoryOptions from "./InventoryOptions";
 
 const InventoryTable = ({ columns, data, to }) => {
+
+    console.log(columns,data,to);
+    data.map((row,idx) => {
+        //console.log(row);
+        columns.map((col,jdx) => {
+            //console.log(row.keys());
+            console.log(row[col.field]);
+        })
+    })
+
     return (
         <table className="flex-grow w-full table-auto justify-self-center">
             <thead>
@@ -14,11 +24,13 @@ const InventoryTable = ({ columns, data, to }) => {
                 </tr>
             </thead>
             <tbody>
-                {data.map((row, idx) => (
+                {data.map((row, idx) => ( 
                     <tr key={idx}>
                         {columns.map((col, jdx) => (
                             <td key={jdx} className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                {row[col.field]}
+                                {col.field.includes('.') 
+                                    ? col.field.split('.').reduce((obj, key) => obj?.[key], row)
+                                    : row[col.field]}
                             </td>
                         ))}
                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">

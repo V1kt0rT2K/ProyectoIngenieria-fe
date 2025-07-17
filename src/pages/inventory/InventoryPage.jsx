@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import InventoryTable from "../../components/InventoryTable";
 import Spinner from "../../components/Spinner";
-
+import SwineBatchService from "../../utils/service/SwineBatchService";
+import StageService from "../../utils/service/StageService";
+import FeedBatchService from "../../utils/service/FeedBatchService";
+import SupplyOptionButton from "../../components/SupplyOptionButton";
+import vacunaIcon from "../../assets/images/vacuna.png";
+import concentradoIcon from "../../assets/images/concentrado.png";
 const Categories = {
     MEATS: "Carnes",
     LOT: "Lotes",
@@ -10,7 +15,10 @@ const Categories = {
     TOOLS: "Herramientas"
 };
 
+
+
 const categories = Object.values(Categories);
+let registroCerdos = [];
 
 const inventarioCarnes = [
     {
@@ -43,72 +51,10 @@ const inventarioCarnes = [
     }
 ];
 
-const registroCerdos = [
-    {
-        id: 1,
-        noLote: 101,
-        noCerdo: "1",
-        nacimiento: "2025-01-15",
-        desarrollo: "2025-03-01",
-        salida: "2025-06-20"
-    },
-    {
-        id: 2,
-        noLote: 111,
-        noCerdo: "2",
-        nacimiento: "2025-01-18",
-        desarrollo: "2025-03-05",
-        salida: "2025-06-22"
-    },
-    {
-        id: 3,
-        noLote: 102,
-        noCerdo: "3",
-        nacimiento: "2025-02-01",
-        desarrollo: "2025-03-20",
-        salida: "2025-07-01"
-    },
-    {
-        id: 4,
-        noLote: 103,
-        noCerdo: "4",
-        nacimiento: "2025-02-15",
-        desarrollo: "2025-04-01",
-        salida: "2025-07-15"
-    },
-    {
-        id: 5,
-        noLote: 112,
-        noCerdo: "1",
-        nacimiento: "2025-01-15",
-        desarrollo: "2025-03-01",
-        salida: "2025-06-20"
-    },
-    {
-        id: 6,
-        noLote: 121,
-        noCerdo: "2",
-        nacimiento: "2025-01-18",
-        desarrollo: "2025-03-05",
-        salida: "2025-06-22"
-    },
-    {
-        id: 7,
-        noLote: 132,
-        noCerdo: "3",
-        nacimiento: "2025-02-01",
-        desarrollo: "2025-03-20",
-        salida: "2025-07-01"
-    },
-    {
-        id: 8,
-        noLote: 143,
-        noCerdo: "4",
-        nacimiento: "2025-02-15",
-        desarrollo: "2025-04-01",
-        salida: "2025-07-15"
-    }
-];
+
+
+
+console.log(registroCerdos);
 
 const InventoryPage = () => {
     const inputRef = useRef(null);
@@ -117,64 +63,89 @@ const InventoryPage = () => {
     const [loading, setLoading] = useState(false);
 
     const [category, setCategory] = useState("");
+   // const [subCategory, setSubCategory] = useState(null);
+
     const [addNew, setAddNew] = useState(null);
     const [toDetails, setToDetails] = useState(null);
 
     const [inventory, setInventory] = useState([]);
     const [columnsTable, setColumnsTable] = useState([]);
 
-    useEffect(() => {
+useEffect(() => {
+    const fetchData = async () => {
         setLoading(true);
         let inv = [];
 
         switch (category) {
             case Categories.MEATS:
-                setColumnsTable(["Tipo de carne", "Cantidad (en libras)", "Fecha de ingreso", "Precio por libra"]);
+                setColumnsTable([{label:"Tipo",field:"tipo"},
+                        {label:"cantidad en Libras",field:"cantidadLibras"},
+                        {label:"Fecha de ingreso",field:"fechaIngreso"},
+                        {label:"Precio por Libra", field:"precioPorLibra"}]);
                 setAddNew("new_meat_type");
                 setToDetails("meat_type_information");
                 inv = inventarioCarnes;
                 break;
+
             case Categories.LOT:
-                setColumnsTable(["No. de lote", "No. de cerdo", "Nacimiento", "Desarrollo", "Salida"]);
+                setColumnsTable(
+                            [
+                                { label: "No. de lote", field: "id" },
+                                { label: "Cerdos restantes", field: "cantidad" },
+                                { label: "Peso estimado", field: "peso" },
+                                { label: "Fecha de Ingreso", field: "fecha" },
+                                { label: "Etapa", field: "etapa" },
+                                ]
+                );
                 setAddNew("new_lot");
-                setToDetails("lot_information");
-                inv = registroCerdos;
+                setToDetails("new_lot_information");  
+                
+
+
+
+                inv = await fetchLotesSwine();
+
                 break;
+
             case Categories.SUPPLIES:
-                setCategory(null);
-                setAddNew("new_supply");
+                setAddNew(null);
                 setToDetails(null);
                 break;
+
             case Categories.TOOLS:
-                setCategory(null);
                 setAddNew("new_tool");
                 setToDetails(null);
                 break;
-        };
+        }
 
         setInventory(inv);
-
         setTimeout(() => setLoading(false), 1000);
-    }, [category]);
+    };
+
+    fetchData();
+}, [category]);
+
 
     return (
         <>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start mb-6">
                     <div className="flex w-full space-x-24 h-8 justify-between">
-                        <select className="py-1 px-3 bg-orange-200 rounded text-leading text-orange-700 border border-orange-700 hover:cursor-pointer">
-                            <option key={0} onClick={() => { setCategory(null); setAddNew(null); }}>Escoja una categoria</option>
-                            {
-                                categories.map((cat, idx) =>
-                                    <option
-                                        key={idx}
-                                        onClick={() => setCategory(cat)}
-                                    >
-                                        {cat}
-                                    </option>
-                                )
-                            }
-                        </select>
+                        <select
+                            className="py-1 px-3 bg-orange-200 rounded text-leading text-orange-700 border border-orange-700 hover:cursor-pointer"
+                            onChange={(e) => setCategory(e.target.value)}
+                            value={category}
+                            >
+    <option value="">Escoja una categoria</option>
+    {
+        categories.map((cat, idx) =>
+            <option key={idx} value={cat}>
+                {cat}
+            </option>
+        )
+    }
+</select>
+
                         {
                             category
                             && !loading
@@ -191,19 +162,87 @@ const InventoryPage = () => {
                     {
                         !category
                             ? <div style={{ height: "55vh" }} className="w-full flex justify-center items-center font-extrabold text-3xl text-orange-700">Escoja una categoria para obtener registros</div>
-                            : (loading
-                                ? <Spinner loading={loading} />
-                                : <InventoryTable
-                                    columns={columnsTable}
-                                    data={inventory.filter(item => !input ? true : (new RegExp(`.*${input}.*`, "i")).test(item.tipo))}
-                                    to={toDetails}
-                                />
-                            )
+                            :  (loading ? (
+                                <Spinner loading={loading} />
+                                ) : (
+                                        category === Categories.SUPPLIES ? (
+                                            <div className="w-full flex flex-col justify-center items-center space-y-6 p-4">
+                                                <SupplyOptionButton
+                                                    icon={concentradoIcon}
+                                                    label="Lotes de Concentrado"
+                                                            onClick={() => {
+                                                            //setSubCategory("Concentrado");
+                                                            //fetchLotesConcentrado();
+                                                            }}
+                                                />
+                                                <SupplyOptionButton
+                                                    icon={vacunaIcon}
+                                                    label="Lotes de Vacunas"
+                                                    onClick={() => console.log("Ir a Lotes de Vacunas")}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <InventoryTable
+                                                columns={columnsTable}
+                                                data={inventory.filter(item =>
+                                                    !input ? true : (new RegExp(`.*${input}.*`, "i")).test(item.tipo)
+                                                )}
+                                                to={toDetails}
+                                            />
+    )
+))
                     }
                 </div>
             </div>
         </>
     );
 };
+const fetchLotesSwine = async () => {
+    try {
+        const response = await SwineBatchService.getswinebatch().then;
+
+        if (!response.hasError && response.data) {
+            const mappedData = await Promise.all(
+                response.data.map(async (item) => {
+                    const stage = await StageService.getStagebyid(item.idStage);
+                    console.log(stage);
+                    return {
+                        id: item.idSwineBatch,
+                        cantidad: item.swineQuantityRemaining,
+                        peso: item.estimatedWeight,
+                        fecha: new Date(item.generationDate).toLocaleDateString(),
+                        etapa: stage?.data.stageName || "Desconocida"
+                    };
+                })
+            );
+
+            return mappedData;
+        }
+    } catch (error) {
+        console.error("Error al cargar lotes de cerdos", error);
+        return [];
+    }
+};/*
+const fetchLotesConcentrado = async () => { 
+    try{
+
+        const response = await FeedBatchService.getAllFeedBacth();
+
+        if (!response.hasError && response.data) {
+            return response.data.map(item => ({
+                id: item.idFeedBatch,
+                tipo: item.idFeed,
+                cantidad: item.quantity,
+                fecha: new Date(item.generationDate).toLocaleDateString(),
+                
+            }));
+        }
+
+    }catch (error) {
+        console.error("Error al cargar lotes de concentrado", error);
+        return [];}
+
+}*/
+
 
 export default InventoryPage;

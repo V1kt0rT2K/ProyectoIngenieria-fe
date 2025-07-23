@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
-import DropDown from "../../components/DropDown";
+import ProviderOptions from "../../components/ProviderOptions";
 
 const proveedores = [
     { id: 1, name: "Proveedor A", contact: "Juan Pérez", category: "Carnes", product: "Carne de res" },
@@ -73,7 +73,7 @@ const ProvidersPage = () => {
                                                             {prov.product}
                                                         </td>                                                        
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <DropDown />
+                                                            <ProviderOptions id={prov.id} />
                                                         </td>
                                                     </tr>
                                                 )

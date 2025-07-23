@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BackButton from "../../components/BackButton";
 import ArrayUtils from "../../utils/ArrayUtils";
+import Configuration from "../../Configuration";
 
 const cuts = [
     {
@@ -101,16 +102,19 @@ const NewSalePage = () => {
                 <div className="rounded overflow-y-auto p-0">
                     <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">
                         <div className="flex flex-col flex-grow space-y-4">
+                            <p className="text-orange-700 underline font-semibold">RTN: { Configuration.RTN_NUMBER }</p>
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Numero de identidad del cliente</p>
                                 <input className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" />
                             </div>
                         </div>
-                        <div className="bg-orange-100 flex flex-col flex-grow space-y-2 py-2 justify-center rounded pl-2">
-                            <p className="ml-4 mb-1 text-lg text-orange-800 font-semibold underline"></p>
-                            <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
-                                <p>Fecha de creacion</p>
-                                <input className="bg-orange-200 rounded px-3 py-2" type="date" defaultValue={new Date().toISOString().split("T")[0]} />
+                        <div className="flex-grow space-y-4 justify-center rounded pl-2">
+                            <p className="text-orange-700 underline font-semibold">CAI: {666}</p>
+                            <div className="bg-orange-100 py-2 flex flex-col ">
+                                <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
+                                    <p>Fecha de creacion</p>
+                                    <input className="bg-orange-200 rounded px-3 py-2" type="date" defaultValue={new Date().toISOString().split("T")[0]} />
+                                </div>
                             </div>
                         </div>
                     </div>

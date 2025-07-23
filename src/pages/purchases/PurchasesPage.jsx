@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 import PurchaseOptions from "../../components/PurchaseOptions";
 
@@ -36,8 +36,6 @@ const datosPrueba = [
 
 
 const PurchasesPage = () => {
-    const inputRef = useRef(null);
-
     const [loading, setLoading] = useState(true);
     const [ordenesCompra, setOrdenesCompra] = useState([]);
 
@@ -53,7 +51,7 @@ const PurchasesPage = () => {
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
-                        <select ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md">
+                        <select className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md">
                             <option onClick={() => setFilterBy(null)}>
                                 {filterBy ? "Mostrar todas" : "Filtrar compras"}
                             </option>

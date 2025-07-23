@@ -24,6 +24,8 @@ import ProvidersPage from "../pages/providers/ProvidersPage";
 import SalesPage from "../pages/sales/SalesPage";
 import NewSalePage from "../pages/sales/NewSalePage";
 
+import ClientsPage from "../pages/clients/ClientsPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const Routes = () => {
@@ -76,7 +78,7 @@ const Routes = () => {
                     </Route>
 
                     <Route path="clients" element={<MainLayout title="Clientes" />} >
-                        <Route index element={<HomePage />} />
+                        <Route index element={<ClientsPage />} />
                     </Route>
                 </Route>
 

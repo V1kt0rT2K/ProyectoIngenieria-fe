@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PublicService from "../utils/service/PublicService";
 import AuthService from "../utils/service/AuthService";
+import { SHA256 } from 'crypto-js';
 
 const RegisterForm = () => {
     const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
@@ -42,6 +43,11 @@ const RegisterForm = () => {
 
         setErrorMsg({ state: false, msg: null });
         setSendingRequest(true);
+
+        const password = SHA256(obj.password).toString();
+        console.log(password);
+        obj.password = password;
+        console.log(obj);
 
         const payload = {
             ...obj,
@@ -93,9 +99,6 @@ const RegisterForm = () => {
 
                         <label className="mb-2 text-lg font-semibold">Contraseña</label>
                         <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Contraseña" name="password" type="password" />
-
-                        <label className="mb-2 text-lg font-semibold">Cargo</label>
-                        <input className="focus:outline-none  mb-6 px-2 py-1 border border-gray-400 rounded" placeholder="Cargo" name="job" type="text" />
 
                         <label className="mb-2 text-lg font-semibold">Rol de usuario</label>
                         <select ref={roleRef} className="border border-gray-400 focus:outline-none bg-white mb-6 px-2 py-1 rounded" name="role">

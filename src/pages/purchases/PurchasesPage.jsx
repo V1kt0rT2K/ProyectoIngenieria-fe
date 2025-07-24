@@ -51,15 +51,15 @@ const PurchasesPage = () => {
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
-                        <select className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md">
-                            <option onClick={() => setFilterBy(null)}>
+                        <select onChange={(e) => setFilterBy(e.target.value)} className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md">
+                            <option value={null}>
                                 {filterBy ? "Mostrar todas" : "Filtrar compras"}
                             </option>
                             {
                                 filters.map((filter, idx) =>
                                     <option
+                                        value={filter}
                                         key={idx}
-                                        onClick={() => setFilterBy(filter)}
                                     >
                                         {filter}
                                     </option>

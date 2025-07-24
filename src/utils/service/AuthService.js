@@ -14,7 +14,13 @@ class AuthService {
             body: JSON.stringify(payload)
         });
 
-        return await result.json();
+        const responseData = await result.json();
+        const responseHeaders = Object.fromEntries(result.headers.entries());
+        
+        return {
+            ...responseData,
+            headers: responseHeaders
+        };
     }
 
     static async registerUser(payload) {

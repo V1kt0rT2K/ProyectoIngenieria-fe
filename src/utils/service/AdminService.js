@@ -11,7 +11,8 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             }
         });
 
@@ -26,7 +27,8 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             }
         });
 
@@ -41,7 +43,8 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             }
         });
 
@@ -56,7 +59,8 @@ class AdminService {
             method: "PUT",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             },
             body: JSON.stringify(payload)
         });
@@ -72,22 +76,24 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             }
         });
 
         return await result.json();
     }
 
-    static async getStatus() {
+    static async getStatusByIdType(idStatusType) {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/asset/status/get/all`, 
+            ${Configuration.API_BASE_URL}/asset/status/get/type/${idStatusType}`, 
         {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             }
         });
 

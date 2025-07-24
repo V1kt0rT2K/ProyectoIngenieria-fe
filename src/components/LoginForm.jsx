@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import Spinner from "./Spinner";
 import { useAuth } from "../provider/AuthProvider";
 import AuthService from "../utils/service/AuthService";
+import { SHA256 } from 'crypto-js';
 
 const LoginForm = () => {
     const { setSession } = useAuth();
@@ -27,12 +28,17 @@ const LoginForm = () => {
             obj[key] = val;
         }
 
+        const password = SHA256(obj.password).toString();
+        console.log(password);
+        obj.password = password;
+        console.log(obj);
+
         setErrorMsg({ state: false, msg: null });
         setValidating(true);
 
         AuthService.loginUser(obj).then((response) => {
             setValidating(false);
-            console.log(response);
+            console.log("repsonse consumido",response);
             if (!response.hasError) {
                 setSession(JSON.stringify({
                     idUser: response.data.idUser,
@@ -40,6 +46,13 @@ const LoginForm = () => {
                     emailUser: response.data.email,
                     token: "test"
                 }));
+
+                console.log(response.headers);
+
+                //return;
+                
+
+                localStorage.setItem("jwt", response.headers.authorization);
 
                 navigate("/home", { replace: true });
                 return;

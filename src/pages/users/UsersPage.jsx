@@ -55,30 +55,20 @@ const UsersPage = () => {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentData, setCurrentData] = useState([]);
+    //const [currentData, setCurrentData] = useState([]);
+    const currentData = useRef([]); 
+
 
     const clearInput = () => {
         setInput("");
         inputRef.current.value = "";
     }
 
-    useEffect(() => {
-        setLoading(true);
-        AdminService.getAllUsers(page, size, sort).then(response => {
-            setUsers([]);
-
-            if (!response.hasError) {
-                setUsers(response.data.data);
-                setCurrentData(response.data.data);
-            }
-            setLoading(false);
-        });
-    }, [page, size, sort]);
 
     useEffect(() => {
         const timeOut = setTimeout(() => {
             if (searchBox === "") {
-                setUsers(currentData);
+                setUsers(currentData.current);
             } else {
                 AdminService.searchUsers(searchBox).then(response => {
                     if (!response.hasError) {
@@ -92,6 +82,21 @@ const UsersPage = () => {
 
         return () => clearTimeout(timeOut);
     }, [searchBox]);
+
+    useEffect(() => {
+        setLoading(true);
+        AdminService.getAllUsers(page, size, sort).then(response => {
+            setUsers([]);
+
+            if (!response.hasError) {
+                setUsers(response.data.data);
+                //setCurrentData(response.data.data);
+                currentData.current = response.data.data;
+            }
+            setLoading(false);
+        });
+
+    }, [page, size, sort]);
 
     return (
         <>

@@ -55,7 +55,7 @@ const UsersRequestsPage = () => {
     const [size, setSize] = useState("15");
 
     useEffect(() => {
-        AdminService.getStatus().then(response =>{
+        AdminService.getStatusByIdType(1).then(response =>{
             console.log("response",response);
             if(!response.hasError){
                 setStatus(response.data);

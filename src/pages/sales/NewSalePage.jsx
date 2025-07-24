@@ -2,79 +2,81 @@ import { useEffect, useState } from "react";
 import BackButton from "../../components/BackButton";
 import ArrayUtils from "../../utils/ArrayUtils";
 import Configuration from "../../Configuration";
+import SellerService from "../../utils/service/SellerService";
 
-const cuts = [
-    {
-        idSwineCutType: 1,
-        swineCutTypeName: "Cabeza",
-        description: "Incluye orejas, morro, cachetes y cabeza completa para caldos o barbacoa",
-        unitPrice: 35.00
-    },
-    {
-        idSwineCutType: 2,
-        swineCutTypeName: "Lomo",
-        description: "Corte magro y tierno, ideal para chuletas, filetes o asar entero",
-        unitPrice: 85.00
-    },
-    {
-        idSwineCutType: 3,
-        swineCutTypeName: "Costilla",
-        description: "Incluye las costillas (chuletas) con hueso, para parrilla o ahumados",
-        unitPrice: 75.00
-    },
-    {
-        idSwineCutType: 4,
-        swineCutTypeName: "Pierna",
-        description: "También llamada jamón, usado para asar, curar o hacer jamones serranos",
-        unitPrice: 65.00
-    },
-    {
-        idSwineCutType: 5,
-        swineCutTypeName: "Paleta",
-        description: "Parte delantera similar al jamón pero con más grasa intramuscular",
-        unitPrice: 55.00
-    },
-    {
-        idSwineCutType: 6,
-        swineCutTypeName: "Panceta",
-        description: "También llamado tocino o bacon (curado), parte ventral del cerdo",
-        unitPrice: 60.00
-    },
-    {
-        idSwineCutType: 7,
-        swineCutTypeName: "Chuletón",
-        description: "Corte premium del lomo alto con hueso",
-        unitPrice: 95.00
-    },
-    {
-        idSwineCutType: 8,
-        swineCutTypeName: "Solomillo",
-        description: "Corte más tierno y valioso, pequeño y magro",
-        unitPrice: 100.00
-    },
-    {
-        idSwineCutType: 9,
-        swineCutTypeName: "Espaldilla",
-        description: "Corte económico de la parte superior delantera",
-        unitPrice: 45.00
-    },
-    {
-        idSwineCutType: 10,
-        swineCutTypeName: "Rabo",
-        description: "Usado principalmente para guisos y caldos",
-        unitPrice: 40.00
-    },
-    {
-        idSwineCutType: 11,
-        swineCutTypeName: "Chicharrón",
-        description: "Piel de cerdo frita o asada",
-        unitPrice: 50.00
-    }
-];
+// const cuts = [
+//     {
+//         idSwineCutType: 1,
+//         swineCutTypeName: "Cabeza",
+//         description: "Incluye orejas, morro, cachetes y cabeza completa para caldos o barbacoa",
+//         unitPrice: 35.00
+//     },
+//     {
+//         idSwineCutType: 2,
+//         swineCutTypeName: "Lomo",
+//         description: "Corte magro y tierno, ideal para chuletas, filetes o asar entero",
+//         unitPrice: 85.00
+//     },
+//     {
+//         idSwineCutType: 3,
+//         swineCutTypeName: "Costilla",
+//         description: "Incluye las costillas (chuletas) con hueso, para parrilla o ahumados",
+//         unitPrice: 75.00
+//     },
+//     {
+//         idSwineCutType: 4,
+//         swineCutTypeName: "Pierna",
+//         description: "También llamada jamón, usado para asar, curar o hacer jamones serranos",
+//         unitPrice: 65.00
+//     },
+//     {
+//         idSwineCutType: 5,
+//         swineCutTypeName: "Paleta",
+//         description: "Parte delantera similar al jamón pero con más grasa intramuscular",
+//         unitPrice: 55.00
+//     },
+//     {
+//         idSwineCutType: 6,
+//         swineCutTypeName: "Panceta",
+//         description: "También llamado tocino o bacon (curado), parte ventral del cerdo",
+//         unitPrice: 60.00
+//     },
+//     {
+//         idSwineCutType: 7,
+//         swineCutTypeName: "Chuletón",
+//         description: "Corte premium del lomo alto con hueso",
+//         unitPrice: 95.00
+//     },
+//     {
+//         idSwineCutType: 8,
+//         swineCutTypeName: "Solomillo",
+//         description: "Corte más tierno y valioso, pequeño y magro",
+//         unitPrice: 100.00
+//     },
+//     {
+//         idSwineCutType: 9,
+//         swineCutTypeName: "Espaldilla",
+//         description: "Corte económico de la parte superior delantera",
+//         unitPrice: 45.00
+//     },
+//     {
+//         idSwineCutType: 10,
+//         swineCutTypeName: "Rabo",
+//         description: "Usado principalmente para guisos y caldos",
+//         unitPrice: 40.00
+//     },
+//     {
+//         idSwineCutType: 11,
+//         swineCutTypeName: "Chicharrón",
+//         description: "Piel de cerdo frita o asada",
+//         unitPrice: 50.00
+//     }
+// ];
 
 const setCheckProductType = (products, idx, cutType, swineCuts) => {
-    const cut = swineCuts.find(c => c.idSwineCutType === cutType);
-    products[idx] = { ...products[idx], ...cut, quantity: 1, total: cut.unitPrice };
+    const cut = swineCuts.find(c => c.idProduct === cutType);
+    console.log(products, idx, cutType, swineCuts);
+    products[idx] = { ...products[idx], ...cut, quantity: 1, total: cut.price };
     return products;
 };
 
@@ -89,10 +91,22 @@ const NewSalePage = () => {
     const [checkProducts, setCheckProducts] = useState([]);
     const [total, setTotal] = useState(0);
 
+    // useEffect(() => {
+    //     setSwineCuts(cuts);
+    //     setTotal(ArrayUtils.sum(checkProducts.map(product => product.idSwineCutType ? product.total : 0)));
+    // }, [checkProducts]);
+
+
     useEffect(() => {
-        setSwineCuts(cuts);
-        setTotal(ArrayUtils.sum(checkProducts.map(product => product.idSwineCutType ? product.total : 0)));
-    }, [checkProducts]);
+        SellerService.getAllProducts().then(response => {
+            console.log(response);
+            if (!response.hasError) {
+                setSwineCuts(response.data);
+                setTotal(response.data.length);
+            }
+
+        });
+    }, [])
 
     return (
         <>
@@ -102,7 +116,7 @@ const NewSalePage = () => {
                 <div className="rounded overflow-y-auto p-0">
                     <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">
                         <div className="flex flex-col flex-grow space-y-4">
-                            <p className="text-orange-700 underline font-semibold">RTN: { Configuration.RTN_NUMBER }</p>
+                            <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p>
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Numero de identidad del cliente</p>
                                 <input className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" />
@@ -136,31 +150,52 @@ const NewSalePage = () => {
                                         .map((product, idx) =>
                                             <tr key={idx}>
                                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                    <select className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700">
-                                                        <option
-                                                            key={0}
-                                                            onClick={() => setCheckProducts(setCheckProductType(checkProducts, idx, undefined).concat())}
-                                                        >
-                                                            Producto
-                                                        </option>
+                                                    <select
+                                                        className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700"
+                                                        value={product.idProduct || 0}
+                                                        onChange={(e) => {
+                                                            const selectedId = parseInt(e.target.value);
+                                                            setCheckProducts(setCheckProductType(checkProducts, idx, selectedId, swineCuts).concat());
+                                                        }}
+                                                    >
+                                                        <option key={0} value={0}>Producto</option>
                                                         {
-                                                            cuts
-                                                                .map(cut =>
-                                                                    <option
-                                                                        className=""
-                                                                        key={cut.idSwineCutType}
-                                                                        onClick={() => setCheckProducts(setCheckProductType(checkProducts, idx, cut.idSwineCutType, swineCuts).concat())}
-                                                                    >
-                                                                        {cut.swineCutTypeName}
-                                                                    </option>)
+                                                            swineCuts.map(cut =>
+                                                                <option
+                                                                    key={cut.idProduct}
+                                                                    value={cut.idProduct}
+                                                                >
+                                                                    {cut.productName}
+                                                                </option>)
                                                         }
                                                     </select>
+                                                    {/* <select className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700">
+                                                            <option
+                                                                key={0}
+                                                                onClick={() => setCheckProducts(setCheckProductType(checkProducts, idx, undefined).concat())}
+                                                            >
+                                                                Producto
+                                                            </option>
+                                                            {
+                                                                swineCuts
+                                                                    .map(cut =>
+                                                                        <option
+                                                                            className=""
+                                                                            key={cut.idProduct}
+                                                                            onClick={() => {
+                                                                                setCheckProducts(setCheckProductType(checkProducts, idx, cut.idProduct, swineCuts).concat())
+                                                                            }}
+                                                                        >
+                                                                            {cut.productName}
+                                                                        </option>)
+                                                            }
+                                                        </select> */}
                                                 </td>
-                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idSwineCutType ? product.description : ""}</td>
-                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idSwineCutType ? product.unitPrice : ""}</td>
+                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idProduct ? product.productDescription : ""}</td>
+                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idProduct ? product.price : ""}</td>
                                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                     {
-                                                        product.idSwineCutType
+                                                        product.idProduct
                                                             ? <input
                                                                 className="bg-orange-300 py-1 px-2 rounded w-16 text-orange-700 font-extrabold focus:outline-none"
                                                                 defaultValue={product.quantity}
@@ -171,7 +206,7 @@ const NewSalePage = () => {
                                                             : ""
                                                     }
                                                 </td>
-                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idSwineCutType ? product.total : ""}</td>
+                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idProduct ? product.total : ""}</td>
                                             </tr>
                                         )
                                 }

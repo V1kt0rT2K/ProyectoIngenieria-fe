@@ -19,7 +19,7 @@ const Categories = {
 
 const categories = Object.values(Categories);
 let registroCerdos = [];
-
+/*
 const inventarioCarnes = [
     {
         id: 1,
@@ -50,7 +50,7 @@ const inventarioCarnes = [
         precioPorLibra: 6.40
     }
 ];
-
+*/
 
 
 
@@ -58,7 +58,7 @@ console.log(registroCerdos);
 
 const InventoryPage = () => {
     const inputRef = useRef(null);
-    const [input, setInput] = useState(null);
+    //const [input, setInput] = useState(null);
 
     const [loading, setLoading] = useState(false);
 
@@ -74,44 +74,39 @@ const InventoryPage = () => {
 useEffect(() => {
     const fetchData = async () => {
         setLoading(true);
-        let inv = [];
+        //let inv = [];
 
         switch (category) {
             case Categories.MEATS:
                 setColumnsTable([{label:"Tipo",field:"tipo"},
-                        {label:"cantidad en Libras",field:"cantidadLibras"},
+                        {label:"cantidad en Libras",field:"cantidad"},
                         {label:"Fecha de ingreso",field:"fechaIngreso"},
                         {label:"Precio por Libra", field:"precioPorLibra"}]);
                 setAddNew("new_meat_type");
                 setToDetails("meat_type_information");
-                inv = inventarioCarnes;
+                //inv = inventarioCarnes;
                 break;
 
             case Categories.LOT:
-                setColumnsTable(
+                { setColumnsTable(
                             [
-                                { label: "No. de lote", field: "idSwineBatch" },
-                                { label: "Cerdos restantes", field: "swineQuantityRemaining" },
-                                { label: "Peso estimado", field: "estimatedWeight" },
-                                { label: "Fecha de Ingreso", field: "generationDate" },
-                                { label: "Etapa", field: "Stage.stageName" },
+                                { label: "No. de lote", field: "id" },
+                                { label: "Cerdos restantes", field: "cantidad" },
+                                { label: "Peso estimado", field: "peso" },
+                                { label: "Fecha de Ingreso", field: "fecha"},
+                                { label: "Etapa", field: "etapa" },
                                 ]
                 );
                 setAddNew("new_lot");
                 setToDetails("new_lot_information");  
                 
 
+                const swineBatchData = await fetchSwineBatch();
+                setInventory(swineBatchData);
+            
+                
 
-                await SwineBatchService.getSwineBatch().then(response =>{
-                    if(!response.hasError && response.data){
-                        console.log(response);
-                        setInventory(response.data);
-                    }
-                });
-
-                //await fetchLotesSwine();
-
-                break;
+                break; }
 
             case Categories.SUPPLIES:
                 setAddNew(null);
@@ -204,37 +199,25 @@ useEffect(() => {
         </>
     );
 };
-// const fetchLotesSwine = async () => {
-//     try {
-//         await SwineBatchService.getSwineBatch().then(response =>{
-//             if(!response.hasError && response.data){
-//                 console.log(response);
-//                 setInventory(response.data);
-//             }
-//         });
 
-//         // if (!response.hasError && response.data) {
-//         //     const mappedData = await Promise.all(
-//         //         response.data.map(async (item) => {
-//         //             const stage = await StageService.getStagebyid(item.idStage);
-//         //             console.log(stage);
-//         //             return {
-//         //                 id: item.idSwineBatch,
-//         //                 cantidad: item.swineQuantityRemaining,
-//         //                 peso: item.estimatedWeight,
-//         //                 fecha: new Date(item.generationDate).toLocaleDateString(),
-//         //                 etapa: stage?.data.stageName || "Desconocida"
-//         //             };
-//         //         })
-//         //     );
-
-//         //     return mappedData;
-//         // }
-//     } catch (error) {
-//         console.error("Error al cargar lotes de cerdos", error);
-//         return [];
-//     }
-// };
+const fetchSwineBatch = async () => {
+    try {
+        const response = await SwineBatchService.getSwineBatch();
+        
+        if (!response.hasError && response.data) {
+            return response.data.map(item => ({
+                id: item.idSwineBatch,
+                cantidad: item.stockQuantity,   
+                peso: item.estimatedWeight +" lb",
+                fecha: new Date(item.generationDate).toLocaleDateString(),
+                etapa: item.Stage.stageName || "Desconocida"
+            }));
+        }
+    } catch (error) {
+        console.error("Error al cargar lotes de cerdos", error);
+        return []; 
+    }
+};
 /*
 const fetchLotesConcentrado = async () => { 
     try{

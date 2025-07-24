@@ -82,7 +82,9 @@ const setCheckProductType = (products, idx, cutType, swineCuts) => {
 
 const setCheckProductTotal = (products, idx, quantity) => {
     const product = products[idx];
-    products[idx] = { ...product, quantity: quantity, total: quantity * product.unitPrice };
+    console.log()
+
+    products[idx] = { ...product, quantity: quantity, total: quantity * product.price };
     return products;
 };
 
@@ -91,10 +93,10 @@ const NewSalePage = () => {
     const [checkProducts, setCheckProducts] = useState([]);
     const [total, setTotal] = useState(0);
 
-    // useEffect(() => {
-    //     setSwineCuts(cuts);
-    //     setTotal(ArrayUtils.sum(checkProducts.map(product => product.idSwineCutType ? product.total : 0)));
-    // }, [checkProducts]);
+    useEffect(() => {
+        //setSwineCuts(cuts);
+        setTotal(ArrayUtils.sum(checkProducts.map(product => product.idProduct ? product.total : 0)));
+    }, [checkProducts]);
 
 
     useEffect(() => {
@@ -201,7 +203,7 @@ const NewSalePage = () => {
                                                                 defaultValue={product.quantity}
                                                                 type="number"
                                                                 min="1"
-                                                                onChange={(e) => setCheckProducts(setCheckProductTotal(checkProducts, idx, parseInt(e.target.value)).concat())}
+                                                                onChange={(e) => setCheckProducts(setCheckProductTotal(checkProducts, idx, parseFloat(e.target.value)).concat())}
                                                             />
                                                             : ""
                                                     }

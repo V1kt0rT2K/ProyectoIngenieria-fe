@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import InventoryTable from "../../components/InventoryTable";
 import Spinner from "../../components/Spinner";
 import SwineBatchService from "../../utils/service/SwineBatchService";
-import StageService from "../../utils/service/StageService";
-import FeedBatchService from "../../utils/service/FeedBatchService";
+import SupplyBatchService from "../../utils/service/SupplyBatchService";
 import SupplyOptionButton from "../../components/SupplyOptionButton";
 import vacunaIcon from "../../assets/images/vacuna.png";
 import concentradoIcon from "../../assets/images/concentrado.png";
+import granjeroicon from "../../assets/images/granjero.png";
 const Categories = {
     MEATS: "Carnes",
     LOT: "Lotes",
@@ -63,7 +63,7 @@ const InventoryPage = () => {
     const [loading, setLoading] = useState(false);
 
     const [category, setCategory] = useState("");
-   // const [subCategory, setSubCategory] = useState(null);
+    const [subCategory, setSubCategory] = useState("");
 
     const [addNew, setAddNew] = useState(null);
     const [toDetails, setToDetails] = useState(null);
@@ -91,8 +91,8 @@ useEffect(() => {
                 { setColumnsTable(
                             [
                                 { label: "No. de lote", field: "id" },
-                                { label: "Cerdos restantes", field: "cantidad" },
-                                { label: "Peso estimado", field: "peso" },
+                                { label: "Cantidad de Cerdos", field: "Cantidad" },
+                                { label: "Cerdos No Procesados", field: "CantidadRestante" },
                                 { label: "Fecha de Ingreso", field: "fecha"},
                                 { label: "Etapa", field: "etapa" },
                                 ]
@@ -107,12 +107,59 @@ useEffect(() => {
                 
 
                 break; }
-
+                
             case Categories.SUPPLIES:
-                setAddNew(null);
-                setToDetails(null);
-                break;
+                        setAddNew("new_supply");
+                        setToDetails('new_supply_information');
+                if( subCategory=="todos"){
 
+                    setColumnsTable([
+                            { label: "ID Lote", field: "id" },
+                            { label: "Insumo", field: "insumo" },
+                            { label: "Tipo de Insumo", field: "tipo" },
+                            { label: "Cantidad", field: "cantidad" },
+                            { label: "Fecha de Vencimiento", field: "fecha" },
+                        ]);
+                        const supplyBatchData = await fetchSupplyBatch();
+                        console.log(supplyBatchData);
+                        
+                        setInventory(supplyBatchData); 
+
+                }
+                if(subCategory=="concentrado"){
+                    setColumnsTable([ 
+                            { label: "ID Lote", field: "id" },
+                            { label: "Insumo", field: "insumo" },
+                            { label: "Tipo de Insumo", field: "tipo" },
+                            { label: "Cantidad", field: "cantidad" },
+                            { label: "Fecha de Vencimiento", field: "fecha" },
+                    ]);
+                    const supplyBatchTypeData = await fetchSupplyBatchByType(3); 
+                    setInventory(supplyBatchTypeData);
+                }
+                if(subCategory=="desparasitantes"){
+                    setColumnsTable([ 
+                            { label: "ID Lote", field: "id" },
+                            { label: "Insumo", field: "insumo" },
+                            { label: "Tipo de Insumo", field: "tipo" },
+                            { label: "Cantidad", field: "cantidad" },
+                            { label: "Fecha de Vencimiento", field: "fecha" },
+                    ]);
+                    const supplyBatchTypeData = await fetchSupplyBatchByType(1); 
+                    setInventory(supplyBatchTypeData);
+                }
+                if(subCategory=="vitaminas"){
+                    setColumnsTable([{ label: "ID Lote", field: "id" },
+                            { label: "Insumo", field: "insumo" },
+                            { label: "Tipo de Insumo", field: "tipo" },
+                            { label: "Cantidad", field: "cantidad" },
+                            { label: "Fecha de Vencimiento", field: "fecha" },
+                    ]);
+                    const supplyBatchTypeData = await fetchSupplyBatchByType(2);
+                    setInventory(supplyBatchTypeData);}
+                    
+                break;
+            
             case Categories.TOOLS:
                 setAddNew("new_tool");
                 setToDetails(null);
@@ -124,7 +171,7 @@ useEffect(() => {
     };
 
     fetchData();
-}, [category]);
+}, [category,subCategory]);
 
 
     return (
@@ -142,6 +189,7 @@ useEffect(() => {
                                 categories.map((cat, idx) =>
                                     <option key={idx} value={cat}>
                                         {cat}
+                                        
                                     </option>
                                 )
                             }
@@ -152,7 +200,7 @@ useEffect(() => {
                             && !loading
                             && (
                                 <>
-                                    {category != Categories.LOT && <input ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar" />}
+                                    {category != Categories.LOT && <input ref={inputRef}  className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar" />}
                                     <Link to={`/inventory/${addNew}`} className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
                                 </>
                             )
@@ -164,35 +212,78 @@ useEffect(() => {
                         !category
                             ? <div style={{ height: "55vh" }} className="w-full flex justify-center items-center font-extrabold text-3xl text-orange-700">Escoja una categoria para obtener registros</div>
                             :  (loading ? (
-                                <Spinner loading={loading} />
-                                ) : (
-                                        category === Categories.SUPPLIES ? (
-                                            <div className="w-full flex flex-col justify-center items-center space-y-6 p-4">
-                                                <SupplyOptionButton
-                                                    icon={concentradoIcon}
-                                                    label="Lotes de Concentrado"
-                                                            onClick={() => {
-                                                            //setSubCategory("Concentrado");
-                                                            //fetchLotesConcentrado();
-                                                            }}
-                                                />
-                                                <SupplyOptionButton
-                                                    icon={vacunaIcon}
-                                                    label="Lotes de Vacunas"
-                                                    onClick={() => console.log("Ir a Lotes de Vacunas")}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <InventoryTable
-                                                columns={columnsTable}
-                                                data = {inventory}
-                                                // data={inventory.filter(item =>
-                                                //     !input ? true : (new RegExp(`.*${input}.*`, "i")).test(item.tipo)
-                                                // )}
-                                                to={toDetails}
+                            <Spinner loading={loading} />
+                                    ) : (
+                                    <>
+                            
+                                    {category === Categories.SUPPLIES && !subCategory && (
+                                        <div className="flex flex-col items-center gap-4 w-full max-w-md mx-auto mt-4">
+                                            <SupplyOptionButton
+                                                icon={granjeroicon}
+                                                label="Todos los Insumos"
+                                                onClick={() => {
+                                                console.log("Ir a todos los Insumos");
+                                                setSubCategory("todos");
+                                                                            }}
                                             />
-    )
-))
+                                            <SupplyOptionButton
+                                                icon={concentradoIcon}
+                                                label="Lotes de Concentrado"
+                                                onClick={() => { 
+                                                    console.log("Concentrado")
+                                                    setSubCategory("concentrado")}}
+                                            />
+                                            <SupplyOptionButton
+                                                icon={vacunaIcon}
+                                                label="Lotes de Desparasitantes"
+                                                onClick={() =>{ 
+                                                    console.log("Desparasitantes")
+                                                    setSubCategory("desparasitantes")}}
+                                            />
+                                            <SupplyOptionButton
+                                                icon={vacunaIcon}
+                                                label="Lotes de Vitaminas"
+                                                onClick={() => {
+                                                    console.log("Vitaminas")
+                                                    setSubCategory("vitaminas")
+                                                }}
+                                            />
+            </div>
+        )}
+
+        
+        {category === Categories.SUPPLIES && subCategory && inventory.length > 0 && (
+            <div className="mt-6 px-6">
+                <button
+                    onClick={() => {
+                        setSubCategory(null);
+                        setInventory([]);
+                    }}
+                    className="mb-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-xl shadow"
+                >
+                    ← Regresar
+                </button>
+                <InventoryTable
+                    columns={columnsTable}
+                    data={inventory}
+                    to={toDetails}
+                />
+            </div>
+        )}
+
+        
+        {category !== Categories.SUPPLIES && inventory.length > 0 && (
+            <div className="mt-6 px-6">
+                <InventoryTable
+                    columns={columnsTable}
+                    data={inventory}
+                    to={toDetails}
+                />
+            </div>
+        )}
+    </>
+)
+)
                     }
                 </div>
             </div>
@@ -207,8 +298,8 @@ const fetchSwineBatch = async () => {
         if (!response.hasError && response.data) {
             return response.data.map(item => ({
                 id: item.idSwineBatch,
-                cantidad: item.stockQuantity,   
-                peso: item.estimatedWeight +" lb",
+                CantidadRestante: item.stockQuantity,   
+                Cantidad: item.quantity,
                 fecha: new Date(item.generationDate).toLocaleDateString(),
                 etapa: item.Stage.stageName || "Desconocida"
             }));
@@ -218,27 +309,43 @@ const fetchSwineBatch = async () => {
         return []; 
     }
 };
-/*
-const fetchLotesConcentrado = async () => { 
-    try{
-
-        const response = await FeedBatchService.getAllFeedBacth();
-
+const fetchSupplyBatch = async () => {
+    try {
+        const response = await SupplyBatchService.getSupplyBatch();
+        
         if (!response.hasError && response.data) {
             return response.data.map(item => ({
-                id: item.idFeedBatch,
-                tipo: item.idFeed,
+                id: item.idSupplyBatch,
+                insumo: item.Supply.nameSupply,
+                tipo:item.Supply.SupplyType.nameSupplyType,
                 cantidad: item.quantity,
-                fecha: new Date(item.generationDate).toLocaleDateString(),
-                
+                fecha: new Date(item.expirationDate).toLocaleDateString(),
             }));
         }
+    } catch (error) {
+        console.error("Error al cargar lotes de insumos", error);
+        return []; 
+    }
+};
+const fetchSupplyBatchByType = async (type) => {
+    try {
+        const response = await SupplyBatchService.getSupplyBatchByType(type);
+        
+        if (!response.hasError && response.data) {
+            return response.data.map(item => ({
+                id: item.idSupplyBatch,
+                insumo: item.Supply.nameSupply,
+                tipo:item.Supply.SupplyType.nameSupplyType,
+                cantidad: item.quantity,
+                fecha: new Date(item.expirationDate).toLocaleDateString(),
+            }));
+        }
+    } catch (error) {
+        console.error("Error al cargar lotes de insumos por tipo", error);
+        return []; 
+    } };
 
-    }catch (error) {
-        console.error("Error al cargar lotes de concentrado", error);
-        return [];}
 
-}*/
 
 
 export default InventoryPage;

@@ -11,8 +11,26 @@ class SellerService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("jwt")
             }
+        });
+
+        return await result.json();
+    }
+
+    static async generateCheck(payload) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/salescheck/generate`, 
+        {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("jwt")
+            },
+            body: JSON.stringify(payload)
         });
 
         return await result.json();

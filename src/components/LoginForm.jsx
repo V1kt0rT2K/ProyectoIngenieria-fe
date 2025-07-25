@@ -54,6 +54,8 @@ const LoginForm = () => {
 
                 localStorage.setItem("jwt", response.headers.authorization);
 
+                console.log(localStorage.getItem("jwt"))
+
                 navigate("/home", { replace: true });
                 return;
             } else {

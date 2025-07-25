@@ -1,77 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BackButton from "../../components/BackButton";
 import ArrayUtils from "../../utils/ArrayUtils";
 import Configuration from "../../Configuration";
 import SellerService from "../../utils/service/SellerService";
+import { generateInvoicePdf } from "../../utils/generateCheckUtils";
 
-// const cuts = [
-//     {
-//         idSwineCutType: 1,
-//         swineCutTypeName: "Cabeza",
-//         description: "Incluye orejas, morro, cachetes y cabeza completa para caldos o barbacoa",
-//         unitPrice: 35.00
-//     },
-//     {
-//         idSwineCutType: 2,
-//         swineCutTypeName: "Lomo",
-//         description: "Corte magro y tierno, ideal para chuletas, filetes o asar entero",
-//         unitPrice: 85.00
-//     },
-//     {
-//         idSwineCutType: 3,
-//         swineCutTypeName: "Costilla",
-//         description: "Incluye las costillas (chuletas) con hueso, para parrilla o ahumados",
-//         unitPrice: 75.00
-//     },
-//     {
-//         idSwineCutType: 4,
-//         swineCutTypeName: "Pierna",
-//         description: "También llamada jamón, usado para asar, curar o hacer jamones serranos",
-//         unitPrice: 65.00
-//     },
-//     {
-//         idSwineCutType: 5,
-//         swineCutTypeName: "Paleta",
-//         description: "Parte delantera similar al jamón pero con más grasa intramuscular",
-//         unitPrice: 55.00
-//     },
-//     {
-//         idSwineCutType: 6,
-//         swineCutTypeName: "Panceta",
-//         description: "También llamado tocino o bacon (curado), parte ventral del cerdo",
-//         unitPrice: 60.00
-//     },
-//     {
-//         idSwineCutType: 7,
-//         swineCutTypeName: "Chuletón",
-//         description: "Corte premium del lomo alto con hueso",
-//         unitPrice: 95.00
-//     },
-//     {
-//         idSwineCutType: 8,
-//         swineCutTypeName: "Solomillo",
-//         description: "Corte más tierno y valioso, pequeño y magro",
-//         unitPrice: 100.00
-//     },
-//     {
-//         idSwineCutType: 9,
-//         swineCutTypeName: "Espaldilla",
-//         description: "Corte económico de la parte superior delantera",
-//         unitPrice: 45.00
-//     },
-//     {
-//         idSwineCutType: 10,
-//         swineCutTypeName: "Rabo",
-//         description: "Usado principalmente para guisos y caldos",
-//         unitPrice: 40.00
-//     },
-//     {
-//         idSwineCutType: 11,
-//         swineCutTypeName: "Chicharrón",
-//         description: "Piel de cerdo frita o asada",
-//         unitPrice: 50.00
-//     }
-// ];
 
 const setCheckProductType = (products, idx, cutType, swineCuts) => {
     const cut = swineCuts.find(c => c.idProduct === cutType);
@@ -88,10 +21,13 @@ const setCheckProductTotal = (products, idx, quantity) => {
     return products;
 };
 
+
+
 const NewSalePage = () => {
     const [swineCuts, setSwineCuts] = useState([]);
     const [checkProducts, setCheckProducts] = useState([]);
     const [total, setTotal] = useState(0);
+    const isLoading = useRef(false);
 
     useEffect(() => {
         //setSwineCuts(cuts);
@@ -108,7 +44,103 @@ const NewSalePage = () => {
             }
 
         });
-    }, [])
+    }, []);
+
+    const saveCheck = () => {
+        if(isLoading.current)
+            return;
+
+        isLoading.current = true;
+
+        let consumption = checkProducts.map((p) =>{
+            return {
+                idProduct : p.idProduct,
+                quantity : p.quantity
+            }
+        });
+
+        console.log(consumption);
+
+        const payload = {
+            identityNumber: null,
+            consumption: consumption
+        }
+
+        generateInvoicePdf ({
+                "idSalesCheck": 7,
+                "generationDate": "2025-07-24T20:07:53.977Z",
+                "idUser": 1,
+                "subTotal": 500.9,
+                "ISV": 75.14,
+                "idClient": null,
+                "idCaiCodeRange": 1,
+                "saleCheckCode": "000-007-01-00000062",
+                "Products": [
+                    {
+                        "idProduct": 1,
+                        "productName": "Cabeza",
+                        "productDescription": "Incluye orejas, morro, cachetes y cabeza completa para caldos o barbacoa",
+                        "price": 200,
+                        "orderPoint": 5,
+                        "SalesChecksDetail": {
+                            "idSalesCheckDetail": 13,
+                            "idSalesCheck": 7,
+                            "idProduct": 1,
+                            "quantity": 2.2
+                        }
+                    },
+                    {
+                        "idProduct": 2,
+                        "productName": "Lomo",
+                        "productDescription": "Corte magro y tierno, ideal para chuletas, filetes o asar entero",
+                        "price": 29,
+                        "orderPoint": 5,
+                        "SalesChecksDetail": {
+                            "idSalesCheckDetail": 14,
+                            "idSalesCheck": 7,
+                            "idProduct": 2,
+                            "quantity": 2.1
+                        }
+                    }
+                ],
+                "CaiCodeRange": {
+                    "idCaiCodeRange": 1,
+                    "idCaiCode": 1,
+                    "startRange": "000-007-01-00000056",
+                    "endRange": "000-007-01-00000065",
+                    "expirationDate": "2025-08-23",
+                    "isActive": true
+                },
+                "User": {
+                    "idUser": 1,
+                    "email": "viktor.hernandez@gmail.com",
+                    "job": "SYSADMIN",
+                    "password": "cdcb7422ca0fe077931b84e6fb7e6dfb7d6678dc7e9ae9c4335e98edc7d5761a",
+                    "isEnabled": true,
+                    "idPerson": 1,
+                    "idRole": 1,
+                    "Person": {
+                        "fullName": "VIKTOR ANDRE HERNANDEZ VELASQUEZ",
+                        "idPerson": 1,
+                        "identityNumber": "0715200500005",
+                        "firstName": "VIKTOR",
+                        "secondName": "ANDRE",
+                        "lastName": "HERNANDEZ",
+                        "secondLastName": "VELASQUEZ"
+                    }
+                }
+            })
+
+        // SellerService.generateCheck(payload).then(response => {
+        //     console.log(response);
+        //     if(!response.hasError){
+
+        //         generateInvoicePdf(response.data);
+        //     }
+        // });
+
+        isLoading.current = false
+    };
 
     return (
         <>
@@ -118,14 +150,14 @@ const NewSalePage = () => {
                 <div className="rounded overflow-y-auto p-0">
                     <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">
                         <div className="flex flex-col flex-grow space-y-4">
-                            <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p>
+                            {/* <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p> */}
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Numero de identidad del cliente</p>
                                 <input className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" />
                             </div>
                         </div>
                         <div className="flex-grow space-y-4 justify-center rounded pl-2">
-                            <p className="text-orange-700 underline font-semibold">CAI: {666}</p>
+                            {/* <p className="text-orange-700 underline font-semibold">CAI: {666}</p> */}
                             <div className="bg-orange-100 py-2 flex flex-col ">
                                 <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
                                     <p>Fecha de creacion</p>
@@ -226,7 +258,12 @@ const NewSalePage = () => {
                         </div>
 
                         <div className="mt-2 flex justify-center">
-                            <button className="bg-green-600 rounded px-3 py-1 font-semibold text-white mt-2">Guardar</button>
+                            <button 
+                                className="bg-green-600 rounded px-3 py-1 font-semibold text-white mt-2"
+                                onClick={() => saveCheck()}
+                            >
+                                    Guardar
+                            </button>
                         </div>
                     </div>
 

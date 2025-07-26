@@ -9,7 +9,7 @@ import vacunaIcon from "../../assets/images/vacuna.png";
 import concentradoIcon from "../../assets/images/concentrado.png";
 import granjeroicon from "../../assets/images/granjero.png";
 const Categories = {
-    MEATS: "Carnes",
+    PRODUCTS: "Productos",
     LOT: "Lotes",
     SUPPLIES: "Insumos",
     TOOLS: "Herramientas"
@@ -20,7 +20,7 @@ const Categories = {
 const categories = Object.values(Categories);
 let registroCerdos = [];
 /*
-const inventarioCarnes = [
+const inventarioProductos = [
     {
         id: 1,
         tipo: "R",
@@ -77,14 +77,14 @@ useEffect(() => {
         //let inv = [];
 
         switch (category) {
-            case Categories.MEATS:
+            case Categories.PRODUCTS:
                 setColumnsTable([{label:"Tipo",field:"tipo"},
                         {label:"cantidad en Libras",field:"cantidad"},
                         {label:"Fecha de ingreso",field:"fechaIngreso"},
                         {label:"Precio por Libra", field:"precioPorLibra"}]);
                 setAddNew("new_meat_type");
                 setToDetails("meat_type_information");
-                //inv = inventarioCarnes;
+                //inv = inventarioProductos;
                 break;
 
             case Categories.LOT:

@@ -91,8 +91,9 @@ useEffect(() => {
                 { setColumnsTable(
                             [
                                 { label: "No. de lote", field: "id" },
-                                { label: "Cantidad de Cerdos", field: "Cantidad" },
-                                { label: "Cerdos No Procesados", field: "CantidadRestante" },
+                                { label: "Cantidad Inicial", field: "Cantidad" },
+                                { label: "Cerdos Actual", field: "CantidadRestante" },
+                                { label: "Fecha de Nacimiento", field: "fecha"},
                                 { label: "Fecha de Ingreso", field: "fecha"},
                                 { label: "Etapa", field: "etapa" },
                                 ]

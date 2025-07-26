@@ -18,6 +18,22 @@ class SwineBatchService {
 
         return await result.json();
     }
+    static async createSwineBatch(swineBatch) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/stock/swinebatch/create`, 
+        {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
+            },
+            body: JSON.stringify(swineBatch)
+        });
+
+        return await result.json();
+    }
 }
 
 export default SwineBatchService;

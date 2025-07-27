@@ -4,6 +4,7 @@ import InventoryTable from "../../components/InventoryTable";
 import Spinner from "../../components/Spinner";
 import SwineBatchService from "../../utils/service/SwineBatchService";
 import SupplyBatchService from "../../utils/service/SupplyBatchService";
+import ProductBatchService from "../../utils/service/ProductBatchService";
 import SupplyOptionButton from "../../components/SupplyOptionButton";
 import vacunaIcon from "../../assets/images/vacuna.png";
 import concentradoIcon from "../../assets/images/concentrado.png";
@@ -77,15 +78,23 @@ useEffect(() => {
         //let inv = [];
 
         switch (category) {
-            case Categories.PRODUCTS:
-                setColumnsTable([{label:"Tipo",field:"tipo"},
-                        {label:"cantidad en Libras",field:"cantidad"},
-                        {label:"Fecha de ingreso",field:"fechaIngreso"},
-                        {label:"Precio por Libra", field:"precioPorLibra"}]);
+            case Categories.PRODUCTS:{
+                setColumnsTable([{label:"No. Lote",field:"idproductBatch"},
+                        {label:"Producto",field:"nombreProducto"},
+                        {label:"Fecha de Expiracion",field:"fechaExpiracion"},
+                        {label:"Cantidad", field:"CantidadRestante"},
+                        {label:"Precio por libra", field:"precioProducto"},
+                        {label:"Punto de Reorden", field:"PuntodeReorden"}]);
                 setAddNew("new_meat_type");
                 setToDetails("meat_type_information");
-                //inv = inventarioProductos;
+                const productBatchData = await fetchProductBatch();
+                console.log(productBatchData);
+                setInventory(productBatchData)
                 break;
+
+            }
+                
+                
 
             case Categories.LOT:
                 { setColumnsTable(
@@ -101,7 +110,7 @@ useEffect(() => {
                 setAddNew("new_lot");
                 setToDetails("new_lot_information");  
                 
-
+                
                 const swineBatchData = await fetchSwineBatch();
                 setInventory(swineBatchData);
             
@@ -345,6 +354,26 @@ const fetchSupplyBatchByType = async (type) => {
         console.error("Error al cargar lotes de insumos por tipo", error);
         return []; 
     } };
+
+    const fetchProductBatch = async () => {
+        try {
+            const response = await ProductBatchService.getAllProductBatch();
+            
+            if (!response.hasError && response.data) {
+                return response.data.map(item => ({
+                    idproductBatch: item.idProductBatch,
+                    nombreProducto: item.Product.productName,
+                    CantidadRestante: item.stockQuantity,
+                    fechaExpiracion: new Date(item.expirationDate).toLocaleDateString(),
+                    precioProducto: item.Product.price,
+                    PuntodeReorden: item.Product.orderPoint,
+                }));
+            }
+        } catch (error) {
+            console.error("Error al cargar lotes de productos", error);
+            return []; 
+        }
+    };
 
 
 

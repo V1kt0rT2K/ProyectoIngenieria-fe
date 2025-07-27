@@ -1,17 +1,18 @@
 import Configuration from "../../Configuration";
 
-class FeedBatchService {
+class ProductBatchService {
     constructor(){}
 
-    static async getAllFeedBacth() {
+    static async getAllProductBatch() {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/supply/feedbatch/get/all`, 
+            ${Configuration.API_BASE_URL}/stock/product/batch/get/all`, 
         {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
             }
         });
 
@@ -19,4 +20,4 @@ class FeedBatchService {
     }
 }
 
-export default FeedBatchService  ;
+export default ProductBatchService;

@@ -12,7 +12,7 @@ import UserActivityPage from "../pages/users/UserActivityPage";
 import UserInfoPage from "../pages/users/UserInfoPage";
 
 import InventoryPage from "../pages/inventory/InventoryPage";
-import NewMeatTypePage from "../pages/inventory/NewMeatTypePage";
+import NewProductBatchPage from "../pages/inventory/NewProductBatchPage";
 import NewLotPage from "../pages/inventory/NewLotPage";
 import LotInfoPage from "../pages/inventory/LotInfoPage";
 
@@ -44,7 +44,7 @@ const Routes = () => {
                     <Route path="inventory" element={<MainLayout title="Inventario" />} >
                         <Route index element={<InventoryPage />} />
 
-                        <Route path="new_meat_type" element={<NewMeatTypePage />} />
+                        <Route path="new_product_batch" element={<NewProductBatchPage />} />
                         <Route path="lot_information" element={<LotInfoPage />} />
                         <Route path="new_lot" element={<NewLotPage />} />
                     </Route>

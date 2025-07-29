@@ -85,10 +85,9 @@ useEffect(() => {
                         {label:"Cantidad", field:"CantidadRestante"},
                         {label:"Precio por libra", field:"precioProducto"},
                         {label:"Punto de Reorden", field:"PuntodeReorden"}]);
-                setAddNew("new_meat_type");
+                setAddNew("new_product_batch");
                 setToDetails("meat_type_information");
                 const productBatchData = await fetchProductBatch();
-                console.log(productBatchData);
                 setInventory(productBatchData)
                 break;
 
@@ -102,7 +101,7 @@ useEffect(() => {
                                 { label: "No. de lote", field: "id" },
                                 { label: "Cantidad Inicial", field: "Cantidad" },
                                 { label: "Cerdos Actual", field: "CantidadRestante" },
-                                { label: "Fecha de Nacimiento", field: "fecha"},
+                                { label: "Fecha de Nacimiento", field: "fechadeNacimiento"},
                                 { label: "Fecha de Ingreso", field: "fecha"},
                                 { label: "Etapa", field: "etapa" },
                                 ]
@@ -308,7 +307,8 @@ const fetchSwineBatch = async () => {
         if (!response.hasError && response.data) {
             return response.data.map(item => ({
                 id: item.idSwineBatch,
-                CantidadRestante: item.stockQuantity,   
+                CantidadRestante: item.stockQuantity,
+                fechadeNacimiento: new Date(item.birthDate).toLocaleDateString(),   
                 Cantidad: item.quantity,
                 fecha: new Date(item.generationDate).toLocaleDateString(),
                 etapa: item.Stage.stageName || "Desconocida"

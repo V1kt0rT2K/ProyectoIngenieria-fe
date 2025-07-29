@@ -28,7 +28,7 @@ const NewPurchasePage = () => {
     const [errorMsg, setErrorMsg] = useState(null);
 
     const location = useLocation();
-    const { preSelectedProvider } = location.state;
+    const { preSelectedProvider } = location.state ?? 0;
 
     const isLoading = useRef(false);
     const providerRef = useRef(null);

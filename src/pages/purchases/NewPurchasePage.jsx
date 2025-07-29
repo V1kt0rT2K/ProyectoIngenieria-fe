@@ -28,7 +28,7 @@ const NewPurchasePage = () => {
     const [errorMsg, setErrorMsg] = useState(null);
 
     const location = useLocation();
-    const { preSelectedProvider } = location.state ?? 0;
+    const { preSelectedProvider, prevPage } = location.state ?? { preSelectedProvider: 0, prevPage: "../" };
 
     const isLoading = useRef(false);
     const providerRef = useRef(null);
@@ -98,7 +98,7 @@ const NewPurchasePage = () => {
     return (
         <>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
-                <BackButton />
+                <BackButton previous={prevPage} />
                 <div className="flex justify-between">
                     <p className="mb-2 text-lg text-orange-800 font-semibold underline">Nueva orden de compra</p>
                     { errorMsg && <p className="mb-2 text-white bg-red-500 px-3 py-1 font-semibold rounded">{ errorMsg }</p> }
@@ -109,7 +109,7 @@ const NewPurchasePage = () => {
                             {/* <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p> */}
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Proveedor</p>
-                                <select value={preSelectedProvider} ref={providerRef} className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
+                                <select onChange={() => {}} value={preSelectedProvider} ref={providerRef} className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
                                     <option value={0}>Seleccionar proveedor</option>
                                     {
                                         providers.map(p => <option value={p.idProvider}>{p.providerName}</option>)

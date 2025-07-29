@@ -6,7 +6,7 @@ import PurchaseOptions from "../../components/PurchaseOptions";
 const State = {
     PAID: "Pagado",
     PENDING: "Pendiente",
-    CANCELED: "Cancelado"
+    CANCELED: "Cancelado",
 };
 
 const filters = Object.values(State);
@@ -42,7 +42,9 @@ const PurchasesPage = () => {
     const [filterBy, setFilterBy] = useState(null);
 
     useEffect(() => {
+        setLoading(true);
         setOrdenesCompra(datosPrueba);
+        console.log(filterBy);
         setTimeout(() => setLoading(false), 1000);
     }, [filterBy]);
 
@@ -52,13 +54,12 @@ const PurchasesPage = () => {
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
                         <select onChange={(e) => setFilterBy(e.target.value)} className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md">
-                            <option value={null}>
+                            <option>
                                 {filterBy ? "Mostrar todas" : "Filtrar compras"}
                             </option>
                             {
                                 filters.map((filter, idx) =>
                                     <option
-                                        value={filter}
                                         key={idx}
                                     >
                                         {filter}
@@ -66,7 +67,7 @@ const PurchasesPage = () => {
                                 )
                             }
                         </select>
-                        <Link to="" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
+                        <Link to="new_purchase_order" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
                     </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Historial de compras</p>

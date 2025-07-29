@@ -5,8 +5,6 @@ import Spinner from "../../components/Spinner";
 import UserOptions from "../../components/UserOptions";
 import AdminService from "../../utils/service/AdminService";
 
-const N_TOTAL_ROWS = 200;
-
 const UsersTable = ({ users }) => {
 
     return (
@@ -53,6 +51,7 @@ const UsersPage = () => {
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(15);
 
+    const [totalRows, setTotalRows] = useState(0);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     //const [currentData, setCurrentData] = useState([]);
@@ -90,6 +89,7 @@ const UsersPage = () => {
 
             if (!response.hasError) {
                 setUsers(response.data.data);
+                setTotalRows(response.data.totalItems);
                 //setCurrentData(response.data.data);
                 currentData.current = response.data.data;
             }
@@ -108,7 +108,7 @@ const UsersPage = () => {
                         <button onClick={clearInput} className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>
                     </div>
                     <div>
-                        <select onChange={e => { setSort(e.target.value) }} value={sort}>
+                        <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
                             <option value="0">Descendente</option>
                             <option value="1">Ascendente</option>
                         </select>
@@ -129,7 +129,7 @@ const UsersPage = () => {
                     && (
                         <div className="flex justify-center space-x-4">
                             {
-                                [...Array(Math.floor(N_TOTAL_ROWS / size)).keys()].map(n =>
+                                [...Array(Math.ceil(totalRows / size)).keys()].map(n =>
                                     <button
                                         className={`text-orange-800 ${page == n + 1 ? "font-extrabold bg-orange-400 rounded px-1" : ""}`}
                                         onClick={() => { setPage(n + 1); console.log(page)}}

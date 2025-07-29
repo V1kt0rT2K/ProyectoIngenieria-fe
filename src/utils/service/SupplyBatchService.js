@@ -1,7 +1,5 @@
 import Configuration from "../../Configuration";
 class SupplyBatchService {
-    constructor() {}
-
     static async getSupplyBatch() {
         const result = await fetch(`
             ${Configuration.API_BASE_URL}/supply/batch/get/all`, 

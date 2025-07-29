@@ -18,6 +18,7 @@ import LotInfoPage from "../pages/inventory/LotInfoPage";
 
 import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
+import NewPurchasePage from "../pages/purchases/NewPurchasePage";
 
 import ProvidersPage from "../pages/providers/ProvidersPage";
 
@@ -54,8 +55,8 @@ const Routes = () => {
 
                     <Route path="purchases" element={<MainLayout title="Compras" />} >
                         <Route index element={<PurchasesPage />} />
-
                         <Route path="purchase_information" element={<PurchaseInfoPage />} />
+                        <Route path="new_purchase_order" element={<NewPurchasePage />} />
                     </Route>
 
                     <Route path="reports" element={<MainLayout title="Informes" />} >

@@ -20,38 +20,6 @@ const Categories = {
 
 const categories = Object.values(Categories);
 let registroCerdos = [];
-/*
-const inventarioProductos = [
-    {
-        id: 1,
-        tipo: "R",
-        cantidadLibras: 50,
-        fechaIngreso: "2025-07-01",
-        precioPorLibra: 5.25
-    },
-    {
-        id: 2,
-        tipo: "C",
-        cantidadLibras: 30,
-        fechaIngreso: "2025-07-03",
-        precioPorLibra: 4.75
-    },
-    {
-        id: 3,
-        tipo: "P",
-        cantidadLibras: 60,
-        fechaIngreso: "2025-07-05",
-        precioPorLibra: 3.80
-    },
-    {
-        id: 4,
-        tipo: "L",
-        cantidadLibras: 20,
-        fechaIngreso: "2025-06-28",
-        precioPorLibra: 6.40
-    }
-];
-*/
 
 
 
@@ -210,7 +178,12 @@ useEffect(() => {
                             && (
                                 <>
                                     {category != Categories.LOT && <input ref={inputRef}  className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar" />}
+                                        {category === Categories.PRODUCTS && (
+                                        <Link to={`/inventory/product_catalog`} className="bg-orange-700 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:bg-green-800 transition">
+                                            Ver Catálogo de producto
+                                        </Link>)}
                                     <Link to={`/inventory/${addNew}`} className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
+                                    
                                 </>
                             )
                         }
@@ -280,8 +253,17 @@ useEffect(() => {
             </div>
         )}
 
-        
-        {category !== Categories.SUPPLIES && inventory.length > 0 && (
+        {category == Categories.PRODUCTS && inventory.length > 0 && (
+            
+            <div className="mt-6 px-6">
+                <InventoryTable
+                    columns={columnsTable}
+                    data={inventory}
+                    to={toDetails}
+                />
+            </div>
+        )}
+        {category !== Categories.SUPPLIES &&category !== Categories.PRODUCTS && inventory.length > 0 && (
             <div className="mt-6 px-6">
                 <InventoryTable
                     columns={columnsTable}

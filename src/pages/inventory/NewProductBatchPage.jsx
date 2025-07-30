@@ -34,6 +34,12 @@ const handleAddEntry = () => {
         updated[idx] = { ...updated[idx], [field]: value };
         setEntries(updated);
     };
+const swineBatchData=SwineBatchService.getSwineBatchById(selectedBatch);
+if(swineBatchData.stockQuantity === 0){
+    alert("El lote de cerdos seleccionado no tiene cerdos disponibles.");
+    return;
+}else{
+
 
     const handleSave = () => {
         const payload = entries.map(entry => ({
@@ -51,9 +57,11 @@ const handleAddEntry = () => {
             payload.forEach(ProductBatch => {
             ProductBatchService.createProductBatch(ProductBatch)});
             alert("Lote de producto guardado correctamente.");
-            setEntries([]); }
+            setEntries([]); 
+            }
             
     };
+
 
     return (
         <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
@@ -70,11 +78,12 @@ const handleAddEntry = () => {
                                 onChange={(e) => {
                                 const value = e.target.value;
                                 setEntries(entries.map((entry) => ({ ...entry, idSwineBatch: value })));
-                                setSelectedBatch(value); // también guardamos el lote seleccionado
+                                setSelectedBatch(value); 
                                 }}
                             >
 
                                 <option value="">Seleccionar lote</option>
+                                
                                 {swineBatches.map(batch => (
                                     <option key={batch.idSwineBatch} value={batch.idSwineBatch}>
                                         Lote #{batch.idSwineBatch}
@@ -170,5 +179,5 @@ const handleAddEntry = () => {
         </div>
     );
 };
-
+};
 export default NewProductBatch;

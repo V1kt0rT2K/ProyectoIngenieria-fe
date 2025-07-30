@@ -15,6 +15,8 @@ import InventoryPage from "../pages/inventory/InventoryPage";
 import NewProductBatchPage from "../pages/inventory/NewProductBatchPage";
 import NewLotPage from "../pages/inventory/NewLotPage";
 import LotInfoPage from "../pages/inventory/LotInfoPage";
+import ProductCatalogPage from "../pages/inventory/ProductCatalogPage";
+import NewProductPage from "../pages/inventory/newProductPage";
 
 import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
@@ -47,6 +49,8 @@ const Routes = () => {
                         <Route path="new_product_batch" element={<NewProductBatchPage />} />
                         <Route path="lot_information" element={<LotInfoPage />} />
                         <Route path="new_lot" element={<NewLotPage />} />
+                        <Route path="product_catalog" element={<ProductCatalogPage />} />
+                        <Route path="new_product" element={<NewProductPage />} />                       
                     </Route>
 
                     <Route path="providers" element={<MainLayout title="Proveedores" />} >

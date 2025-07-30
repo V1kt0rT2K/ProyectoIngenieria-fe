@@ -18,6 +18,18 @@ class SellerService {
 
         return await result.json();
     }
+    static async createProduct(product) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/stock/product/create`, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("jwt")
+            },
+            body: JSON.stringify(product)
+        });
+        return await result.json();
+    }
 
     static async generateCheck(payload) {
         

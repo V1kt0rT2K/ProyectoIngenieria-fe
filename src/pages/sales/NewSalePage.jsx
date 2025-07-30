@@ -40,7 +40,6 @@ const NewSalePage = () => {
             console.log(response);
             if (!response.hasError) {
                 setSwineCuts(response.data);
-                setTotal(response.data.length);
             }
 
         });

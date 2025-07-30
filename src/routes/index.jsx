@@ -12,12 +12,15 @@ import UserActivityPage from "../pages/users/UserActivityPage";
 import UserInfoPage from "../pages/users/UserInfoPage";
 
 import InventoryPage from "../pages/inventory/InventoryPage";
-import NewMeatTypePage from "../pages/inventory/NewMeatTypePage";
+import NewProductBatchPage from "../pages/inventory/NewProductBatchPage";
 import NewLotPage from "../pages/inventory/NewLotPage";
 import LotInfoPage from "../pages/inventory/LotInfoPage";
+import ProductCatalogPage from "../pages/inventory/ProductCatalogPage";
+import NewProductPage from "../pages/inventory/newProductPage";
 
 import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
+import NewPurchasePage from "../pages/purchases/NewPurchasePage";
 
 import ProvidersPage from "../pages/providers/ProvidersPage";
 import NewProviderPage from "../pages/providers/NewProviderPage";
@@ -44,9 +47,11 @@ const Routes = () => {
                     <Route path="inventory" element={<MainLayout title="Inventario" />} >
                         <Route index element={<InventoryPage />} />
 
-                        <Route path="new_meat_type" element={<NewMeatTypePage />} />
+                        <Route path="new_product_batch" element={<NewProductBatchPage />} />
                         <Route path="lot_information" element={<LotInfoPage />} />
                         <Route path="new_lot" element={<NewLotPage />} />
+                        <Route path="product_catalog" element={<ProductCatalogPage />} />
+                        <Route path="new_product" element={<NewProductPage />} />                       
                     </Route>
 
                     <Route path="providers" element={<MainLayout title="Proveedores" />} >
@@ -56,8 +61,8 @@ const Routes = () => {
 
                     <Route path="purchases" element={<MainLayout title="Compras" />} >
                         <Route index element={<PurchasesPage />} />
-
                         <Route path="purchase_information" element={<PurchaseInfoPage />} />
+                        <Route path="new_purchase_order" element={<NewPurchasePage />} />
                     </Route>
 
                     <Route path="reports" element={<MainLayout title="Informes" />} >

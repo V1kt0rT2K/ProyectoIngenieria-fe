@@ -6,6 +6,7 @@ const Roles = {
 	ADMINISTRATOR: 1,
 	CASHIER: 2,
 	WAREHOUSE_MANAGER: 3,
+	SYSADMIN: 4,
 };
 
 const SideBar = () => {
@@ -86,6 +87,9 @@ const SideBar = () => {
 
 	switch (JSON.parse(session).idRole) {
 		case Roles.ADMINISTRATOR:
+			barElements = Object.values(navLinks);
+			break;
+		case Roles.SYSADMIN:
 			barElements = Object.values(navLinks);
 			break;
 		case Roles.CASHIER:

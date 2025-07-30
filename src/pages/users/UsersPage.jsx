@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import UserOptions from "../../components/UserOptions";
 import AdminService from "../../utils/service/AdminService";
+import toast, { Toaster } from 'react-hot-toast';
 
 const UsersTable = ({ users }) => {
 
@@ -49,7 +50,7 @@ const UsersPage = () => {
     const [searchBox, setSearchBox] = useState("");
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(15);
+    const [size, setSize] = useState(4);
 
     const [totalRows, setTotalRows] = useState(0);
     const [users, setUsers] = useState([]);
@@ -86,12 +87,13 @@ const UsersPage = () => {
         setLoading(true);
         AdminService.getAllUsers(page, size, sort).then(response => {
             setUsers([]);
-
             if (!response.hasError) {
                 setUsers(response.data.data);
                 setTotalRows(response.data.totalItems);
                 //setCurrentData(response.data.data);
                 currentData.current = response.data.data;
+            }else{
+                toast(response.meta.message);
             }
             setLoading(false);
         });
@@ -100,6 +102,7 @@ const UsersPage = () => {
 
     return (
         <>
+            <div><Toaster/></div>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <Link to="requests" className="text-white rounded bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario</Link>

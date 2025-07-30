@@ -48,6 +48,21 @@ class SwineBatchService {
 
         return await result.json();
     }
+    static async getSwineBatchByIdStage(idStage) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/stock/swinebatch/get/stage/${idStage}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("jwt")
+            }
+        });
+
+        return await result.json();
+    }
 }
 
 export default SwineBatchService;

@@ -17,7 +17,7 @@ const NewProductBatch = () => {
             }
         });
 
-        SwineBatchService.getSwineBatch().then(response => {
+        SwineBatchService.getSwineBatchByIdStage(5).then(response => {
             if (!response.hasError) {
                 setSwineBatches(response.data);
             }

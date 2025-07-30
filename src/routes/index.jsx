@@ -20,6 +20,7 @@ import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
 
 import ProvidersPage from "../pages/providers/ProvidersPage";
+import NewProviderPage from "../pages/providers/NewProviderPage";
 
 import SalesPage from "../pages/sales/SalesPage";
 import NewSalePage from "../pages/sales/NewSalePage";
@@ -50,6 +51,7 @@ const Routes = () => {
 
                     <Route path="providers" element={<MainLayout title="Proveedores" />} >
                         <Route index element={<ProvidersPage />} />
+                        <Route path="new_provider" element={<NewProviderPage />} />
                     </Route>
 
                     <Route path="purchases" element={<MainLayout title="Compras" />} >

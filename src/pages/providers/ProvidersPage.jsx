@@ -42,7 +42,7 @@ useEffect(() => {
                 <div className="flex flex-col items-start">
                     <div className="flex w-full">
                         <input ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar proveedores" />
-                        <Link to="" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
+                        <Link to="new_provider" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
                     </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Informacion general</p>

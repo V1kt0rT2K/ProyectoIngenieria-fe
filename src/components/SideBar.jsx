@@ -16,6 +16,10 @@ const SideBar = () => {
 
 	const logout = () => {
 		setSession();
+
+		localStorage.removeItem("jwt");
+		localStorage.removeItem("token");
+
 		navigate("/", { replace: true });
 	}
 

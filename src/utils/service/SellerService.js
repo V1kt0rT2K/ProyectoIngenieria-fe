@@ -1,5 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
 
+
+registerInterceptor();
 class SellerService {
     constructor(){}
 
@@ -11,8 +14,7 @@ class SellerService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -27,8 +29,7 @@ class SellerService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -43,8 +44,7 @@ class SellerService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -59,8 +59,7 @@ class SellerService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -72,8 +71,7 @@ class SellerService {
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(product)
         });
@@ -88,8 +86,7 @@ class SellerService {
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
         });

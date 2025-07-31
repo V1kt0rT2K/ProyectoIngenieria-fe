@@ -1,5 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
 
+
+registerInterceptor();
 class PurchaseService {
 
     static async getStatusForPurcharses() {
@@ -9,8 +12,7 @@ class PurchaseService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -24,8 +26,7 @@ class PurchaseService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -39,8 +40,7 @@ class PurchaseService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -54,8 +54,7 @@ class PurchaseService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 

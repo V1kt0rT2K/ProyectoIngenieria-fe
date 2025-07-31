@@ -30,14 +30,15 @@ const PurchaseInfoPage = () => {
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Proveedor</p>
                                 <input className="bg-orange-200 px-3 py-2 rounded font-bold" defaultValue={ purchase && purchase.Provider.providerName } disabled />
-                                <div className="flex justify-end underline hover:cursor-pointer">Ver proveedor</div>
+                                <p>Estado de la compra:</p>
+                                <p className="bg-orange-200 px-3 py-2 rounded font-bold">{purchase && purchase.Status.statusName}</p> 
                             </div>
                         </div>
                         <div className="bg-orange-100 flex flex-col flex-grow space-y-2 py-2 justify-center rounded pl-2">
                             <p className="ml-4 mb-1 text-lg text-orange-800 font-semibold underline">Orden de compra No. {id}</p>
                             <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
                                 <p>Fecha de creacion</p>
-                                <input className="bg-orange-200 rounded px-3 py-4" type="date" defaultValue={ purchase && new Date(purchase.generationDate).toISOString().split('T')[0]} />
+                                <input className="bg-orange-200 rounded px-3 py-4" type="date" defaultValue={ purchase && new Date(purchase.generationDate).toISOString().split('T')[0]}  disabled/>
                             </div>
                         </div>
                     </div>

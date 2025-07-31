@@ -76,7 +76,7 @@ const PurchasesPage = () => {
                             {
                                 statusList.map((s, idx) =>
                                     <option
-                                        key={idx}
+                                        key={s.idStatus}
                                         value={s.idStatus}
                                     >
                                         {s.statusName}
@@ -86,6 +86,12 @@ const PurchasesPage = () => {
                         </select>
                         <Link to="new_purchase_order" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
                     </div>
+                <div className="flex flex-row gap-3">
+                    <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
+                        <option value="0">Descendente</option>
+                        <option value="1">Ascendente</option>
+                    </select>
+                </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Historial de compras</p>
                 <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>

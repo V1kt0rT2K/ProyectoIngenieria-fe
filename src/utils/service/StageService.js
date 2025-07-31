@@ -1,5 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "./Interceptor";
 
+
+registerInterceptor();
 class StageService {
     constructor(){}
 
@@ -11,8 +14,7 @@ class StageService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 

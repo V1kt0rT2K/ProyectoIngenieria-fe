@@ -48,7 +48,7 @@ const Routes = () => {
                         <Route index element={<InventoryPage />} />
 
                         <Route path="new_product_batch" element={<NewProductBatchPage />} />
-                        <Route path="lot_information" element={<LotInfoPage />} />
+                        <Route path="/inventory/lot/:idLote" element={<LotInfoPage />} />
                         <Route path="new_lot" element={<NewLotPage />} />
                         <Route path="product_catalog" element={<ProductCatalogPage />} />
                         <Route path="new_product" element={<NewProductPage />} />                       

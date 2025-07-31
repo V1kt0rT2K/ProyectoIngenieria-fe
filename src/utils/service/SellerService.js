@@ -3,6 +3,38 @@ import Configuration from "../../Configuration";
 class SellerService {
     constructor(){}
 
+    static async getClientTypes() {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/client/get/types`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("jwt")
+            }
+        });
+
+        return await result.json();
+    }
+
+    static async getAllSalesChecksForUserByClientType(idClientType,page,size,sort) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/salescheck/cashier/get/type/${idClientType}/${page}/${size}/${sort}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("jwt")
+            }
+        });
+
+        return await result.json();
+    }
+
     static async getAllProducts() {
         
         const result = await fetch(`
@@ -18,6 +50,7 @@ class SellerService {
 
         return await result.json();
     }
+
     static async createProduct(product) {
         const result = await fetch(`${Configuration.API_BASE_URL}/stock/product/create`, {
             method: "POST",

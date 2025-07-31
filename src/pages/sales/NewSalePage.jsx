@@ -4,6 +4,7 @@ import ArrayUtils from "../../utils/ArrayUtils";
 import Configuration from "../../Configuration";
 import SellerService from "../../utils/service/SellerService";
 import { generateInvoicePdf } from "../../utils/generateCheckUtils";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const setCheckProductType = (products, idx, cutType, swineCuts) => {
@@ -28,6 +29,7 @@ const NewSalePage = () => {
     const [checkProducts, setCheckProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const isLoading = useRef(false);
+    const identity = useRef("");
 
     useEffect(() => {
         //setSwineCuts(cuts);
@@ -61,88 +63,34 @@ const NewSalePage = () => {
         console.log(consumption);
 
         const payload = {
-            identityNumber: null,
+            identification: identity.current.value,
             consumption: consumption
         }
 
-        generateInvoicePdf ({
-                "idSalesCheck": 7,
-                "generationDate": "2025-07-24T20:07:53.977Z",
-                "idUser": 1,
-                "subTotal": 500.9,
-                "ISV": 75.14,
-                "idClient": null,
-                "idCaiCodeRange": 1,
-                "saleCheckCode": "000-007-01-00000062",
-                "Products": [
-                    {
-                        "idProduct": 1,
-                        "productName": "Cabeza",
-                        "productDescription": "Incluye orejas, morro, cachetes y cabeza completa para caldos o barbacoa",
-                        "price": 200,
-                        "orderPoint": 5,
-                        "SalesChecksDetail": {
-                            "idSalesCheckDetail": 13,
-                            "idSalesCheck": 7,
-                            "idProduct": 1,
-                            "quantity": 2.2
-                        }
-                    },
-                    {
-                        "idProduct": 2,
-                        "productName": "Lomo",
-                        "productDescription": "Corte magro y tierno, ideal para chuletas, filetes o asar entero",
-                        "price": 29,
-                        "orderPoint": 5,
-                        "SalesChecksDetail": {
-                            "idSalesCheckDetail": 14,
-                            "idSalesCheck": 7,
-                            "idProduct": 2,
-                            "quantity": 2.1
-                        }
-                    }
-                ],
-                "CaiCodeRange": {
-                    "idCaiCodeRange": 1,
-                    "idCaiCode": 1,
-                    "startRange": "000-007-01-00000056",
-                    "endRange": "000-007-01-00000065",
-                    "expirationDate": "2025-08-23",
-                    "isActive": true
-                },
-                "User": {
-                    "idUser": 1,
-                    "email": "viktor.hernandez@gmail.com",
-                    "job": "SYSADMIN",
-                    "password": "cdcb7422ca0fe077931b84e6fb7e6dfb7d6678dc7e9ae9c4335e98edc7d5761a",
-                    "isEnabled": true,
-                    "idPerson": 1,
-                    "idRole": 1,
-                    "Person": {
-                        "fullName": "VIKTOR ANDRE HERNANDEZ VELASQUEZ",
-                        "idPerson": 1,
-                        "identityNumber": "0715200500005",
-                        "firstName": "VIKTOR",
-                        "secondName": "ANDRE",
-                        "lastName": "HERNANDEZ",
-                        "secondLastName": "VELASQUEZ"
-                    }
-                }
-            })
+        console.log(payload);
 
-        // SellerService.generateCheck(payload).then(response => {
-        //     console.log(response);
-        //     if(!response.hasError){
-
-        //         generateInvoicePdf(response.data);
-        //     }
-        // });
+        SellerService.generateCheck(payload).then(response => {
+            console.log(response);
+            if(!response.hasError){
+                generateInvoicePdf(response.data);
+                toast.success("La factura se ha generado con éxito.");
+            }else{
+                toast.error(response.meta.message);
+            }
+        });
 
         isLoading.current = false
     };
 
     return (
         <>
+            <div><Toaster 
+              toastOptions={{
+                className: '',
+                duration: 1500,
+                removeDelay: 1000
+                }}/>
+            </div>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
                 <BackButton />
                 <p className="mb-2 text-lg text-orange-800 font-semibold underline">Crear factura</p>
@@ -152,7 +100,7 @@ const NewSalePage = () => {
                             {/* <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p> */}
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Numero de identidad del cliente</p>
-                                <input className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" />
+                                <input ref={identity}  name="identification"  className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" />
                             </div>
                         </div>
                         <div className="flex-grow space-y-4 justify-center rounded pl-2">

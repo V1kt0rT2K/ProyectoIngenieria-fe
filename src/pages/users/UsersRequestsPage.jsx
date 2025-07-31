@@ -5,7 +5,6 @@ import BackButton from "../../components/BackButton";
 import AdminService from "../../utils/service/AdminService";
 import toast, { Toaster } from 'react-hot-toast';
 
-
 const UsersRequestsTable = ({requests}) => {
     
     return (<>
@@ -101,7 +100,8 @@ const UsersRequestsPage = () => {
                 className: '',
                 duration: 1500,
                 removeDelay: 1000
-                }}/></div>
+                }}/>
+            </div>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
                 <BackButton />
                 <p className="mb-2 text-lg text-orange-800 font-semibold underline">Solicitudes pendientes</p>

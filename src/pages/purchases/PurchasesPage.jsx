@@ -3,52 +3,83 @@ import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 import PurchaseOptions from "../../components/PurchaseOptions";
 import PurchaseService from "../../utils/service/PurchaseService";
-
-const State = {
-    PAID: "Pagado",
-    PENDING: "Pendiente",
-    CANCELED: "Cancelado",
-};
-
-const filters = Object.values(State);
+import toast, { Toaster } from 'react-hot-toast';
+import dayjs from "dayjs";
+import Pagination from "react-js-pagination";
 
 const PurchasesPage = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [purchaseOrders, setPurchaseOrders] = useState([]);
 
-    const [filterBy, setFilterBy] = useState(null);
+    const [status, setStatus] = useState("0");
+    const[statusList, setStatusList] = useState([]);
 
+    const [totalItems, setTotalItems] = useState(0);
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(15);
 
-    useEffect(() => {
-        setLoading(true);
-        PurchaseService.getAll(page, size, sort).then(response => {
-            if (!response.hasError) {
-                setPurchaseOrders(response.data.data);
-                console.log(purchaseOrders);
-            }
 
+    useEffect(() => {
+        PurchaseService.getStatusForPurcharses().then(response => {
+            if (!response.hasError) {
+                setStatusList(response.data);
+            }
+        });
+
+        PurchaseService.getPurcharsesByStatus(status,page,size,sort).then(response =>{
+            if(!response.hasError){
+                setPurchaseOrders(response.data.data);
+                setTotalItems(response.data.totalItems);
+            }
+        }).finally(() =>{
             setLoading(false);
         });
-    }, [page, size, sort]);
+
+        
+    }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        PurchaseService.getPurcharsesByStatus(status,page, size, sort).then(response => {
+            if (!response.hasError) {
+                setPurchaseOrders(response.data.data);
+                setTotalItems(response.data.totalItems);
+
+            }else{
+                toast.error(response.meta.message);
+                setPurchaseOrders([]);
+            }
+            setLoading(false);
+        });
+    }, [status,page, size, sort]);
 
     return (
         <>
+            <div><Toaster 
+              toastOptions={{
+                className: '',
+                duration: 1500,
+                removeDelay: 1000
+                }}/>
+            </div>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
-                        <select onChange={(e) => setFilterBy(e.target.value)} className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md">
-                            <option>
-                                {filterBy ? "Mostrar todas" : "Filtrar compras"}
+                        <select 
+                        className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md"
+                        onChange={e=>{setStatus(e.target.value)}} 
+                        >
+                            <option key="0" value="0">
+                                Mostrar todas
                             </option>
                             {
-                                filters.map((filter, idx) =>
+                                statusList.map((s, idx) =>
                                     <option
                                         key={idx}
+                                        value={s.idStatus}
                                     >
-                                        {filter}
+                                        {s.statusName}
                                     </option>
                                 )
                             }
@@ -106,6 +137,30 @@ const PurchasesPage = () => {
                             )
                     }
                 </div>
+                {
+                    !loading
+                    && (
+                        <div className="flex justify-center space-x-4">
+                        <Pagination
+                            activePage={page}
+                            itemsCountPerPage={size}
+                            totalItemsCount={totalItems}
+                            pageRangeDisplayed={5}
+                            onChange={(pageNumber) => setPage(pageNumber)}
+                            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+                            itemClass="flex items-center justify-center"
+                            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                            activeClass="bg-green-500"
+                            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+                            disabledClass="opacity-50 cursor-not-allowed"
+                            prevPageText="<<"
+                            nextPageText=">>"
+                            firstPageText="Primera"
+                            lastPageText="Última"
+                        />
+                        </div>
+                    )
+                }
             </div>
         </>
     );

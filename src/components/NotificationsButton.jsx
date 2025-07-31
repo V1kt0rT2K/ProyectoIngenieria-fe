@@ -1,29 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Spinner from "./Spinner";
-
-const notificaciones = [
-    { msg: "Orden OC-001 ha sido completada." },
-    { msg: "Nuevo proveedor agregado: Proveedor G." },
-    { msg: "Error al procesar el lote 102." },
-    { msg: "Stock de carne tipo 'R' está por debajo del mínimo." },
-    { msg: "Compra OC-015 ha sido cancelada." },
-    { msg: "Se ha recibido un nuevo pedido de carne tipo 'P'." },
-    { msg: "Proveedor B ha actualizado sus precios." },
-    { msg: "Inventario actualizado correctamente." },
-    { msg: "Lote 103 fue marcado como listo para salida." },
-    { msg: "Se ha programado una inspección para el lote 112." },
-    { msg: "OC-008 fue aprobada por el supervisor." },
-    { msg: "El cerdo número 2 del lote 121 ha sido dado de baja." },
-    { msg: "Nuevo ingreso de carne registrado." },
-    { msg: "Notificación de mantenimiento pendiente para sistema." },
-    { msg: "Actualización disponible para el módulo de compras." },
-    { msg: "Se detectó una posible duplicación de lote." },
-    { msg: "Proveedor D ha sido desactivado temporalmente." },
-    { msg: "El sistema se reiniciará a las 2:00 AM." },
-    { msg: "Orden OC-020 pendiente de aprobación." },
-    { msg: "Se ha generado el reporte mensual de compras." }
-];
-
+import NotificationService from "../utils/service/NotificationService";
 
 const NotificationsButton = () => {
     const [expand, setExpand] = useState(false);
@@ -33,13 +10,25 @@ const NotificationsButton = () => {
     const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        const menu = menuRef.current;
-        menu && menu.addEventListener("mouseleave", () => setExpand(false));
-
-        setNotifications(notificaciones);
-
-        setTimeout(() => setLoading(false), 2000);
+        NotificationService.getNotificationsForUser().then(response => {
+            if(!response.hasError){
+                setNotifications(response.data);
+            }
+        });
+        setLoading(false);
     }, [expand]);
+
+    const checkNotification = (idNotification,idx) =>{
+        NotificationService.checkNotification({idNotification:idNotification}).then(response =>{
+            if(!response.hasError){
+                const currentNotifications = [...notifications];
+
+                currentNotifications.splice(idx,1);
+
+                setNotifications(currentNotifications);
+            }
+        });
+    };
 
     return (
         <>
@@ -62,12 +51,12 @@ const NotificationsButton = () => {
                                             : (
                                                 <div style={{ maxHeight: "35vh" }} className="space-y-2 overflow-y-scroll text-orange-100">
                                                     {
-                                                        notifications.map(item =>
+                                                        notifications.map((item,idx) =>
                                                             <>
                                                                 <hr className="mr-4" />
                                                                 <div className="flex justify-between items-center">
-                                                                    <p className="text-sm">{item.msg}</p>
-                                                                    <p className="mx-4 font-extrabold hover:cursor-pointer">x</p>
+                                                                    <p className="text-sm">{item.message}</p>
+                                                                    <p onClick={()=>{checkNotification(item.idNotification,idx)}} className="mx-4 font-extrabold hover:cursor-pointer">x</p>
                                                                 </div>
                                                             </>
                                                         )

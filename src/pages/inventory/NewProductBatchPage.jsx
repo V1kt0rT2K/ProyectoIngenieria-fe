@@ -3,14 +3,17 @@ import BackButton from "../../components/BackButton";
 import SellerService from "../../utils/service/SellerService";
 import SwineBatchService from "../../utils/service/SwineBatchService";
 import ProductBatchService from "../../utils/service/ProductBatchService";
+import toast, { Toaster } from 'react-hot-toast';
 const NewProductBatch = () => {
     const [swineBatches, setSwineBatches] = useState([]);
     const [products, setProducts] = useState([]);
     const [entries, setEntries] = useState([]);
     const [selectedBatch, setSelectedBatch] = useState("");
+    const [selectquantitySwine, setSelectQuantitySwine] = useState(0);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [swineBatchData, setSwineBatchData] = useState(null);
 
     useEffect(() => {
-        
         SellerService.getAllProducts().then(response => {
             if (!response.hasError) {
                 setProducts(response.data);
@@ -22,11 +25,38 @@ const NewProductBatch = () => {
                 setSwineBatches(response.data);
             }
         });
-    }, []);
+        if (selectedBatch) {
+        SwineBatchService.getSwineBatchById(selectedBatch).then(response => {
+            if (!response.hasError) {
+                setSwineBatchData(response.data); 
+                 // ← Aquí guarda los datos reales
+            } else {
+                setSwineBatchData(null);
+                toast.error("Error al obtener el lote seleccionado.");
+            }
+        });
+    } else {
+        setSwineBatchData(null);
+    }
+        
+    }, [selectedBatch]);
 
 const handleAddEntry = () => {
-    setEntries([...entries, { idSwineBatch: selectedBatch }]);
+    if (!selectedBatch) {
+        
+        toast.error("Debe seleccionar un lote de cerdos antes de añadir productos.");
+        return;
+    }
+
+    const newEntry = {
+        idSwineBatch: selectedBatch,
+        idProduct: "",
+        entryQuantity: "",
+        expirationDate: ""
+    };
+    setEntries([...entries, newEntry]);
 };
+
 
 
     const handleChangeEntry = (idx, field, value) => {
@@ -34,38 +64,73 @@ const handleAddEntry = () => {
         updated[idx] = { ...updated[idx], [field]: value };
         setEntries(updated);
     };
-const swineBatchData=SwineBatchService.getSwineBatchById(selectedBatch);
-if(swineBatchData.stockQuantity === 0){
-    alert("El lote de cerdos seleccionado no tiene cerdos disponibles.");
+
+
+
+
+const executeSave = () => {
+    
+    const payload = entries.map(entry => ({
+        idProduct: parseInt(entry.idProduct),
+        idSwineBatch: parseInt(entry.idSwineBatch),
+        entryQuantity: parseInt(entry.entryQuantity),
+        expirationDate: new Date(entry.expirationDate + "T00:00:00").toISOString(),
+    }));
+
+    SwineBatchService.updateStockQuantitySwineBatch(parseInt(selectedBatch), selectquantitySwine);
+    payload.forEach(ProductBatch => ProductBatchService.createProductBatch(ProductBatch));
+    toast.success("Lote de producto guardado correctamente.");
+    setEntries([]);
+};
+
+
+const handleSave = () => {
+    if (entries.length === 0) {
+        toast.error("Debe agregar al menos un producto al lote.");
+        return;
+    }
+
+    if (selectquantitySwine === 0) {
+        toast.error("Debe ingresar una cantidad de cerdos procesados.");
+        return;
+    }
+
+    const invalidEntry = entries.find(entry =>
+        !entry.idProduct || !entry.entryQuantity || !entry.expirationDate
+    );
+
+    if (invalidEntry) {
+        toast.error("Debe completar todos los campos de cada producto antes de guardar.");
+        return;
+    }
+    if (!swineBatchData) {
+    toast.error("No se ha podido obtener el lote seleccionado.");
     return;
-}else{
+}
 
+const stock = Number(swineBatchData.stockQuantity);
+    const processed = Number(selectquantitySwine);
+    console.log(stock)
+    console.log(processed)
+    if (processed > stock) {
+    toast.error("La cantidad de cerdos procesados no puede ser mayor que la cantidad de cerdos en el lote seleccionado.");
+    return;
+    }
 
-    const handleSave = () => {
-        const payload = entries.map(entry => ({
-            idProduct: parseInt(entry.idProduct),
-            idSwineBatch: parseInt(entry.idSwineBatch),
-            entryQuantity: parseInt(entry.entryQuantity),
-            expirationDate: entry.expirationDate,
-        }));
-
-        console.log("Payload a enviar:", payload);
-        if(payload.length === 0) {
-            alert("Debe agregar al menos un producto al lote.");
-
-            }else{
-            payload.forEach(ProductBatch => {
-            ProductBatchService.createProductBatch(ProductBatch)});
-            alert("Lote de producto guardado correctamente.");
-            setEntries([]); 
-            }
-            
-    };
+    setShowConfirmModal(true);
+};
 
 
     return (
         <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
             <BackButton />
+            <div><Toaster 
+                            toastOptions={{
+                            className: '',
+                            duration: 1500,
+                            removeDelay: 1000
+                            }}/>
+                        </div>
             <p className="mb-2 text-lg text-orange-800 font-semibold underline">Nuevo Lote de Producto</p>
 
             <div className="rounded overflow-y-auto p-0">
@@ -77,7 +142,7 @@ if(swineBatchData.stockQuantity === 0){
                                 className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                 onChange={(e) => {
                                 const value = e.target.value;
-                                setEntries(entries.map((entry) => ({ ...entry, idSwineBatch: value })));
+                                
                                 setSelectedBatch(value); 
                                 }}
                             >
@@ -90,6 +155,18 @@ if(swineBatchData.stockQuantity === 0){
                                     </option>
                                 ))}
                             </select>
+                            <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
+                                <p>Cantidad de Cerdos Procesados</p>
+                                <input
+                                    className="bg-orange-200 rounded px-3 py-2"
+                                    type="number"
+                                    defaultValue={0}
+                                    onChange={(e) => setSelectQuantitySwine(Number(e.target.value))}
+
+                                    min="0"
+                                />
+                            </div>
+                            
                         </div>
                         <div className="bg-orange-100 py-2 flex flex-col">
                             <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
@@ -175,9 +252,38 @@ if(swineBatchData.stockQuantity === 0){
                         </button>
                     </div>
                 </div>
+            </div>{showConfirmModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white w-96 rounded-xl shadow-lg p-6">
+            <h2 className="text-lg font-bold text-orange-800 mb-4">
+                Confirmación
+            </h2>
+            <p className="text-sm text-gray-700 mb-6">
+                ¿Está seguro que la cantidad de productos corresponde con la cantidad de cerdos procesados?
+            </p>
+            <div className="flex justify-end gap-3">
+                <button
+                    onClick={() => setShowConfirmModal(false)}
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                >
+                    No
+                </button>
+                <button
+                    onClick={() => {
+                        executeSave();
+                        setShowConfirmModal(false);
+                    }}
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                    Sí
+                </button>
             </div>
+        </div>
+    </div>
+)}
+
         </div>
     );
 };
-};
+
 export default NewProductBatch;

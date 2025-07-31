@@ -27,6 +27,7 @@ import NewProviderPage from "../pages/providers/NewProviderPage";
 
 import SalesPage from "../pages/sales/SalesPage";
 import NewSalePage from "../pages/sales/NewSalePage";
+import SaleDetailPage from "../pages/sales/SaleDetailPage";
 
 import ClientsPage from "../pages/clients/ClientsPage";
 
@@ -82,6 +83,7 @@ const Routes = () => {
                     <Route path="sales" element={<MainLayout title="Ventas" />} >
                         <Route index element={<SalesPage />} />
                         <Route path="new_sale" element={<NewSalePage />} />
+                        <Route path="sale_detail" element={<SaleDetailPage/>} />
                     </Route>
 
                     <Route path="clients" element={<MainLayout title="Clientes" />} >

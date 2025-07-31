@@ -35,6 +35,22 @@ class SellerService {
         return await result.json();
     }
 
+    static async getSalesCheckById(idSalesCheck) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/salescheck/get/${idSalesCheck}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("jwt")
+            }
+        });
+
+        return await result.json();
+    }
+
     static async getAllProducts() {
         
         const result = await fetch(`

@@ -142,7 +142,7 @@ const SalesPage = () => {
                                                             {sale.Status?.statusName}
                                                         </td> */}
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <SaleOptions idSale={sale.idSalesCheck} />
+                                                            <SaleOptions idSalesCheck={sale.idSalesCheck} />
                                                         </td>
                                                     </tr>
                                                 )

@@ -1,4 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
+
+
+registerInterceptor();
 class SupplyBatchService {
     static async getSupplyBatch() {
         const result = await fetch(`
@@ -7,8 +11,7 @@ class SupplyBatchService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -20,8 +23,7 @@ class SupplyBatchService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 

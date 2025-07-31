@@ -71,14 +71,10 @@ const NewSalePage = () => {
             }
         });
 
-        console.log(consumption);
-
         const payload = {
             identification: identity.current.value,
             consumption: consumption
         }
-
-        console.log(payload);
 
         SellerService.generateCheck(payload).then(response => {
             console.log(response);

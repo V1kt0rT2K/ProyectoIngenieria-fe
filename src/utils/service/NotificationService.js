@@ -3,13 +3,11 @@ import registerInterceptor from "../Interceptor";
 
 
 registerInterceptor();
-class ProductBatchService {
-    constructor(){}
+class NotificationService {
 
-    static async getAllProductBatch() {
-        
+    static async getNotificationsForUser() {
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/stock/product/batch/get/all`, 
+            ${Configuration.API_BASE_URL}/asset/notification/get/all`, 
         {
             method: "GET",
             headers: {
@@ -20,18 +18,20 @@ class ProductBatchService {
 
         return await result.json();
     }
-    static async createProductBatch(productBatch) {
-        const result = await fetch(`${Configuration.API_BASE_URL}/stock/product/batch/create`, {
-            method: "POST",
+
+    static async checkNotification(payload) {
+        
+        const result = await fetch(`${Configuration.API_BASE_URL}/asset/notification`, {
+            method: "PUT",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(productBatch)
+            body: JSON.stringify(payload)
         });
 
         return await result.json();
     }
 }
 
-export default ProductBatchService;
+export default NotificationService;

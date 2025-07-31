@@ -1,5 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
 
+
+registerInterceptor();
 class SupplyService {
     static async getAll() {
         const result = await fetch(`
@@ -8,8 +11,7 @@ class SupplyService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 

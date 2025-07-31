@@ -47,14 +47,7 @@ const LoginForm = () => {
                     token: "test"
                 }));
 
-                console.log(response.headers);
-
-                //return;
-                
-
                 localStorage.setItem("jwt", response.headers.authorization);
-
-                console.log(localStorage.getItem("jwt"))
 
                 navigate("/home", { replace: true });
                 return;

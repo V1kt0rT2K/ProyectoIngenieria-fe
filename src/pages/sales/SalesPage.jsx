@@ -35,7 +35,7 @@ const SalesPage = () => {
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
             }else{
-                toast.error(response.meta.message);
+                //toast.error(response.meta.message);
             }
         });
 
@@ -54,7 +54,7 @@ const SalesPage = () => {
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
             }else{
-                toast.error(response.meta.message);
+                //toast.error(response.meta.message);
                 setSales([]);
             }
         });
@@ -94,7 +94,7 @@ const SalesPage = () => {
                         </select>
                         <Link to="new_sale" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Nueva venta</Link>
                     </div>
-                    <div className="flex flex-row gap-3">
+                <div className="flex flex-row gap-3">
                     <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
                         <option value="0">Descendente</option>
                         <option value="1">Ascendente</option>
@@ -142,7 +142,7 @@ const SalesPage = () => {
                                                             {sale.Status?.statusName}
                                                         </td> */}
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <SaleOptions idSale={sale.idSalesCheck} />
+                                                            <SaleOptions idSalesCheck={sale.idSalesCheck} />
                                                         </td>
                                                     </tr>
                                                 )

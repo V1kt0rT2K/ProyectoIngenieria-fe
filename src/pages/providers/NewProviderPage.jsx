@@ -2,18 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import BackButton from "../../components/BackButton";
 import Validator from "../../utils/Validator";
 import ProviderService from "../../utils/service/ProviderService";
+import toast, { Toaster } from 'react-hot-toast';
 
 const NewProviderPage = () => {
 
     const formRef = useRef(null);
     const isLoading = useRef(false);
-    const [isValid, setIsValid] = useState(true);
+    const isCorrect = useRef(true);
 
     const saveProvider = () =>{
         if(isLoading.current)
             return;
 
-        setIsValid(true);
+        isCorrect.current = true;
 
         let obj = {};
 
@@ -22,23 +23,27 @@ const NewProviderPage = () => {
                 !element.value
                 || element.name === "rtn" && !Validator.isRTN(element.value)
                 || element.name === "contact" && !Validator.isEmail(element.value)
-            )
-                setIsValid(false);
+            ){
+                isCorrect.current = false;
+            }
 
             obj[element.name] = element.value;
         });
 
-        if (!isValid) {
-            console.log("Informacion no valida", obj);
+        if (!isCorrect.current) {
+            toast.error("Informacion no valida");
             return;
         }
 
         isLoading.current = true;
 
+        console.log("Pasado la validacion.");
         ProviderService.saveProvider(obj).then(response => {
              if(!response.hasError) {
                 console.log("Proveedor guardado exitosamente", response);
-                return;
+                //return;
+             }else{
+                toast.error(response.meta.message);
              }
 
             //isLoading.current = false;
@@ -49,11 +54,18 @@ const NewProviderPage = () => {
 
     return (
         <>
+            <div><Toaster 
+              toastOptions={{
+                className: '',
+                duration: 1500,
+                removeDelay: 1000
+                }}/>
+            </div>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
                 <BackButton />
                 <div className="flex justify-between">
                     <p className="mb-2 text-lg text-orange-800 font-semibold underline">Crear Proveedor</p>
-                    { !isValid && <p className="mb-2 text-lg font-semibold bg-red-600 text-white rounded px-2 py-1">Informacion no valida</p> }
+                    {/* { !isValid && <p className="mb-2 text-lg font-semibold bg-red-600 text-white rounded px-2 py-1">Informacion no valida</p> } */}
                 </div>
                 <div className="rounded overflow-y-auto p-0">
                     <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">

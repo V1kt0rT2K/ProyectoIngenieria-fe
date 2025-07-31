@@ -1,6 +1,7 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { imageLogo } from "../assets/images/imagenBase64";
+import dayjs from "dayjs";
 //import logo from '../../assets/images/logo.png';
 
 // Registrar las fuentes
@@ -97,8 +98,8 @@ export const generateInvoicePdf = async (checkSaleData) => {
                     ]
                 ]
             },
-            { text: `Cliente: ${checkSaleData.idClient ? checkSaleData.idClient : "Cliente Final"}`, margin: [0, 10, 0, 0] },
-            { text: `Fecha: ${new Date(checkSaleData.generationDate).toDateString()}`, margin: [0, 0, 0, 10] },
+            { text: `Cliente: ${checkSaleData.idClient == "000" ? checkSaleData.idClient : "CLEINTE FINAL"}`, margin: [0, 10, 0, 0] },
+            { text: `Fecha: ${dayjs(checkSaleData.generationDate).format('YYYY-MM-DD HH:mm:ss')}`, margin: [0, 0, 0, 10] },
             // { text: `Rango Inicio: ${checkSaleData.CaiCodeRange.startRange}`, margin: [0, 0, 0, 10] },
             // { text: `Rango Final: ${checkSaleData.CaiCodeRange.endRange}`, margin: [0, 0, 0, 10] },
             { text: `Rango Inicial: ${checkSaleData.CaiCodeRange.startRange}`, margin: [0, 0, 0, 10] },

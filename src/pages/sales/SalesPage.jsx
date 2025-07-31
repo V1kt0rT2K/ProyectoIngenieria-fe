@@ -4,12 +4,13 @@ import Spinner from "../../components/Spinner";
 import SaleOptions from "../../components/SaleOptions";
 import SellerService from "../../utils/service/SellerService";
 import toast, { Toaster } from 'react-hot-toast';
+import dayjs from "dayjs";
 
 const SalesPage = () => {
     const [loading, setLoading] = useState(true);
 
     const [clientTypes, setClientTypes] = useState([]);
-    const [typeSelected, setTypeSelected] = useState("");
+    const [typeSelected, setTypeSelected] = useState("0");
     const [size, setSize] = useState("5");
     const [page, setPage] = useState("1");
     const [sort, setSort] = useState("0");
@@ -23,11 +24,9 @@ const SalesPage = () => {
             console.log("response ", response);
             if(!response.hasError){
                 setClientTypes(response.data);
-                setTypeSelected(response.data[0].idClientType);
+                //setTypeSelected(response.data[0].idClientType);
             }
         });
-
-        console.log("FDSAJÑFASDJKL");
 
         SellerService.getAllSalesChecksForUserByClientType(typeSelected,page,size,sort).then(response => {
             console.log("response  clientType", response);
@@ -47,6 +46,7 @@ const SalesPage = () => {
         if(!typeSelected) return;
 
         setLoading(true);
+        setSales([]);
         SellerService.getAllSalesChecksForUserByClientType(typeSelected,page,size,sort).then( response => {
             console.log(response);
             if(!response.hasError){
@@ -54,19 +54,12 @@ const SalesPage = () => {
                 setTotalRows(response.data.totalItems);
             }else{
                 toast.error(response.meta.message);
-                //setSales([]);
+                setSales([]);
             }
         });
 
         setLoading(false);
     }, [typeSelected,page,size,sort]);
-
-    // useEffect(() => {
-    //     setLoading(true);
-
-    //     setSales(ventas.slice(size * (page - 1), page * size));
-    //     setTimeout(() => setLoading(false), 1000);
-    // }, [page, size, sort]);
 
     return (
         <>
@@ -100,6 +93,12 @@ const SalesPage = () => {
                         </select>
                         <Link to="new_sale" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Nueva venta</Link>
                     </div>
+                    <div className="flex flex-row gap-3">
+                    <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
+                        <option value="0">Descendente</option>
+                        <option value="1">Ascendente</option>
+                    </select>
+                </div>
                 </div>
                 <p className="mt-6 text-lg text-orange-800 font-semibold underline">Historial de ventas</p>
                 <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>
@@ -124,10 +123,10 @@ const SalesPage = () => {
                                                 .map((sale, idx) =>
                                                     <tr key={idx}>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {sale.idSalesCheck}
+                                                            {sale.idSalesCheck  }
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {sale.Client?.identification}
+                                                            {sale.Client?.identification == "000" ? "CLIENTE FINAL" : sale.Client?.identification}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                             {(sale.subTotal + sale.ISV).toLocaleString('en-US', {
@@ -136,7 +135,7 @@ const SalesPage = () => {
                                                         })}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {new Date(sale.generationDate).toLocaleDateString()}
+                                                            {dayjs(sale.generationDate).format('YYYY-MM-DD HH:mm:ss')}
                                                         </td>
                                                         {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                             {sale.Status?.statusName}
@@ -157,10 +156,10 @@ const SalesPage = () => {
                     && (
                         <div className="flex justify-center space-x-4">
                             {
-                                [...Array(Math.floor(totalRows / size)).keys()].map(n =>
+                                [...Array(Math.ceil(totalRows / size)).keys()].map(n =>
                                     <button
                                         className={`text-orange-800 ${page == n + 1 ? "font-extrabold bg-orange-400 rounded px-1" : ""}`}
-                                        onClick={() => { setPage(n + 1); }}
+                                        onClick={() => { setPage(n + 1); console.log(page)}}
                                     >
                                         {n + 1}
                                     </button>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import BackButton from "../../components/BackButton";
 import ArrayUtils from "../../utils/ArrayUtils";
-import Configuration from "../../Configuration";
+import {useNavigate} from 'react-router-dom';
 import SellerService from "../../utils/service/SellerService";
 import { generateInvoicePdf } from "../../utils/generateCheckUtils";
 import toast, { Toaster } from 'react-hot-toast';
@@ -31,6 +31,8 @@ const NewSalePage = () => {
     const isLoading = useRef(false);
     const identity = useRef("");
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         //setSwineCuts(cuts);
         setTotal(ArrayUtils.sum(checkProducts.map(product => product.idProduct ? product.total : 0)));
@@ -46,6 +48,15 @@ const NewSalePage = () => {
 
         });
     }, []);
+
+    const removeProduct = (idx) => {
+        const currentProducts = [...checkProducts];
+
+        currentProducts.splice(idx,1);
+
+        setCheckProducts(currentProducts);
+
+    };
 
     const saveCheck = () => {
         if(isLoading.current)
@@ -74,6 +85,8 @@ const NewSalePage = () => {
             if(!response.hasError){
                 generateInvoicePdf(response.data);
                 toast.success("La factura se ha generado con éxito.");
+
+                navigate(-1);
             }else{
                 toast.error(response.meta.message);
             }
@@ -123,6 +136,7 @@ const NewSalePage = () => {
                                     <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Costo (Por libra)</th>
                                     <th className="border border-orange-900 bg-orange-700 text-white w-24 px-2">Cantidad</th>
                                     <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Total</th>
+                                    <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -150,27 +164,7 @@ const NewSalePage = () => {
                                                                 </option>)
                                                         }
                                                     </select>
-                                                    {/* <select className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700">
-                                                            <option
-                                                                key={0}
-                                                                onClick={() => setCheckProducts(setCheckProductType(checkProducts, idx, undefined).concat())}
-                                                            >
-                                                                Producto
-                                                            </option>
-                                                            {
-                                                                swineCuts
-                                                                    .map(cut =>
-                                                                        <option
-                                                                            className=""
-                                                                            key={cut.idProduct}
-                                                                            onClick={() => {
-                                                                                setCheckProducts(setCheckProductType(checkProducts, idx, cut.idProduct, swineCuts).concat())
-                                                                            }}
-                                                                        >
-                                                                            {cut.productName}
-                                                                        </option>)
-                                                            }
-                                                        </select> */}
+                                                    
                                                 </td>
                                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idProduct ? product.productDescription : ""}</td>
                                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idProduct ? product.price : ""}</td>
@@ -188,6 +182,15 @@ const NewSalePage = () => {
                                                     }
                                                 </td>
                                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{product.idProduct ? product.total : ""}</td>
+                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                    <button
+                                                        onClick={() => removeProduct(idx)}
+                                                        className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer rounded-full hover:bg-orange-900"
+                                                        aria-label="Delete"
+                                                    >
+                                                    Borrar
+                                                    </button>
+                                                </td>
                                             </tr>
                                         )
                                 }

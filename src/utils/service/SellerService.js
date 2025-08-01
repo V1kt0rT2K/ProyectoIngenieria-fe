@@ -4,8 +4,6 @@ import registerInterceptor from "../Interceptor";
 
 registerInterceptor();
 class SellerService {
-    constructor(){}
-
     static async getClientTypes() {
         
         const result = await fetch(`

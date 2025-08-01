@@ -16,7 +16,7 @@ import NewProductBatchPage from "../pages/inventory/NewProductBatchPage";
 import NewLotPage from "../pages/inventory/NewLotPage";
 import LotInfoPage from "../pages/inventory/LotInfoPage";
 import ProductCatalogPage from "../pages/inventory/ProductCatalogPage";
-import NewProductPage from "../pages/inventory/newProductPage";
+import NewProductPage from "../pages/inventory/NewProductPage";
 
 import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
@@ -30,6 +30,7 @@ import NewSalePage from "../pages/sales/NewSalePage";
 import SaleDetailPage from "../pages/sales/SaleDetailPage";
 
 import ClientsPage from "../pages/clients/ClientsPage";
+import NewClientPage from "../pages/clients/NewClientPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -90,6 +91,7 @@ const Routes = () => {
 
                     <Route path="clients" element={<MainLayout title="Clientes" />} >
                         <Route index element={<ClientsPage />} />
+                        <Route path="new_client" element={<NewClientPage />} />
                     </Route>
                 </Route>
 

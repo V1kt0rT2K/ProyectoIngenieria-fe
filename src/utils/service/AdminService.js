@@ -5,8 +5,6 @@ import registerInterceptor from "../Interceptor";
 registerInterceptor();
 
 class AdminService {
-    constructor(){}
-
     static async getAllUsers(page,size,sort) {
         
         const result = await fetch(`

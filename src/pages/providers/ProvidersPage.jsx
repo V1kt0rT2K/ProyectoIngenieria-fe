@@ -3,20 +3,7 @@ import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ProviderOptions from "../../components/ProviderOptions";
 import ProvidersService from "../../utils/service/ProviderService";
-/*
-const proveedores = [
-    { id: 1, name: "Proveedor A", contact: "Juan Pérez", category: "Carnes", product: "Carne de res" },
-    { id: 2, name: "Proveedor B", contact: "Laura Gómez", category: "Carnes", product: "Carne de cerdo" },
-    { id: 3, name: "Proveedor C", contact: "carnes_c@gmail.com", category: "Carnes", product: "Carne de pollo" },
-    { id: 4, name: "Proveedor D", contact: "0987-123456", category: "Insumos", product: "Bolsas plásticas" },
-    { id: 5, name: "Proveedor E", contact: "proveedore@empresa.com", category: "Alimentos", product: "Condimentos" },
-    { id: 6, name: "Proveedor F", contact: "Carlos López", category: "Insumos", product: "Guantes de látex" },
-    { id: 7, name: "Proveedor G", contact: "proveedorg@supply.com", category: "Carnes", product: "Carne de cordero" },
-    { id: 8, name: "Proveedor H", contact: "Ana Ruiz", category: "Alimentos", product: "Salsas preparadas" },
-    { id: 9, name: "Proveedor I", contact: "504-99887766", category: "Limpieza", product: "Desinfectante" },
-    { id: 10, name: "Proveedor J", contact: "ventasJ@empresa.com", category: "Limpieza", product: "Detergente industrial" }
-];
-*/
+
 const ProvidersPage = () => {
     const [loading, setLoading] = useState(true);
 

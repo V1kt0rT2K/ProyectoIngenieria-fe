@@ -28,7 +28,7 @@ const LoginForm = () => {
             obj[key] = val;
         }
 
-        const password = SHA256(obj.password).toString();
+        const password = obj.password//SHA256(obj.password).toString();
         console.log(password);
         obj.password = password;
         console.log(obj);

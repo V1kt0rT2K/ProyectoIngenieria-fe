@@ -1,16 +1,26 @@
 import toast, { Toaster } from "react-hot-toast";
 import BackButton from "../../components/BackButton";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Validator from "../../utils/Validator";
 import ClientService from "../../utils/service/ClientService";
 import { useNavigate } from "react-router-dom";
+import SellerService from "../../utils/service/SellerService";
 
 const NewClientPage = () => {
     const formRef = useRef(null);
     const navigate = useNavigate();
+    const [clientTypes,setClientTypes] = useState([]);
 
     const isLoading = useRef(false);
     const isCorrect = useRef(true);
+
+    useEffect(() =>{
+        SellerService.getClientTypes().then(response => {
+            if(!response.hasError){
+                setClientTypes(response.data);
+            }
+        });
+    },[]);
     
     const saveClient = () => {
         if (isLoading.current)
@@ -57,6 +67,8 @@ const NewClientPage = () => {
                 toast.success("Cliente creado con éxito");
                 form.querySelectorAll("input").forEach(input => input.value = "");
                 form.querySelector("select").value = "0";
+                toast.success("Cliente creado con éxito.");
+                navigate(-1);
             } else {
                 toast.error(response.meta.message);
             }
@@ -94,6 +106,7 @@ const NewClientPage = () => {
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Nombre</p>
                                 <input
+                                    
                                     name="fullName"
                                     className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                 />
@@ -101,6 +114,7 @@ const NewClientPage = () => {
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Contacto</p>
                                 <input
+                                    placeholder="Correo: abcd@gmail.com o Numero de Telefono"
                                     name="contact"
                                     className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                 />
@@ -114,11 +128,22 @@ const NewClientPage = () => {
                             </div>
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Tipo de cliente</p>
-                                <select className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
-                                    <option value="0">Seleccionar tipo de cliente</option>
-                                    <option value="1">Minorista</option>
-                                    <option value="2">Mayorista</option>
-                                </select>
+                                {
+                                    clientTypes && (
+                                        <select  className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
+                                            <option value="0">Seleccionar tipo de cliente</option>
+                                            {
+                                                clientTypes.map((type,idx) =>
+                                                    <option key={type.idClientType}
+                                                            value={type.idClientType}
+                                                    >
+                                                        {type.clientTypeName}
+                                                    </option>
+                                                )
+                                            }
+                                        </select>
+                                    )
+                                }
                             </div>
                         </div>
 

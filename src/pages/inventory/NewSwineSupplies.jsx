@@ -87,51 +87,54 @@ const decrementarLotes = async (idSupply, quantityNeeded) => {
     }
 };
 
-    const executeSave = async () => {
-    
-        try {
-            const session = localStorage.getItem("session"); 
-            if (!session) {
-                toast.error("Debe iniciar sesión para realizar esta acción.");
-            return;}
-                const User=JSON.parse(session);
-
-    for (let supply of newSupplies) {
-        const idSupply = parseInt(supply.supplyId);
-        const quantity = parseInt(supply.quantity);
-        const decrementado = await decrementarLotes(idSupply, quantity);
-        if (!decrementado) {
-            toast.error(`No se pudo suministrar el insumo con ID ${idSupply}`);
+const executeSave = async () => {
+    try {
+        const session = localStorage.getItem("session"); 
+        if (!session) {
+            toast.error("Debe iniciar sesión para realizar esta acción.");
             return;
-    }
+        }
+        const User = JSON.parse(session);
 
+      
+        for (let supply of newSupplies) {
+            const idSupply = parseInt(supply.supplyId);
+            const quantity = parseInt(supply.quantity);
+            const decrementado = await decrementarLotes(idSupply, quantity);
+
+            if (!decrementado) {
+                toast.error(`No se pudo suministrar el insumo con ID ${idSupply}`);
+                return;
+            }
+        }
+
+        
         const payload = newSupplies.map(supply => ({
             idSwineBatch: parseInt(idLote),
             idSupply: parseInt(supply.supplyId),
             quantity: parseInt(supply.quantity),
-            generationDate: new Date(supply.generationDate + "T00:00:00"), // adaptamos generationDate como generación
+            generationDate: new Date(supply.generationDate + "T00:00:00"),
             idUser: User.idUser
         }));
 
-            console.log("Payload to save:", payload);
-            payload.forEach(SwineSupplies => {
-                const response = SwineSuppliesService.createSwineSupplies(SwineSupplies);
-            if (!response.hasError) {
-                toast.success("Insumos suministrados correctamente.");
-                setNewSupplies([]);
-                return;
-            } else {
-                toast.error("Error al guardar insumos.");
-            }
-            
-            });
-            }
-            
-        } catch (error) {
-            console.error("Error al guardar insumos:", error);
-            toast.error("No se pudo guardar. Intente nuevamente.");
+        console.log("Payload to save:", payload);
+        const responses = await Promise.all(
+            payload.map(SwineSupplies => SwineSuppliesService.createSwineSupplies(SwineSupplies))
+        );
+
+        if (responses.some(r => r.hasError)) {
+            toast.error("Error al guardar uno o más insumos.");
+        } else {
+            toast.success("Insumos suministrados correctamente.");
+            setNewSupplies([]);
         }
-    };
+
+    } catch (error) {
+        console.error("Error al guardar insumos:", error);
+        toast.error("No se pudo guardar. Intente nuevamente.");
+    }
+};
+
 
     const handleSave = () => {
         if (newSupplies.length === 0) {

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 import Pagination from "react-js-pagination";
+import OrderWholesalerService from "../../utils/service/OrderWholesalerService";
+import dayjs from "dayjs";
 
 const OrdersWholesalerPage = () => {
     const [loading, setLoading] = useState(true);
@@ -13,7 +15,18 @@ const OrdersWholesalerPage = () => {
     const [size, setSize] = useState(4);
     const [page, setPage] = useState(1);
 
-    useEffect(() => setLoading(false));
+    useEffect(() => {
+        setLoading(true);
+
+        OrderWholesalerService.getAllOrders(page, size, sort).then(response => {
+            if (!response.hasError) {
+                setOrders(response.data.data);
+                setTotalRows(response.data.totalItems)
+            }
+        });
+
+        setLoading(false);
+    }, []);
 
     return (
         <>
@@ -48,12 +61,12 @@ const OrdersWholesalerPage = () => {
                                             orders
                                                 .map((order, idx) =>
                                                     <tr key={idx}>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.identification ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.fullName ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.contact ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.address ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.address ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.address ?? "_"}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.idOrderWholesaler}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.idClient}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{order.Status.statusName}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{(order.subTotal + order.ISV).toLocaleString()}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{dayjs(order.generationDate).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{dayjs(order.deliveryDate).format('YYYY-MM-DD')}</td>
                                                     </tr>
                                                 )
                                         }

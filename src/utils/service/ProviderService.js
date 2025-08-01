@@ -30,5 +30,28 @@ class ProviderService {
 
         return await result.json();
     }
+
+    static async getProviderById(id) {
+  const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/get/${id}`, {
+    method: "GET",
+    headers: {
+      "Authorization": localStorage.getItem("jwt")
+    }
+  });
+  return await result.json();
+}
+
+static async updateProvider(payload) {
+  const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/update`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": localStorage.getItem("jwt")
+    },
+    body: JSON.stringify(payload)
+  });
+  return await result.json();
+}
+
 }
 export default ProviderService;

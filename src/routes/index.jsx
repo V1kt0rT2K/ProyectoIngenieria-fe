@@ -57,6 +57,8 @@ const Routes = () => {
                     <Route path="providers" element={<MainLayout title="Proveedores" />} >
                         <Route index element={<ProvidersPage />} />
                         <Route path="new_provider" element={<NewProviderPage />} />
+                        <Route path="edit_provider" element={<NewProviderPage />} />
+                        <Route path="view_provider" element={<NewProviderPage />} />
                     </Route>
 
                     <Route path="purchases" element={<MainLayout title="Compras" />} >

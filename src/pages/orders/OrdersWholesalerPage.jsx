@@ -26,7 +26,7 @@ const OrdersWholesalerPage = () => {
         });
 
         setLoading(false);
-    }, []);
+    }, [sort, size, page]);
 
     return (
         <>

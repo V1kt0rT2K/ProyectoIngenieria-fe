@@ -5,8 +5,21 @@ import registerInterceptor from "../Interceptor";
 registerInterceptor();
 
 class AdminService {
+    static async getUserById(id) {
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/users/${id}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
     static async getAllUsers(page,size,sort) {
-        
         const result = await fetch(`
             ${Configuration.API_BASE_URL}/users/get/all/${page}/${size}/${sort}`, 
         {

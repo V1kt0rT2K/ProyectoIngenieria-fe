@@ -36,6 +36,8 @@ class AuthService {
 
         return await result.json();
     }
+
 }
+
 
 export default AuthService;

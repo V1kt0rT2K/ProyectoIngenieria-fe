@@ -75,7 +75,7 @@ useEffect(() => {
                                 ]
                 );
                 setAddNew("new_lot");
-                setToDetails("new_lot_information");  
+                setToDetails("lot");  
                 
                 
                 const swineBatchData = await fetchSwineBatch();
@@ -254,6 +254,16 @@ useEffect(() => {
         )}
 
         {category == Categories.PRODUCTS && inventory.length > 0 && (
+            
+            <div className="mt-6 px-6">
+                <InventoryTable
+                    columns={columnsTable}
+                    data={inventory}
+                    to={toDetails}
+                />
+            </div>
+        )}
+        {category == Categories.TOOLS && inventory.length > 0 && (
             
             <div className="mt-6 px-6">
                 <InventoryTable

@@ -27,6 +27,7 @@ import NewProviderPage from "../pages/providers/NewProviderPage";
 
 import SalesPage from "../pages/sales/SalesPage";
 import NewSalePage from "../pages/sales/NewSalePage";
+import SaleDetailPage from "../pages/sales/SaleDetailPage";
 
 import ClientsPage from "../pages/clients/ClientsPage";
 
@@ -48,7 +49,7 @@ const Routes = () => {
                         <Route index element={<InventoryPage />} />
 
                         <Route path="new_product_batch" element={<NewProductBatchPage />} />
-                        <Route path="lot_information" element={<LotInfoPage />} />
+                        <Route path="/inventory/lot/:idLote" element={<LotInfoPage />} />
                         <Route path="new_lot" element={<NewLotPage />} />
                         <Route path="product_catalog" element={<ProductCatalogPage />} />
                         <Route path="new_product" element={<NewProductPage />} />                       
@@ -84,6 +85,7 @@ const Routes = () => {
                     <Route path="sales" element={<MainLayout title="Ventas" />} >
                         <Route index element={<SalesPage />} />
                         <Route path="new_sale" element={<NewSalePage />} />
+                        <Route path="sale_detail" element={<SaleDetailPage/>} />
                     </Route>
 
                     <Route path="clients" element={<MainLayout title="Clientes" />} >

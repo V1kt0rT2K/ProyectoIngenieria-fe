@@ -5,14 +5,15 @@ import SaleOptions from "../../components/SaleOptions";
 import SellerService from "../../utils/service/SellerService";
 import toast, { Toaster } from 'react-hot-toast';
 import dayjs from "dayjs";
+import Pagination from "react-js-pagination";
 
 const SalesPage = () => {
     const [loading, setLoading] = useState(true);
 
     const [clientTypes, setClientTypes] = useState([]);
     const [typeSelected, setTypeSelected] = useState("0");
-    const [size, setSize] = useState("5");
-    const [page, setPage] = useState("1");
+    const [size, setSize] = useState(4);
+    const [page, setPage] = useState(1);
     const [sort, setSort] = useState("0");
     const [totalRows, setTotalRows] = useState(0);
 
@@ -34,7 +35,7 @@ const SalesPage = () => {
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
             }else{
-                toast.error(response.meta.message);
+                //toast.error(response.meta.message);
             }
         });
 
@@ -53,7 +54,7 @@ const SalesPage = () => {
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
             }else{
-                toast.error(response.meta.message);
+                //toast.error(response.meta.message);
                 setSales([]);
             }
         });
@@ -93,7 +94,7 @@ const SalesPage = () => {
                         </select>
                         <Link to="new_sale" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Nueva venta</Link>
                     </div>
-                    <div className="flex flex-row gap-3">
+                <div className="flex flex-row gap-3">
                     <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
                         <option value="0">Descendente</option>
                         <option value="1">Ascendente</option>
@@ -141,7 +142,7 @@ const SalesPage = () => {
                                                             {sale.Status?.statusName}
                                                         </td> */}
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <SaleOptions idSale={sale.idSalesCheck} />
+                                                            <SaleOptions idSalesCheck={sale.idSalesCheck} />
                                                         </td>
                                                     </tr>
                                                 )
@@ -155,16 +156,22 @@ const SalesPage = () => {
                     !loading
                     && (
                         <div className="flex justify-center space-x-4">
-                            {
-                                [...Array(Math.ceil(totalRows / size)).keys()].map(n =>
-                                    <button
-                                        className={`text-orange-800 ${page == n + 1 ? "font-extrabold bg-orange-400 rounded px-1" : ""}`}
-                                        onClick={() => { setPage(n + 1); console.log(page)}}
-                                    >
-                                        {n + 1}
-                                    </button>
-                                )
-                            }
+                            <Pagination
+                            activePage={page}
+                            itemsCountPerPage={size}
+                            totalItemsCount={totalRows}
+                            pageRangeDisplayed={5}
+                            onChange={(pageNumber)=>{setPage(pageNumber)}}
+                            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+                            itemClass="flex items-center justify-center"
+                            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+                            disabledClass="opacity-50 cursor-not-allowed"
+                            prevPageText="<<"
+                            nextPageText=">>"
+                            firstPageText="Primera"
+                            lastPageText="Última"
+                            />
                         </div>
                     )
                 }

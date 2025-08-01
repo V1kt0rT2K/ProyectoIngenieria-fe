@@ -1,4 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
+
+
+registerInterceptor();
 
 class AdminService {
     constructor(){}
@@ -11,8 +15,7 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -27,8 +30,7 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -43,8 +45,7 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -59,8 +60,7 @@ class AdminService {
             method: "PUT",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
         });
@@ -76,8 +76,7 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -92,8 +91,7 @@ class AdminService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 

@@ -4,6 +4,7 @@ import Spinner from "../../components/Spinner";
 import BackButton from "../../components/BackButton";
 import AdminService from "../../utils/service/AdminService";
 import toast, { Toaster } from 'react-hot-toast';
+import Pagination from "react-js-pagination";
 
 const UsersRequestsTable = ({requests}) => {
     
@@ -55,8 +56,8 @@ const UsersRequestsPage = () => {
     const [status, setStatus] = useState([]);
     const [statusSelected, setStatusSelected] = useState("");
     const [sort, setSort] = useState("0");
-    const [page, setPage] = useState("1");
-    const [size, setSize] = useState("4");
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(4);
 
     useEffect(() => {
         AdminService.getStatusByIdType(1).then(response =>{
@@ -134,16 +135,22 @@ const UsersRequestsPage = () => {
                     !loading
                     && (
                         <div className="flex justify-center space-x-4">
-                            {
-                                [...Array(Math.ceil(totalRows / size)).keys()].map(n =>
-                                    <button
-                                        className={`text-orange-800 ${page == n + 1 ? "font-extrabold bg-orange-400 rounded px-1" : ""}`}
-                                        onClick={() => { setPage(n + 1); console.log(page)}}
-                                    >
-                                        {n + 1}
-                                    </button>
-                                )
-                            }
+                            <Pagination
+                            activePage={page}
+                            itemsCountPerPage={size}
+                            totalItemsCount={totalRows}
+                            pageRangeDisplayed={5}
+                            onChange={(pageNumber)=>{setPage(pageNumber)}}
+                            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+                            itemClass="flex items-center justify-center"
+                            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+                            disabledClass="opacity-50 cursor-not-allowed"
+                            prevPageText="<<"
+                            nextPageText=">>"
+                            firstPageText="Primera"
+                            lastPageText="Última"
+                            />
                         </div>
                     )
                 }

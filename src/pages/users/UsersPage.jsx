@@ -5,6 +5,7 @@ import Spinner from "../../components/Spinner";
 import UserOptions from "../../components/UserOptions";
 import AdminService from "../../utils/service/AdminService";
 import toast, { Toaster } from 'react-hot-toast';
+import Pagination from "react-js-pagination";
 
 const UsersTable = ({ users }) => {
 
@@ -131,16 +132,22 @@ const UsersPage = () => {
                     !loading
                     && (
                         <div className="flex justify-center space-x-4">
-                            {
-                                [...Array(Math.ceil(totalRows / size)).keys()].map(n =>
-                                    <button
-                                        className={`text-orange-800 ${page == n + 1 ? "font-extrabold bg-orange-400 rounded px-1" : ""}`}
-                                        onClick={() => { setPage(n + 1); console.log(page)}}
-                                    >
-                                        {n + 1}
-                                    </button>
-                                )
-                            }
+                            <Pagination
+                            activePage={page}
+                            itemsCountPerPage={size}
+                            totalItemsCount={totalRows}
+                            pageRangeDisplayed={5}
+                            onChange={(pageNumber)=>{setPage(pageNumber)}}
+                            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+                            itemClass="flex items-center justify-center"
+                            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+                            disabledClass="opacity-50 cursor-not-allowed"
+                            prevPageText="<<"
+                            nextPageText=">>"
+                            firstPageText="Primera"
+                            lastPageText="Última"
+                            />
                         </div>
                     )
                 }

@@ -1,4 +1,8 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
+
+
+registerInterceptor();
 class ProviderService {
     constructor(){}
 
@@ -8,8 +12,7 @@ class ProviderService {
             method: "GET",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             }
         });
 
@@ -22,8 +25,7 @@ class ProviderService {
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("jwt")
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)
         });

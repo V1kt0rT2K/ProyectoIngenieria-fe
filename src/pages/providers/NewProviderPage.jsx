@@ -4,10 +4,12 @@ import Validator from "../../utils/Validator";
 import ProviderService from "../../utils/service/ProviderService";
 import toast, { Toaster } from 'react-hot-toast';
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const NewProviderPage = () => {
 
+    const navigate = useNavigate();
     const formRef = useRef(null);
     // const isLoading = useRef(false);
     // const isCorrect = useRef(true);
@@ -90,6 +92,7 @@ const NewProviderPage = () => {
                 if (!response.hasError) {
                     console.log("Proveedor guardado exitosamente", response);
                     toast.success("Proveedor creado con éxito");
+                    navigate("/providers");
                 } else {
                     toast.error(response.meta.message);
                 }

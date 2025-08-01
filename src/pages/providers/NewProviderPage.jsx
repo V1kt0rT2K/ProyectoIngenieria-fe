@@ -23,6 +23,7 @@ const NewProviderPage = () => {
 
     useEffect(() => {
         console.log(location.state?.id);
+        console.log(location.pathname == '/providers/edit_provider');
         ProviderService.getProviderById(location.state?.id).then(response => {
             if (!response.hasError) {
                 const { providerName, RTN, providerContact, location } = response.data;
@@ -33,7 +34,7 @@ const NewProviderPage = () => {
                     address: location
                 });
             } else {
-                toast.error("No se pudo cargar el proveedor.");
+                //toast.error("No se pudo cargar el proveedor.");
             }
         });
     }, []);
@@ -157,7 +158,9 @@ const NewProviderPage = () => {
 
                     </div>
                     {
-                        location.pathname == '/providers/edit_provider' &&  <div className="mt-6 bg-orange-200 border border-orange-300 p-6">
+                        (location.pathname == '/providers/edit_provider' || location.pathname == '/providers/new_provider') && 
+                        (
+                            <div className="mt-6 bg-orange-200 border border-orange-300 p-6">
                             <div className="mt-2 flex justify-center">
                                 <button
                                     className="bg-green-600 rounded px-3 py-1 font-semibold text-white mt-2"
@@ -167,9 +170,8 @@ const NewProviderPage = () => {
                                 </button>
                             </div>
                         </div>
+                        )
                     }
-
-
                 </div>
             </div>
         </>

@@ -4,8 +4,6 @@ import registerInterceptor from "../Interceptor";
 
 registerInterceptor();
 class ProviderService {
-    constructor() { }
-
     static async getAllProviders() {
         const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/get/all`,
             {

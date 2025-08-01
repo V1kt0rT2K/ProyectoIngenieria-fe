@@ -17,6 +17,7 @@ import NewLotPage from "../pages/inventory/NewLotPage";
 import LotInfoPage from "../pages/inventory/LotInfoPage";
 import ProductCatalogPage from "../pages/inventory/ProductCatalogPage";
 import NewProductPage from "../pages/inventory/NewProductPage";
+import NewSwineSupplies from "../pages/inventory/NewSwineSupplies"; 
 
 import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
@@ -31,6 +32,8 @@ import SaleDetailPage from "../pages/sales/SaleDetailPage";
 
 import ClientsPage from "../pages/clients/ClientsPage";
 import NewClientPage from "../pages/clients/NewClientPage";
+
+import OrdersWholesalerPage from "../pages/orders/OrdersWholesalerPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -53,7 +56,9 @@ const Routes = () => {
                         <Route path="/inventory/lot/:idLote" element={<LotInfoPage />} />
                         <Route path="new_lot" element={<NewLotPage />} />
                         <Route path="product_catalog" element={<ProductCatalogPage />} />
-                        <Route path="new_product" element={<NewProductPage />} />                       
+                        <Route path="new_product" element={<NewProductPage />} />   
+                        <Route path="/inventory/:idLote/new-supplies" element={<NewSwineSupplies />} />
+                    
                     </Route>
 
                     <Route path="providers" element={<MainLayout title="Proveedores" />} >
@@ -92,6 +97,10 @@ const Routes = () => {
                     <Route path="clients" element={<MainLayout title="Clientes" />} >
                         <Route index element={<ClientsPage />} />
                         <Route path="new_client" element={<NewClientPage />} />
+                    </Route>
+
+                    <Route path="orders" element={<MainLayout title="Pedidos" />} >
+                        <Route index element={<OrdersWholesalerPage />} />
                     </Route>
                 </Route>
 

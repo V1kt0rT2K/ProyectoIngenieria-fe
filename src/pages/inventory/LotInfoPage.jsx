@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SwineBatchService from "../../utils/service/SwineBatchService";
 import SwineSuppliesService from "../../utils/service/SwineSuppliesService";
 import InventoryTable from "../../components/InventoryTable";
@@ -96,6 +97,13 @@ const LotInfoPage = () => {
                     <div>
                         <label className="font-semibold">Etapa:</label>
                         <p>{loteData.etapa}</p>
+                    </div>
+                    <div>
+                   <Link 
+                    to={`/inventory/${idLote}/new-supplies`} 
+                    className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">
+                    + Suministrar Insumos
+                    </Link>
                     </div>
                 </div>
             )}

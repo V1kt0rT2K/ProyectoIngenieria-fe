@@ -25,16 +25,31 @@ const ProvidersPage = () => {
 
     const [providers, setProviders] = useState([]);
 
-useEffect(() => {
-    const loadProviders = async () => {
-        const data = await fetchProviders();
-        setProviders(data);
-        setLoading(false);
-    };
+    useEffect(() => {
+        const loadProviders = async () => {
+            const data = await fetchProviders();
+            setProviders(data);
+            setLoading(false);
+        };
 
-    loadProviders();
-    
-}, []);
+        loadProviders();
+
+    }, []);
+
+    const deleteProvider = async (id) => {
+
+        const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este proveedor?");
+
+        if (!confirmed) return; 
+        
+        const payload = { idProvider: id };
+        const response = await ProvidersService.deleteProvider(payload);
+        if (!response.hasError) {
+            setProviders(prev => prev.filter(provider => provider.id !== id));
+        } else {
+            console.error("Error al eliminar proveedor:", response.meta?.message);
+        }
+    };
 
     return (
         <>
@@ -78,9 +93,9 @@ useEffect(() => {
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                             {prov.location}
-                                                        </td>                                                        
+                                                        </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <ProviderOptions id={prov.id} />
+                                                            <ProviderOptions id={prov.id} onDelete={deleteProvider} />
                                                         </td>
                                                     </tr>
                                                 )
@@ -97,19 +112,21 @@ useEffect(() => {
 const fetchProviders = async () => {
     try {
         const response = await ProvidersService.getAllProviders();
-        
+
         if (!response.hasError && response.data) {
             return response.data.map(item => ({
-            id: item.idProvider,
-            name: item.providerName,
-            rtn: item.RTN,
-            contact: item.providerContact,
-            location: item.location,
-}));
-    } }catch (error) {
+                id: item.idProvider,
+                name: item.providerName,
+                rtn: item.RTN,
+                contact: item.providerContact,
+                location: item.location,
+            }));
+        }
+    } catch (error) {
         console.error("Error fetching providers:", error);
         return [];
-    }};
+    }
+};
 
 
 export default ProvidersPage;

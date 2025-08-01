@@ -1,13 +1,15 @@
 import DropDown from "./DropDown";
 import { Link } from "react-router-dom";
 
-const ProviderOptions = ({ id }) => {
+const ProviderOptions = ({ id, onDelete }) => {
     return (
         <DropDown links={[
             <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="view_provider" state={{ id: id }}>Ver Detalles</Link>,
             <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="edit_provider" state={{ id: id }}>Editar</Link>,
             <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="/purchases/new_purchase_order" state={{ preSelectedProvider: id, prevPage: "/providers" }}>Hacer Pedido</Link>,
-            <button className="w-full block px-4 py-2 font-semibold text-md text-white bg-red-700 hover:cursor-pointer hover:bg-orange-900">
+            <button
+                onClick={() => onDelete(id)}
+                className="w-full block px-4 py-2 font-semibold text-md text-white bg-red-700 hover:cursor-pointer hover:bg-orange-900">
                 Eliminar
             </button>
         ]} />

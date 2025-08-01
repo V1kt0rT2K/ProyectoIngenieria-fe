@@ -32,6 +32,8 @@ import SaleDetailPage from "../pages/sales/SaleDetailPage";
 import ClientsPage from "../pages/clients/ClientsPage";
 import NewClientPage from "../pages/clients/NewClientPage";
 
+import OrdersWholesalerPage from "../pages/orders/OrdersWholesalerPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const Routes = () => {
@@ -92,6 +94,10 @@ const Routes = () => {
                     <Route path="clients" element={<MainLayout title="Clientes" />} >
                         <Route index element={<ClientsPage />} />
                         <Route path="new_client" element={<NewClientPage />} />
+                    </Route>
+
+                    <Route path="orders" element={<MainLayout title="Pedidos" />} >
+                        <Route index element={<OrdersWholesalerPage />} />
                     </Route>
                 </Route>
 

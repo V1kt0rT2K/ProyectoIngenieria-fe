@@ -9,7 +9,6 @@ import PurchaseService from "../../utils/service/PurchaseService";
 import { useNavigate } from "react-router-dom";
 
 const setCheckSupplyType = (checkSupplies, idx, supplyType, supplies) => {
-    console.log(supplies, supplyType);
     const supply = supplies.find(c => c.idSupply === supplyType);
     checkSupplies[idx] = { ...checkSupplies[idx], ...supply, quantity: 1, total: supply.price };
     return checkSupplies;
@@ -66,17 +65,24 @@ const NewPurchasePage = () => {
             return;
         }
 
-        let obj = {
+        const payload = {
             idProvider: idProvider,
             detail: selectedSupplies
         };
 
+        console.log("checkSupplies",checkSupplies);
+        
+        console.log("payload",payload);
+
         isLoading.current = true;
 
-        PurchaseService.savePurchase(obj).then(response => {
+        PurchaseService.savePurchase(payload).then(response => {
             if (!response.hasError) {
                 toast.success("Compra guardada con exito");
                 navigate(-1);
+            }
+            else{
+                toast.error(response.meta.message);
             }
         });
 
@@ -84,8 +90,6 @@ const NewPurchasePage = () => {
     }
 
     useEffect(() => {
-        console.log(prevPage);
-        //setSupplies(cuts);
         setTotal(ArrayUtils.sum(checkSupplies.map(supply => supply.idSupply ? supply.total : 0)));
     }, [checkSupplies]);
 
@@ -98,10 +102,10 @@ const NewPurchasePage = () => {
             }
         });
 
-        ProvidersService.getAllProviders().then(response => {
+        ProvidersService.getAllProviders(1,30,0).then(response => {
             console.log(response);
             if (!response.hasError) {
-                setProviders(response.data);
+                setProviders(response.data.data);
             }
         });
     }, []);
@@ -129,7 +133,7 @@ const NewPurchasePage = () => {
                                 <select onChange={(e) => { setProvider(e.target.value) }} value={provider} className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
                                     <option value={0}>Seleccionar proveedor</option>
                                     {
-                                        providers.map(p => <option value={p.idProvider}>{p.providerName}</option>)
+                                        providers.map(p => <option key={p.idProvider} value={p.idProvider}>{p.providerName}</option>)
                                     }
                                 </select>
                             </div>
@@ -139,7 +143,7 @@ const NewPurchasePage = () => {
                             <div className="bg-orange-100 py-2 flex flex-col ">
                                 <div className="flex justify-between items-center text-md text-orange-800 font-bold px-4">
                                     <p>Fecha de creacion</p>
-                                    <input className="bg-orange-200 rounded px-3 py-2" type="date" defaultValue={new Date().toISOString().split("T")[0]} />
+                                    <input className="bg-orange-200 rounded px-3 py-2" type="date" defaultValue={new Date().toISOString().split("T")[0] } disabled/>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +173,7 @@ const NewPurchasePage = () => {
                                                             <option
                                                                 key={0}
                                                             >
-                                                                Insumo
+                                                                Seleccionar Insumo
                                                             </option>
                                                             {
                                                                 supplies

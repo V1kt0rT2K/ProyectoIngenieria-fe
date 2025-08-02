@@ -40,10 +40,10 @@ const NewSalePage = () => {
 
 
     useEffect(() => {
-        SellerService.getAllProducts().then(response => {
+        SellerService.getAllProducts(1, 30, 0).then(response => {
             console.log(response);
             if (!response.hasError) {
-                setSwineCuts(response.data);
+                setSwineCuts(response.data.data);
             }
 
         });

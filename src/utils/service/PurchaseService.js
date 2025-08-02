@@ -74,6 +74,20 @@ class PurchaseService {
 
         return await result.json();
     } 
+
+    static async enterSupplyPurcharse(payload) {
+        
+        const result = await fetch(`${Configuration.API_BASE_URL}/order/purcharse/entry`, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        return await result.json();
+    }
     
     static async updatePurcharseStatus(payload) {
         

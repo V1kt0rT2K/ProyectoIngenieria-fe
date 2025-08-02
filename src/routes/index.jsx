@@ -22,6 +22,7 @@ import NewSwineSupplies from "../pages/inventory/NewSwineSupplies";
 import PurchasesPage from "../pages/purchases/PurchasesPage";
 import PurchaseInfoPage from "../pages/purchases/PurchaseInfoPage";
 import NewPurchasePage from "../pages/purchases/NewPurchasePage";
+import EntryPurcharsePage from "../pages/purchases/EntryPurcharsePage";
 
 import ProvidersPage from "../pages/providers/ProvidersPage";
 import NewProviderPage from "../pages/providers/NewProviderPage";
@@ -73,6 +74,7 @@ const Routes = () => {
                         <Route index element={<PurchasesPage />} />
                         <Route path="purchase_information" element={<PurchaseInfoPage />} />
                         <Route path="new_purchase_order" element={<NewPurchasePage />} />
+                        <Route path="entry_purcharse" element={<EntryPurcharsePage/>}/>
                     </Route>
 
                     <Route path="reports" element={<MainLayout title="Informes" />} >

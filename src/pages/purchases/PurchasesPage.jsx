@@ -17,7 +17,7 @@ const PurchasesPage = () => {
     const [totalItems, setTotalItems] = useState(0);
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(15);
+    const [size, setSize] = useState(4);
 
 
     useEffect(() => {

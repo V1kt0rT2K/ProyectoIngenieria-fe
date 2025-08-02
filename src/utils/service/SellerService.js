@@ -91,6 +91,18 @@ class SellerService {
 
         return await result.json();
     }
+    static async searchProducts(searchParam, page, size, sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/stock/product/search/${searchParam}/${page}/${size}/${sort}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
 
 }
 

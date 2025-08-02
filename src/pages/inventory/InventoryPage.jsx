@@ -10,6 +10,7 @@ import vacunaIcon from "../../assets/images/vacuna.png";
 import concentradoIcon from "../../assets/images/concentrado.png";
 import granjeroicon from "../../assets/images/granjero.png";
 import Pagination from "react-js-pagination";
+import BackButton from "../../components/BackButton";
 
 const Categories = {
     PRODUCTS: "Productos",
@@ -69,7 +70,7 @@ const InventoryPage = () => {
                         id: item.idSupplyBatch,
                         insumo: item.Supply.nameSupply,
                         tipo: item.Supply.SupplyType.nameSupplyType,
-                        cantidad: item.quantity,
+                        cantidad: item.stockQuantity,
                         fecha: new Date(item.expirationDate).toLocaleDateString(),
                     })),
                     totalItems: response.data.totalItems
@@ -91,7 +92,7 @@ const InventoryPage = () => {
                         id: item.idSupplyBatch,
                         insumo: item.Supply.nameSupply,
                         tipo: item.Supply.SupplyType.nameSupplyType,
-                        cantidad: item.quantity,
+                        cantidad: item.stockQuantity,
                         fecha: new Date(item.expirationDate).toLocaleDateString(),
                     })),
                     totalItems: response.data.totalItems
@@ -135,7 +136,7 @@ const InventoryPage = () => {
 
             switch (category) {
                 case Categories.PRODUCTS:
-                setSize()
+                setSize(4)
                     setColumnsTable([
                         {label:"No. Lote",field:"idproductBatch"},
                         {label:"Producto",field:"nombreProducto"},
@@ -280,6 +281,19 @@ const InventoryPage = () => {
                         </select>
                     </div>
                 </div>
+                {category === Categories.SUPPLIES && subCategory && (
+                    <div className="flex flex-col w-full items-start mb-4 ">
+                    <button
+                        onClick={() => {
+                        setSubCategory("");
+                        setPage(1);
+                    }}
+                    className="bg-orange-700 text-white font-semibold py-1 px-4 rounded hover:bg-orange-800 transition"
+                    >
+                    ← Regresar a Insumos
+                    </button>
+                    </div>
+                        )}
                 <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${!category || loading ? "" : "border border-orange-700 bg-orange-200"}`}>
                     {!category ? (
                         <div style={{ height: "55vh" }} className="w-full flex justify-center items-center font-extrabold text-3xl text-orange-700">
@@ -291,13 +305,14 @@ const InventoryPage = () => {
                         <>
                             {category === Categories.SUPPLIES && !subCategory && (
                                 <div className="flex flex-col items-center gap-4 w-full max-w-md mx-auto mt-4">
+                                    
                                     <SupplyOptionButton
                                         icon={granjeroicon}
                                         label="Todos los Insumos"
                                         onClick={() => {
                                             setSubCategory("todos");
                                             setPage(1);
-                                            setSize(4);
+                                            setSize(3);
                                         }}
                                     />
                                     <SupplyOptionButton
@@ -327,19 +342,18 @@ const InventoryPage = () => {
                                 </div>
                             )}
 
-                            {category === Categories.SUPPLIES && subCategory && inventory.length > 0 && (
-                                
-                                
-                                
-                                    <InventoryTable
-                                        columns={columnsTable}
-                                        data={inventory}
-                                        to={toDetails}
-                                    />
-                                
-                            )}
+                            
+
+        {category === Categories.SUPPLIES && subCategory && inventory.length > 0 && (
+            <InventoryTable
+                columns={columnsTable}
+                data={inventory}
+                to={toDetails}
+            />
+        )}
+
                             {category == Categories.PRODUCTS && inventory.length > 0 && (
-                                
+                                    <BackButton />,
                                     <InventoryTable
                                         columns={columnsTable}
                                         data={inventory}
@@ -349,7 +363,7 @@ const InventoryPage = () => {
                             )}
 
                             {category !== Categories.SUPPLIES && category !== Categories.PRODUCTS && inventory.length > 0 && (
-                                
+                                    <BackButton />,
                                     <InventoryTable
                                         columns={columnsTable}
                                         data={inventory}

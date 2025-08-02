@@ -86,6 +86,11 @@ const decrementarLotes = async (idSupply, quantityNeeded) => {
         return false;
     }
 };
+const removeSupply = (idx) => {
+    const updated = [...newSupplies];
+    updated.splice(idx, 1);
+    setNewSupplies(updated);
+};
 
 const executeSave = async () => {
     try {
@@ -191,46 +196,55 @@ const executeSave = async () => {
                                 <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Insumo</th>
                                 <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Cantidad</th>
                                 <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Fecha Consumo</th>
+                                <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Accion</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {newSupplies.map((row, idx) => (
-                                <tr key={idx}>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        <select
-                                            className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700"
-                                            value={row.supplyId}
-                                            onChange={(e) => handleChange(idx, "supplyId", e.target.value)}
-                                        >
-                                            <option value="">Seleccionar insumo</option>
-                                            {supplies.map((supply) => (
-                                                <option key={supply.idSupply} value={supply.idSupply}>
-                                                    {supply.nameSupply}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </td>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            className="bg-orange-300 py-1 px-2 rounded w-16 text-orange-700 font-extrabold focus:outline-none"
-                                            value={row.quantity}
-                                            onChange={(e) => handleChange(idx, "quantity", e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        <input
-                                            type="date"
-                                            className="bg-orange-300 py-1 px-2 rounded w-40 text-orange-700 font-extrabold focus:outline-none"
-                                            value={row.generationDate}
-                                            onChange={(e) => handleChange(idx, "generationDate", e.target.value)}
-                                        />
-                                    </td>
-                                    
-                                </tr>
-                            ))}
-                        </tbody>
+    {newSupplies.map((row, idx) => (
+        <tr key={idx}>
+            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                <select
+                    className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700"
+                    value={row.supplyId}
+                    onChange={(e) => handleChange(idx, "supplyId", e.target.value)}
+                >
+                    <option value="">Seleccionar insumo</option>
+                    {supplies.map((supply) => (
+                        <option key={supply.idSupply} value={supply.idSupply}>
+                            {supply.nameSupply}
+                        </option>
+                    ))}
+                </select>
+            </td>
+            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                <input
+                    type="number"
+                    min="1"
+                    className="bg-orange-300 py-1 px-2 rounded w-16 text-orange-700 font-extrabold focus:outline-none"
+                    value={row.quantity}
+                    onChange={(e) => handleChange(idx, "quantity", e.target.value)}
+                />
+            </td>
+            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                <input
+                    type="date"
+                    className="bg-orange-300 py-1 px-2 rounded w-40 text-orange-700 font-extrabold focus:outline-none"
+                    value={row.generationDate}
+                    onChange={(e) => handleChange(idx, "generationDate", e.target.value)}
+                />
+            </td>
+            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                <button
+                    onClick={() => removeSupply(idx)}
+                    className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer rounded hover:bg-orange-900"
+                >
+                    Borrar
+                </button>
+            </td>
+        </tr>
+    ))}
+</tbody>
+
                     </table>
 
                     <div className="flex justify-center">

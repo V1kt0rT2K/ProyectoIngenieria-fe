@@ -133,7 +133,7 @@ const PurchasesPage = () => {
                                                             {new Date(order.generationDate).toLocaleDateString()}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <PurchaseOptions id={order.idSupplyPurcharse} />
+                                                            <PurchaseOptions idSupplyPurcharse={order.idSupplyPurcharse} idStatus={order.idStatus} />
                                                         </td>
                                                     </tr>
                                                 )

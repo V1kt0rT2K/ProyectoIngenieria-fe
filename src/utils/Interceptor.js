@@ -20,22 +20,21 @@
           localStorage.setItem("jwt", newToken);
         }
 
-        // Mostrar errores con toastr
+        //// Mostrar errores con toastr
         // if (response.status == 400 || response.status == 500) {
         //   try {
-        //     console.log("response", response);
-            
-        //     console.log("response status", response.status);
-        //     const clonedResponse = response.clone();
-        //     response.json().then(json =>{
+        //     //const clonedResponse = response.clone();
+        //     return response.json().then(json =>{
         //       const errorMessage = json.meta?.message || "Error desconocido";
         //       toast.error(errorMessage);
+        //       console.log("toast interceptor", errorMessage);
+        //       return Promise.resolve({ ...json, status: response.status });
         //     });
             
         //   } catch (err) {
         //     toast.error("Error al procesar la respuesta del servidor");
         //   }
-        // }
+        //}
 
         return response;
       }

@@ -54,7 +54,7 @@ const SalesPage = () => {
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
             }else{
-                //toast.error(response.meta.message);
+                toast.error(response.meta.message);
                 setSales([]);
             }
         });

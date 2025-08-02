@@ -16,6 +16,20 @@ class OrderWholesalerService {
 
         return await result.json();
     }
+
+    static async getById(id) {
+        const result = await fetch(
+            `${Configuration.API_BASE_URL}/sales/orders/get/${id}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }      
 }
 
 export default OrderWholesalerService;

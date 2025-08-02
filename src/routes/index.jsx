@@ -34,7 +34,7 @@ import ClientsPage from "../pages/clients/ClientsPage";
 import NewClientPage from "../pages/clients/NewClientPage";
 
 import OrdersWholesalerPage from "../pages/orders/OrdersWholesalerPage";
-import OrdersWholesalerInfoPage from "../pages/orders/OrdersWholesalerInfoPage";
+import OrderWholesalerInfoPage from "../pages/orders/OrderWholesalerInfoPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -102,7 +102,7 @@ const Routes = () => {
 
                     <Route path="orders" element={<MainLayout title="Pedidos" />} >
                         <Route index element={<OrdersWholesalerPage />} />
-                        <Route path="order_wholesaler_information" element={<OrdersWholesalerInfoPage />} />
+                        <Route path="order_wholesaler_information" element={<OrderWholesalerInfoPage />} />
                     </Route>
                 </Route>
 

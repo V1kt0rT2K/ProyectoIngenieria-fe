@@ -4,8 +4,21 @@ import registerInterceptor from "../Interceptor";
 
 registerInterceptor();
 class ProviderService {
-    static async getAllProviders() {
-        const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/get/all`,
+    // static async getAllProviders() {
+    //     const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/get/all`,
+    //         {
+    //             method: "GET",
+    //             headers: {
+    //                 "Accept": "application/json",
+    //                 "Content-Type": "application/json"
+    //             }
+    //         });
+
+    //     return await result.json();
+    // }
+
+    static async getAllProviders(page, size, sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/get/all/${page}/${size}/${sort}`,
             {
                 method: "GET",
                 headers: {
@@ -16,6 +29,7 @@ class ProviderService {
 
         return await result.json();
     }
+
 
     static async saveProvider(payload) {
         const result = await fetch(`${Configuration.API_BASE_URL}/order/provider/create`,

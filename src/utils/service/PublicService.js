@@ -1,8 +1,6 @@
 import Configuration from "../../Configuration";
 
 class PublicService {
-    constructor(){}
-
     static async getUserRoles() {
         
         const result = await fetch(`

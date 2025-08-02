@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import BackButton from "../../components/BackButton";
 import SwineBatchService from "../../utils/service/SwineBatchService";
 import SwineSuppliesService from "../../utils/service/SwineSuppliesService";
 import InventoryTable from "../../components/InventoryTable";
@@ -8,12 +9,15 @@ import SupplyOptionButton from "../../components/SupplyOptionButton";
 import vacunaIcon from "../../assets/images/vacuna.png";
 import concentradoIcon from "../../assets/images/concentrado.png";
 import granjeroicon from "../../assets/images/granjero.png";
+import Pagination from "react-js-pagination";
 
 const LotInfoPage = () => {
     const { idLote } = useParams(); // este parámetro vendrá de la ruta
     const [loteData, setLoteData] = useState(null);
     const [supplies, setSupplies] = useState([]);
     const [filter, setFilter] = useState("todos");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
 
     const fetchLoteInfo = async () => {
         try {
@@ -46,6 +50,8 @@ const LotInfoPage = () => {
     };
 
 
+
+
     const filteredSupplies = supplies.filter(supply => {
         if (filter === "todos") return true;
         if (filter === "Concentrado") return true;
@@ -55,6 +61,9 @@ const LotInfoPage = () => {
         
             
     });
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentSupplies = filteredSupplies.slice(indexOfFirstItem, indexOfLastItem);
     
     const columns = [
         { label: "ID Lote", field: "idSwineSupply" },
@@ -74,6 +83,7 @@ const LotInfoPage = () => {
         <div className="rounded overflow-y-auto p-0">
         <div style={{ height: "80vh" }} className="flex flex-col pt-8">
         <div className="p-8 text-orange-800">
+            <BackButton />
             <h1 className="text-2xl font-bold mb-4">Detalle del Lote #{idLote}</h1>
 
             {loteData && (
@@ -112,28 +122,61 @@ const LotInfoPage = () => {
                 <SupplyOptionButton
                     icon={granjeroicon}
                     label="Todos"
-                    onClick={() => setFilter("todos")}
+                    onClick={() => {setFilter("todos"),
+                        setCurrentPage(1);
+                    }}
                 />
                 <SupplyOptionButton
                     icon={concentradoIcon}
                     label="Concentrado"
-                    onClick={() => setFilter("concentrado")}
+                    onClick={() => {setFilter("concentrado"),
+                        setCurrentPage(1);
+                    }}
                 />
                 <SupplyOptionButton
                     icon={vacunaIcon}
                     label="Vitaminas"
-                    onClick={() => setFilter("vitaminas")}
+                    onClick={() => {
+                    setFilter("vitaminas");
+                    setCurrentPage(1);
+                    }}
                 />
+
                 <SupplyOptionButton
                     icon={vacunaIcon}
                     label="Desparasitantes"
-                    onClick={() => setFilter("desparasitantes")}
+                    onClick={() =>{ setFilter("desparasitantes"),
+                        setCurrentPage(1);
+                    }}
                 />
             </div>
     
             <div className="mt-6">
-                <InventoryTable columns={columns} data={filteredSupplies} />
+                <InventoryTable columns={columns} data={currentSupplies} />
+
             </div>
+            {filteredSupplies.length > itemsPerPage && (
+        <div className="mt-4 flex justify-center">
+            <Pagination
+            activePage={currentPage}
+            itemsCountPerPage={itemsPerPage}
+            totalItemsCount={filteredSupplies.length}
+            pageRangeDisplayed={5}
+            onChange={(pageNumber) => setCurrentPage(pageNumber)}
+            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+            itemClass="flex items-center justify-center"
+            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            activeClass="bg-green-500"
+            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+            disabledClass="opacity-50 cursor-not-allowed"
+            prevPageText="<<"
+            nextPageText=">>"
+            firstPageText="Primera"
+            lastPageText="Última"
+        />
+    </div>
+)}
+
             
         </div>
         </div>

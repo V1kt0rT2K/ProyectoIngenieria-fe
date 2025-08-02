@@ -4,6 +4,20 @@ import registerInterceptor from "../Interceptor";
 
 registerInterceptor();
 class PurchaseService {
+    static async savePurchase(payload) {
+        const result = await fetch(
+            `${Configuration.API_BASE_URL}/order/purcharse/generate`, 
+        {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        return await result.json();
+    }    
 
     static async getStatusForPurcharses() {
         const result = await fetch(

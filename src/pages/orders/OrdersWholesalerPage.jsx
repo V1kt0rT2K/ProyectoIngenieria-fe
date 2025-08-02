@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 import Pagination from "react-js-pagination";
 import OrderWholesalerService from "../../utils/service/OrderWholesalerService";
 import dayjs from "dayjs";
+import OrderOptions from "../../components/OrderOptions";
 
 const OrdersWholesalerPage = () => {
     const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ const OrdersWholesalerPage = () => {
         });
 
         setLoading(false);
-    }, []);
+    }, [sort, size, page]);
 
     return (
         <>
@@ -54,6 +54,7 @@ const OrdersWholesalerPage = () => {
                                             <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Monto</th>
                                             <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Fecha de creacion</th>
                                             <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Fecha de entrega</th>
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -67,6 +68,7 @@ const OrdersWholesalerPage = () => {
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{(order.subTotal + order.ISV).toLocaleString()}</td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{dayjs(order.generationDate).format('YYYY-MM-DD HH:mm:ss')}</td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{dayjs(order.deliveryDate).format('YYYY-MM-DD')}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md"><OrderOptions id={order.idOrderWholesaler} /></td>
                                                     </tr>
                                                 )
                                         }

@@ -49,10 +49,10 @@ class SellerService {
         return await result.json();
     }
 
-    static async getAllProducts() {
+    static async getAllProducts(page, size, sort) {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/stock/product/get/all`, 
+            ${Configuration.API_BASE_URL}/stock/product/get/all/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {

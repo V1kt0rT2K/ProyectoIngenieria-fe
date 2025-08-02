@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BackButton from "../../components/BackButton";
 import SwineBatchService from "../../utils/service/SwineBatchService";
+import toast, { Toaster } from 'react-hot-toast';
 const NewLotPage = () => {
     const [lots, setLots] = useState([]);
 
@@ -14,22 +15,32 @@ const NewLotPage = () => {
         setLots(newLots);
     };
 
-    const handleSave = () => {
-    console.log("Lote guardado:", lots);
-    if (lots.length === 0) {
-        alert("Debe agregar al menos un lote."); }else{
-        lots.forEach(element => {
-        SwineBatchService.createSwineBatch(element);
-        });
-        alert("Lotes guardados correctamente.");
-        setLots([]); 
-    }
-        
+    const removeLot = (idx) => {
+        const updatedLots = [...lots];
+        updatedLots.splice(idx, 1);
+        setLots(updatedLots);
     };
+
+    const handleSave = () => {
+        console.log("Lote guardado:", lots);
+        if (lots.length === 0) {
+            toast.error("Debe agregar al menos un lote.");
+        } else {
+            lots.forEach(element => {
+                SwineBatchService.createSwineBatch(element);
+            });
+            toast.error("Lotes guardados correctamente.");
+            setLots([]);
+        }
+    };
+
     return (
         <>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
                 <BackButton />
+                <div>
+                                <Toaster toastOptions={{ duration: 1500, removeDelay: 1000 }} />
+                            </div>
                 <p className="mb-2 text-lg text-orange-800 font-semibold underline">Nuevo lote</p>
 
                 <div className="mt-6 bg-orange-200 border border-orange-300 p-6">
@@ -39,6 +50,7 @@ const NewLotPage = () => {
                             <tr>
                                 <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Cantidad de Cerdos</th>
                                 <th className="border border-orange-900 bg-orange-700 text-white w-64 px-2">Fecha de Nacimiento</th>
+                                <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,7 +61,7 @@ const NewLotPage = () => {
                                             className="bg-orange-300 py-1 px-2 rounded w-32 text-orange-700 font-extrabold focus:outline-none"
                                             type="number"
                                             min="1"
-                                            value={lot.quantity }
+                                            value={lot.quantity}
                                             onChange={(e) => handleLotChange(idx, "quantity", parseInt(e.target.value))}
                                         />
                                     </td>
@@ -60,6 +72,14 @@ const NewLotPage = () => {
                                             value={lot.birthDate}
                                             onChange={(e) => handleLotChange(idx, "birthDate", e.target.value)}
                                         />
+                                    </td>
+                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                        <button
+                                            onClick={() => removeLot(idx)}
+                                            className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer rounded hover:bg-orange-900"
+                                        >
+                                            Borrar
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

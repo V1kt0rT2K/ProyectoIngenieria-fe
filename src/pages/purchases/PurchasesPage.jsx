@@ -127,7 +127,7 @@ const PurchasesPage = () => {
                                                             {order.Provider.providerName}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            L. {(order.subTotal * order.ISV).toLocaleString()}
+                                                            L. {(order.subTotal + order.ISV).toLocaleString()}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                             {new Date(order.generationDate).toLocaleDateString()}

@@ -4,9 +4,9 @@ import registerInterceptor from "../Interceptor";
 
 registerInterceptor();
 class SupplyBatchService {
-    static async getSupplyBatch() {
+    static async getSupplyBatch(page, size, sort) {
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/supply/batch/get/all`, 
+            ${Configuration.API_BASE_URL}/supply/batch/get/all/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {
@@ -17,8 +17,8 @@ class SupplyBatchService {
 
         return await result.json();
     }
-    static async getSupplyBatchByType(type) {
-        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/get/type/${type}`, 
+    static async getSupplyBatchByType(type, page, size, sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/get/type/${type}/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {

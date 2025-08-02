@@ -68,6 +68,12 @@ const PurchaseInfoPage = () => {
                             }
                         </tbody>
                     </table>
+                    <div className="mt-4 font-semibold text-orange-800 inline-block flex flex-col space-y-3 bg-orange-300 p-6 rounded">
+                        <p className="flex justify-between"><span>Subtotal</span><span className="font-extrabold">L. {purchase && purchase.subTotal}</span></p>
+                        <p className="flex justify-between"><span>ISV</span><span className="font-extrabold">L. {purchase && (purchase.ISV).toFixed(2)}</span></p>
+                        <hr />
+                        <p className="flex justify-between"><span>Total</span><span className="font-extrabold">L. {purchase && (purchase.subTotal * 1.15).toFixed(2)}</span></p>
+                    </div>
                 </div>
             </div>
         </>

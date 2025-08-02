@@ -4,6 +4,9 @@ import ArrayUtils from "../../utils/ArrayUtils";
 import SupplyService from "../../utils/service/SupplyService";
 import ProvidersService from "../../utils/service/ProviderService";
 import { useLocation } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import PurchaseService from "../../utils/service/PurchaseService";
+import { useNavigate } from "react-router-dom";
 
 const setCheckSupplyType = (checkSupplies, idx, supplyType, supplies) => {
     console.log(supplies, supplyType);
@@ -21,23 +24,35 @@ const setCheckSupplyTotal = (supplies, idx, quantity) => {
 };
 
 const NewPurchasePage = () => {
+    const navigate = useNavigate();
+
     const [supplies, setSupplies] = useState([]);
     const [providers, setProviders] = useState([]);
     const [checkSupplies, setCheckSupplies] = useState([]);
     const [total, setTotal] = useState(0);
-    const [errorMsg, setErrorMsg] = useState(null);
 
     const location = useLocation();
     const { preSelectedProvider, prevPage } = location.state ?? { preSelectedProvider: 0, prevPage: "../" };
 
     const isLoading = useRef(false);
-    const providerRef = useRef(null);
+    const [provider, setProvider] = useState(preSelectedProvider);
+
+    const removeProduct = (idx) => {
+        const currentProducts = [...checkSupplies];
+
+        currentProducts.splice(idx,1);
+
+        setCheckSupplies(currentProducts);
+    };
 
     const saveOrder = () => {
-        const idProvider = parseInt(providerRef.current.value);
+        if(isLoading.current)
+            return;
+
+        const idProvider = parseInt(provider);
 
         if (idProvider === 0) {
-            setErrorMsg("Seleccionar proveedor");
+            toast.error("Seleccionar proveedor");
             return;
         }
 
@@ -47,24 +62,29 @@ const NewPurchasePage = () => {
         }));
 
         if (selectedSupplies.length === 0) {
-            setErrorMsg("Seleccionar insumos");
+            toast.error("Seleccionar insumos");
             return;
         }
 
-        setErrorMsg(null);
-
         let obj = {
             idProvider: idProvider,
-            subtotal: total,
-            isv: total * 0.15,
-            supplies: selectedSupplies
+            detail: selectedSupplies
         };
 
-        console.log(obj);
+        isLoading.current = true;
+
+        PurchaseService.savePurchase(obj).then(response => {
+            if (!response.hasError) {
+                toast.success("Compra guardada con exito");
+                navigate(-1);
+            }
+        });
+
+        isLoading.current = false;
     }
 
     useEffect(() => {
-        console.log(preSelectedProvider);
+        console.log(prevPage);
         //setSupplies(cuts);
         setTotal(ArrayUtils.sum(checkSupplies.map(supply => supply.idSupply ? supply.total : 0)));
     }, [checkSupplies]);
@@ -86,22 +106,19 @@ const NewPurchasePage = () => {
         });
     }, []);
 
-    const saveCheck = () => {
-        if(isLoading.current)
-            return;
-
-        isLoading.current = true;
-
-        isLoading.current = false
-    };
-
     return (
         <>
+            <div><Toaster 
+              toastOptions={{
+                className: '',
+                duration: 1500,
+                removeDelay: 1000
+                }}/>
+            </div>
             <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
-                <BackButton previous={prevPage} />
+                <BackButton previousPage={prevPage} />
                 <div className="flex justify-between">
                     <p className="mb-2 text-lg text-orange-800 font-semibold underline">Nueva orden de compra</p>
-                    { errorMsg && <p className="mb-2 text-white bg-red-500 px-3 py-1 font-semibold rounded">{ errorMsg }</p> }
                 </div>
                 <div className="rounded overflow-y-auto p-0">
                     <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">
@@ -109,7 +126,7 @@ const NewPurchasePage = () => {
                             {/* <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p> */}
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Proveedor</p>
-                                <select onChange={() => {}} value={preSelectedProvider} ref={providerRef} className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
+                                <select onChange={(e) => { setProvider(e.target.value) }} value={provider} className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none">
                                     <option value={0}>Seleccionar proveedor</option>
                                     {
                                         providers.map(p => <option value={p.idProvider}>{p.providerName}</option>)
@@ -136,6 +153,7 @@ const NewPurchasePage = () => {
                                     <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Precio</th>
                                     <th className="border border-orange-900 bg-orange-700 text-white w-24 px-2">Cantidad</th>
                                     <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Total</th>
+                                    <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -181,6 +199,15 @@ const NewPurchasePage = () => {
                                                     }
                                                 </td>
                                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{supply.idSupply ? supply.total : ""}</td>
+                                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                    <button
+                                                        onClick={() => removeProduct(idx)}
+                                                        className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer rounded hover:bg-orange-900"
+                                                        aria-label="Delete"
+                                                    >
+                                                    Borrar
+                                                    </button>
+                                                </td>
                                             </tr>
                                         )
                                 }

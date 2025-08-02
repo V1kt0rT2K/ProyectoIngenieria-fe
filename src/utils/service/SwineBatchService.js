@@ -7,10 +7,10 @@ registerInterceptor();
 class SwineBatchService {
     constructor(){}
 
-    static async getSwineBatch() {
+    static async getSwineBatch(page,size,sort) {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/stock/swinebatch/get/all`, 
+            ${Configuration.API_BASE_URL}/stock/swinebatch/get/all/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {

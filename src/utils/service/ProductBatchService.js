@@ -6,10 +6,10 @@ registerInterceptor();
 class ProductBatchService {
     constructor(){}
 
-    static async getAllProductBatch() {
+    static async getAllProductBatch(page,size, sort) {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/stock/product/batch/get/all`, 
+            ${Configuration.API_BASE_URL}/stock/product/batch/get/all/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {

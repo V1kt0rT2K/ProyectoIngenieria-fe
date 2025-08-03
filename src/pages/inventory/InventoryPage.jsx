@@ -10,15 +10,13 @@ import { inventoryColumns } from "../../utils/inventoryColumns";
 import SearchInput from "../../components/SearchInput";
 import CategorySelector from "../../components/CategorySelector";
 import NoRecordsMessage from "../../components/NoRecordsMessage";
-//se definen las categorias
+
 const Categories = {
   PRODUCTS: "Productos",
   LOT: "Lotes",
   SUPPLIES: "Insumos",
   TOOLS: "Herramientas"
 };
-//se define la configuración de las categorías
-//cada categoría tiene sus columnas, ruta para agregar, si tiene tabla y si es buscable
 const CATEGORY_CONFIG = {
   [Categories.PRODUCTS]: {
     columns: inventoryColumns.productos,
@@ -45,7 +43,6 @@ const CATEGORY_CONFIG = {
     searchable: false,
   },
 };
-//se define las categorias como un array para ser usado en el selector de categorias
 const categories = Object.values(Categories);
 const TableOrMessage = ({ data, columns }) => {
   return data.length > 0 ? (
@@ -56,8 +53,6 @@ const TableOrMessage = ({ data, columns }) => {
     <NoRecordsMessage />
   );
 };
-//mensaje de prompt para que el usuario elija una categoría
-//se muestra cuando no hay categoría seleccionada
 const PromptMessage = () => (
   <div 
     style={{ height: "55vh" }} 
@@ -99,20 +94,15 @@ const InventoryPage = () => {
     setPage(1);
     setSearchTerm("");
   };
-  //Estado del Contendor Principal 
-  // Se define si se muestra el botón de agregar o no dependiendo de la categoría seleccionada y si está cargando datos o no}
+
   const shouldShowAddButton = category && !loading && 
     (category !== Categories.SUPPLIES || subCategory);
-  // Configuración actual de la categoría seleccionada
-  // Se obtiene la configuración de la categoría actual 
+
   const currentConfig = CATEGORY_CONFIG[category] || {};
-  // Determina si se debe mostrar la tabla o un mensaje de no registros
+  
   const shouldShowTable = currentConfig.hasTable && !(category === Categories.SUPPLIES && !subCategory);
   
-// Renderiza el contenido principal de la página
-  // Dependiendo de la categoría y subcategoría seleccionada, se muestra la tabla o los botones de opciones de insumos
-  // Si la categoría es "Insumos" y no hay subcategoría, se muestra los botones de opciones de insumos
-  // Si hay una subcategoría, se muestra la tabla con los datos correspondientes
+
   const renderContent = () => {
     if (category === Categories.SUPPLIES && !subCategory) {
       return <SupplyOptions setSubCategory={setSubCategory} setPage={setPage} setSize={setSize} />;
@@ -130,7 +120,7 @@ const InventoryPage = () => {
 
   return (
     <div style={{ height: "80vh" }} className="flex flex-col pt-8">
-      {/* Filtros y barra de búsqueda */}
+      
       <div className="flex w-full space-x-24 h-8 justify-between">
         <CategorySelector 
           categories={categories} 
@@ -168,7 +158,7 @@ const InventoryPage = () => {
         )}
       </div>
 
-      {/* Selector de orden */}
+      
       <div className="flex flex-row gap-3">
         <select
           className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold"
@@ -180,7 +170,7 @@ const InventoryPage = () => {
         </select>
       </div>
 
-      {/* Botón de regreso para elegir que tipo de lote insumo quiere ver  */}
+      
       {category === Categories.SUPPLIES && subCategory && (
         <div className="flex flex-col w-full items-start mb-4 my-4">
           <button
@@ -196,7 +186,7 @@ const InventoryPage = () => {
         </div>
       )}
 
-      {/* Contenido principal: se caergar todas las tablas dependiendo de la categoria o subcategoria que elija el usuario */}
+      
       <div
         style={{ width: "75vw", maxHeight: "55vh" }}
         className={`rounded mt-2 mb-6 overflow-x-auto overflow-y-auto ${
@@ -211,8 +201,6 @@ const InventoryPage = () => {
           renderContent()
         )}
       </div>
-
-      {/* Paginación */}
       {!loading && totalItems > 0 && (
         <div className="flex justify-center space-x-4">
           <Pagination

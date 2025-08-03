@@ -5,7 +5,7 @@ import SellerService from "../../utils/service/SellerService";
 import { generateInvoicePdf } from "../../utils/generateCheckUtils";
 import toast, { Toaster } from 'react-hot-toast';
 
-const SaleDetailPage = () => {
+const AdminSaleDetailPage = () => {
     const [checkProducts, setCheckProducts] = useState([]);
     const [saleData, setSaleData] = useState({});
     const location = useLocation()
@@ -128,4 +128,4 @@ const SaleDetailPage = () => {
     );
 };
 
-export default SaleDetailPage;
+export default AdminSaleDetailPage;

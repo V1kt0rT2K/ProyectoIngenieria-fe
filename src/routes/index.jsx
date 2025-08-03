@@ -37,6 +37,11 @@ import NewClientPage from "../pages/clients/NewClientPage";
 import OrdersWholesalerPage from "../pages/orders/OrdersWholesalerPage";
 import OrderWholesalerInfoPage from "../pages/orders/OrderWholesalerInfoPage";
 
+//VISTAS DE ADMINISTRADOR
+import AdminSalesPage from "../pages/admin/AdminSalesPage";
+import CaiCodesPage from "../pages/admin/CaiCodesPage";
+import AdminSaleDetailPage from "../pages/admin/AdminSaleDetailPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const Routes = () => {
@@ -106,6 +111,18 @@ const Routes = () => {
                         <Route index element={<OrdersWholesalerPage />} />
                         <Route path="order_wholesaler_information" element={<OrderWholesalerInfoPage />} />
                     </Route>
+                    {/* RUTAS DE ADMINISTRADOR */}
+                    <Route path="admin">
+
+                        {/* <Route index element={<HomePage title="Inicio" />} /> */}
+
+                        <Route path="sales" element={<MainLayout title="Ventas" />} >
+                            <Route index element={<AdminSalesPage />} />
+                            <Route path="codes" element={<CaiCodesPage/>} />
+                            <Route path="sale_detail" element={<AdminSaleDetailPage/>} />
+                        </Route>
+                    </Route>
+
                 </Route>
 
             </Route>

@@ -70,8 +70,6 @@ const InventoryPage = () => {
   const [size, setSize] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  // Estado de carga y datos de inventario con el hook personalizado useInventoryData
-  // Se obtiene el estado de carga, los datos del inventario y el total de elementos
   const { loading, inventory, totalItems } = useInventoryData(
     category,
     subCategory,

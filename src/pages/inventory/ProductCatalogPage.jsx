@@ -18,7 +18,7 @@ const ProductCatalogPage = () => {
         setSearchTerm(e.target.value);
         if (e.target.value) {
             
-            setPage(1); // Resetear a la primera página al buscar
+            setPage(1); 
         }
     };
     useEffect(() => {

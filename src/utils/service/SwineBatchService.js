@@ -66,7 +66,7 @@ class SwineBatchService {
 
         return await result.json();
     }
-    static async updateStockQuantitySwineBatch(idSwineBatch, quantitySwine) {
+    static async decrementStockSwineBatch(idSwineBatch, quantitySwine) {
         const result = await fetch(`
             ${Configuration.API_BASE_URL}/stock/swinebatch/update/stockquantity`, 
         {

@@ -14,10 +14,10 @@ const UsersTable = ({ users }) => {
             <table className="flex-grow w-full table-fixed justify-self-center">
                 <thead>
                     <tr>
-                        <th className="border border-orange-900 w-72 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
-                        <th className="border border-orange-900 w-60 px-5 bg-orange-700 text-white text-md">Rol asignado</th>
-                        {/* <th className="border border-orange-900 w-36 px-5 bg-orange-700 text-white text-md">Fecha de creacion</th> */}
-                        <th className="border border-orange-900 w-32 px-5 bg-orange-700 text-white"></th>
+                        <th className="border border-orange-900 w-65 py-2 px-5 bg-orange-700 text-white text-md">Nombre completo</th>
+                        <th className="border border-orange-900 w-40 px-5 bg-orange-700 text-white text-md">Rol asignado</th>
+                        <th className="border border-orange-900 w-45 px-5 bg-orange-700 text-white text-md">Correo</th> 
+                        <th className="border border-orange-900 w-40 px-5 bg-orange-700 text-white"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,11 +30,11 @@ const UsersTable = ({ users }) => {
                                 <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                     {user.UserRole.roleName}
                                 </td>
-                                {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                    {user.date.match(/\d+-\d+-\d+/g)}
-                                </td> */}
+                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                    {user.email}
+                                </td>
 
-                                <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                <td className="border border-orange-900 bg-orange-200 py-4 px-5 ">
                                     <UserOptions user={user} />
                                 </td>
                             </tr>
@@ -118,7 +118,7 @@ const UsersPage = () => {
                         </select>
                     </div>
                 </div>
-                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Usuarios activos</p>
+                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Usuarios Registrados</p>
                 <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>
                     {
                         loading

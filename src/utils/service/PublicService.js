@@ -1,10 +1,10 @@
 import Configuration from "../../Configuration";
 
 class PublicService {
-    static async getUserRoles() {
+    static async getUserRolesForRegistration() {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/roles/get/all`, 
+            ${Configuration.API_BASE_URL}/public/get/roles`, 
         {
             method: "GET",
             headers: {

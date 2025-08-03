@@ -38,7 +38,6 @@ const LoginForm = () => {
 
         AuthService.loginUser(obj).then((response) => {
             setValidating(false);
-            console.log("repsonse consumido",response);
             if (!response.hasError) {
                 setSession(JSON.stringify({
                     idUser: response.data.idUser,
@@ -56,7 +55,6 @@ const LoginForm = () => {
                 return;
             }
         });
-        console.log("Alo");
     }
 
     return (

@@ -29,6 +29,8 @@ const UpdatePurcharseModal = ({ isOpen, onClose, idSupplyPurcharse}) => {
             toast.success("Orden actualizada con éxito.");
             onClose();
 
+            setTimeout(()=>{window.location.reload()},1000);
+
         }else{
             toast.error(response.meta.message);
         }

@@ -64,6 +64,36 @@ class SellerService {
         return await result.json();
     }
 
+    static async searchSalesCheckForUser(searchParam) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/salescheck/cashier/search/${searchParam}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
+    static async searchSalesCheck(searchParam) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/salescheck/search/${searchParam}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
     static async createProduct(product) {
         const result = await fetch(`${Configuration.API_BASE_URL}/stock/product/create`, {
             method: "POST",

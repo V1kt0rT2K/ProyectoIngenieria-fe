@@ -12,6 +12,7 @@ const UsersRequestsTable = ({requests}) => {
                 <table className="flex-grow table-auto justify-self-center">
                     <thead>
                         <tr>
+                            <th className="w-50 py-2 px-5 border border-orange-900 bg-orange-700 text-white text-md">Estado</th>
                             <th className="w-96 py-2 px-5 border border-orange-900 bg-orange-700 text-white text-md">Nombre completo</th>
                             <th className="w-70 px-5 border border-orange-900 bg-orange-700 text-white text-md">Rol</th>
                             <th className="w-70 px-5 border border-orange-900 bg-orange-700 text-white text-md">Fecha de Solicitud</th>
@@ -23,6 +24,9 @@ const UsersRequestsTable = ({requests}) => {
                             requests
                                 .map((request, idx) =>
                                     <tr key={idx}>
+                                        <td className="border border-orange-900 bg-orange-200 py-4 px-3 text-md">
+                                            {request.Status.statusName}
+                                        </td>
                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                             {request.User.Person.fullName}
                                         </td>
@@ -54,7 +58,7 @@ const UsersRequestsPage = () => {
     
     const [totalRows, setTotalRows] = useState(0);
     const [status, setStatus] = useState([]);
-    const [statusSelected, setStatusSelected] = useState("");
+    const [statusSelected, setStatusSelected] = useState("0");
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(4);
@@ -64,19 +68,18 @@ const UsersRequestsPage = () => {
             console.log("response",response);
             if(!response.hasError){
                 setStatus(response.data);
-                setStatusSelected(response.data[0].idStatus);
+                //setStatusSelected(response.data[0].idStatus);
             }
         });      
 
         AdminService.getUserRequestsByIdStatus(statusSelected,page,size,sort).then(response =>{
             if(!response.hasError){
-                setRequests(response.data);
+                setRequests(response.data.data);
                 setTotalRows(response.data.totalItems);
             }
             setLoading(false);
         });
 
-        console.log("effect pordefecto");
 
     }, []);
 
@@ -112,7 +115,8 @@ const UsersRequestsPage = () => {
                         value={statusSelected}
                         className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold"
                     >
-                        <option value="0"> Todos</option>
+                        <option key="0" value="0"> Todos</option>
+
                         {status.map((s,idx)=>(
                             <option key={s.idStatus} value={s.idStatus}>{s.statusName}</option>
                         ))}

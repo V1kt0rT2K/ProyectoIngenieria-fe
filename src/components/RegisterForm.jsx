@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import PublicService from "../utils/service/PublicService";
 import AuthService from "../utils/service/AuthService";
 import { SHA256 } from 'crypto-js';
+import toast, { Toaster } from 'react-hot-toast';
 
 const RegisterForm = () => {
     const [errorMsg, setErrorMsg] = useState({ state: false, msg: null });
@@ -16,7 +17,7 @@ const RegisterForm = () => {
 
     useEffect(() => {
         
-        PublicService.getUserRoles().then(response =>{
+        PublicService.getUserRolesForRegistration().then(response =>{
             if(!response.hasError){
                 setUserRoles(response.data);
             }
@@ -55,22 +56,26 @@ const RegisterForm = () => {
         };
 
         AuthService.registerUser(payload).then(response=>{
-            console.log(response);
             if(!response.hasError){
                 formRef.current.querySelectorAll("input").forEach(input => input.value = "");
                 roleRef.current.value = 0;
-                setTimeout(() => setSentRequest(false), 5000);
+                toast.success("Se ha creado la solicitud de usuario con éxito.");
             }else{
-                setErrorMsg({state:true, msg:response.meta.message});
+                toast.error(response.meta.message);
             }
 
-            setSendingRequest(false);
-            setSentRequest(true);
         });
     }
 
     return (
         <>
+            <div><Toaster 
+            toastOptions={{
+                className: '',
+                duration: 1500,
+                removeDelay: 1000
+                }}/>
+            </div>
             <form ref={formRef} onSubmit={register} >
                 <div className="flex flex-col items-center mb-2">
                     <h1 className="text-2xl font-semibold">Registrarse</h1>
@@ -112,9 +117,6 @@ const RegisterForm = () => {
                     </div>
                 </div>
                 <div className="flex flex-col items-center mt-4">
-                    {errorMsg.state && <div className="mb-4 bg-red-500 rounded px-4 py-1 font-semibold text-white">{errorMsg.msg}</div>}
-                    {sendingRequest && <div className="mb-4 bg-yellow-700 rounded px-4 py-1 font-bold text-white">Procesando informacion...</div>}
-                    {sentRequest && <div className="mb-4 bg-green-600 rounded px-4 py-1 font-bold text-white">Se ha enviado la solicitud de registro</div>}
                     <input className="hover:cursor-pointer bg-orange-800 text-lg font-semibold text-white py-1 px-3 rounded shadow-lg" value="Registrarse" type="submit" />
                 </div>
             </form>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import SaleOptions from "../../components/SaleOptions";
@@ -10,6 +10,7 @@ import Pagination from "react-js-pagination";
 const SalesPage = () => {
     const [loading, setLoading] = useState(true);
 
+    const [searchBox, setSearchBox] = useState("");
     const [clientTypes, setClientTypes] = useState([]);
     const [typeSelected, setTypeSelected] = useState("0");
     const [size, setSize] = useState(4);
@@ -18,6 +19,7 @@ const SalesPage = () => {
     const [totalRows, setTotalRows] = useState(0);
 
     const [sales, setSales] = useState([]);
+    const currentData = useRef([]); 
 
     useEffect(() => {
 
@@ -30,10 +32,10 @@ const SalesPage = () => {
         });
 
         SellerService.getAllSalesChecksForUserByClientType(typeSelected,page,size,sort).then(response => {
-            console.log("response  clientType", response);
             if(!response.hasError){
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
+                currentData.current = response.data.data;
             }else{
                 //toast.error(response.meta.message);
             }
@@ -42,6 +44,24 @@ const SalesPage = () => {
         setLoading(false);
         
     },[]);
+
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            if (searchBox === "") {
+                setSales(currentData.current);
+            } else {
+                SellerService.searchSalesCheckForUser(searchBox).then(response => {
+                    if (!response.hasError) {
+                        setSales(response.data);
+                    } else {
+                        setSales([]);
+                    }
+                });
+            }
+        }, 500);
+
+        return () => clearTimeout(timeOut);
+    }, [searchBox]);
 
     useEffect(() => {
         if(!typeSelected) return;
@@ -53,6 +73,7 @@ const SalesPage = () => {
             if(!response.hasError){
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
+                currentData.current = response.data.data;
             }else{
                 toast.error(response.meta.message);
                 setSales([]);
@@ -74,8 +95,10 @@ const SalesPage = () => {
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
+                        <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por cliente..." />
                         <select 
                         className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md"
+                        value={typeSelected}
                         onChange={e=>{setTypeSelected(e.target.value)}} 
                         >
                             <option key="0" value="0">
@@ -141,7 +164,7 @@ const SalesPage = () => {
                                                         {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                             {sale.Status?.statusName}
                                                         </td> */}
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 inline">
                                                             <SaleOptions idSalesCheck={sale.idSalesCheck} />
                                                         </td>
                                                     </tr>

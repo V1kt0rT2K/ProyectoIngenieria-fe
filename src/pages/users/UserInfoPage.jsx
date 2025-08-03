@@ -85,7 +85,7 @@ const UserInfoPage = () => {
   }
 
   useEffect(() => {
-    PublicService.getUserRoles().then(response => {
+    AdminService.getAllRoles().then(response => {
       if (!response.hasError)
         setUserRoles(response.data);
     });

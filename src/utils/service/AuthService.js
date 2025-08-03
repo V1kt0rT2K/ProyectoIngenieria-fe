@@ -25,7 +25,7 @@ class AuthService {
 
     static async registerUser(payload) {
         
-        const result = await fetch(`${Configuration.API_BASE_URL}/users/register`, {
+        const result = await fetch(`${Configuration.API_BASE_URL}/auth/register`, {
             method: "POST",
             headers: {
                 "Accept": "application/json",

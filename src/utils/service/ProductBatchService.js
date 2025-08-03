@@ -32,6 +32,18 @@ class ProductBatchService {
 
         return await result.json();
     }
+    static async searchProductBatch(searchParam, page, size, sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/stock/product/batch/search/${searchParam}/${page}/${size}/${sort}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
 }
 
 export default ProductBatchService;

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDebounce } from "../../utils/debounce";
 import InventoryTable from "../../components/InventoryTable";
 import Spinner from "../../components/Spinner";
 import SwineBatchService from "../../utils/service/SwineBatchService";
@@ -22,21 +23,29 @@ const Categories = {
 const categories = Object.values(Categories);
 
 const InventoryPage = () => {
-    const inputRef = useRef(null);
+    
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState("");
-    const [subCategory, setSubCategory] = useState("");
+    const [subCategory, setSubCategory] = useState(null);
     const [addNew, setAddNew] = useState(null);
     const [toDetails, setToDetails] = useState(null);
     const [inventory, setInventory] = useState([]);
     const [columnsTable, setColumnsTable] = useState([]);
-    
-    
     const [totalItems, setTotalItems] = useState(0);
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(3);
-
+    const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearchTerm = useDebounce(searchTerm, 500); // 500ms de debounce
+    
+    
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        if (e.target.value) {
+            
+            setPage(1); // Resetear a la primera página al buscar
+        }
+    };
     const fetchSwineBatch = async () => {
         
         try {
@@ -61,9 +70,12 @@ const InventoryPage = () => {
         }
     };
 
-    const fetchSupplyBatch = async () => {
+    const fetchSupplyBatch = async (search = "") => {
         try {
-            const response = await SupplyBatchService.getSupplyBatch(page, size, sort);
+            const response = search 
+                ? await SupplyBatchService.searchSupplyBatch(search, page, size, sort)
+                : await SupplyBatchService.getSupplyBatch(page, size, sort);
+                
             if (!response.hasError && response.data) {
                 return {
                     data: response.data.data.map(item => ({
@@ -83,9 +95,10 @@ const InventoryPage = () => {
         }
     };
 
-    const fetchSupplyBatchByType = async (type) => {
+    const fetchSupplyBatchByType = async (type,search = "") => {
         try {
-            const response = await SupplyBatchService.getSupplyBatchByType(type, page, size, sort);
+            const response = search ?SupplyBatchService.searchSupplyBatchByType(type, search, page, size, sort)
+            : await SupplyBatchService.getSupplyBatchByType(type, page, size, sort);
             if (!response.hasError && response.data) {
                 return {
                     data: response.data.data.map(item => ({
@@ -105,29 +118,38 @@ const InventoryPage = () => {
         }
     };
 
-    const fetchProductBatch = async () => {
+    const fetchProductBatch = async (search = "") => {
+    try {
+        const response = search
+            ? await ProductBatchService.searchProductBatch(search, page, size, sort)
+            : await ProductBatchService.getAllProductBatch(page, size, sort);
         
-        try {
-            const response = await ProductBatchService.getAllProductBatch(page, size, sort);
-            if (!response.hasError && response.data) {
-                return {
-                    data: response.data.data.map(item => ({
-                        idproductBatch: item.idProductBatch,
-                        nombreProducto: item.Product.productName,
-                        CantidadRestante: item.stockQuantity,
-                        fechaExpiracion: new Date(item.expirationDate).toLocaleDateString(),
-                        precioProducto: item.Product.price,
-                        PuntodeReorden: item.Product.orderPoint,
-                    })),
-                    totalItems: response.data.totalItems
-                };
-            }
-            return { data: [], totalItems: 0 };
-        } catch (error) {
-            console.error("Error al cargar lotes de productos", error);
+        if (response.hasError) {
+            console.error("Error del servidor:", response.meta.message);
             return { data: [], totalItems: 0 };
         }
-    };
+
+        if (!response.data || !response.data.data) {
+            return { data: [], totalItems: 0 };
+        }
+
+        return {
+            data: response.data.data.map(item => ({
+                idproductBatch: item.idProductBatch,
+                nombreProducto: item.Product.productName,
+                CantidadRestante: item.stockQuantity,
+                fechaExpiracion: new Date(item.expirationDate).toLocaleDateString(),
+                precioProducto: item.Product.price,
+                PuntodeReorden: item.Product.orderPoint,
+            })),
+            totalItems: response.data.totalItems
+        };
+    } catch (error) {
+        console.error("Error en fetchProductBatch:", error);
+        return { data: [], totalItems: 0 };
+    }
+};
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -147,7 +169,7 @@ const InventoryPage = () => {
                     ]);
                     setAddNew("new_product_batch");
                     setToDetails("meat_type_information");
-                    result = await fetchProductBatch();
+                    result = await fetchProductBatch(debouncedSearchTerm);
                     break;
 
                 case Categories.LOT:
@@ -178,7 +200,8 @@ const InventoryPage = () => {
                             { label: "Cantidad", field: "cantidad" },
                             { label: "Fecha de Vencimiento", field: "fecha" },
                         ]);
-                        result = await fetchSupplyBatch();
+                        result = await fetchSupplyBatch(debouncedSearchTerm);
+                        console.log("result", result);
                     } else if (subCategory === "concentrado") {
                         setColumnsTable([ 
                             { label: "ID Lote", field: "id" },
@@ -218,10 +241,11 @@ const InventoryPage = () => {
             setInventory(result.data);
             setTotalItems(result.totalItems);
             setLoading(false);
+            
         };
 
         fetchData();
-    }, [category, subCategory, page, size, sort]);
+    }, [category, subCategory, page, size, sort,debouncedSearchTerm]);
 
     return (
         <>
@@ -233,7 +257,8 @@ const InventoryPage = () => {
                             onChange={(e) => {
                                 setCategory(e.target.value);
                                 setSubCategory("");
-                                setPage(1); // Resetear a la primera página al cambiar categoría
+                                setPage(1);
+                                setSearchTerm(""); // Limpiar filtro al cambiar categoría
                             }}
                             value={category}
                         >
@@ -245,14 +270,25 @@ const InventoryPage = () => {
 
                         {category && !loading && (
                             <>
-                                {category !== Categories.LOT && (
-                                    <input 
-                                        ref={inputRef}  
-                                        className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" 
-                                        type="text" 
-                                        placeholder="Filtrar" 
-                                    />
-                                )}
+                            {(category === Categories.PRODUCTS || (category === Categories.SUPPLIES && subCategory)) && (
+                <div className="relative">
+                    <input 
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" 
+                        type="text" 
+                        placeholder="Filtrar..." 
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm("")}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
+            )}
                                 {category === Categories.PRODUCTS && (
                                     <Link 
                                         to="/inventory/product_catalog" 
@@ -285,8 +321,9 @@ const InventoryPage = () => {
                     <div className="flex flex-col w-full items-start mb-4 ">
                     <button
                         onClick={() => {
-                        setSubCategory("");
+                        setSubCategory(null);
                         setPage(1);
+                        setSearchTerm(""); 
                     }}
                     className="bg-orange-700 text-white font-semibold py-1 px-4 rounded hover:bg-orange-800 transition"
                     >
@@ -345,22 +382,20 @@ const InventoryPage = () => {
                             
 
         {category === Categories.SUPPLIES && subCategory && inventory.length > 0 && (
-            <InventoryTable
-                columns={columnsTable}
-                data={inventory}
-                to={toDetails}
-            />
-        )}
+                    <InventoryTable
+                        columns={columnsTable}
+                        data={ inventory}
+                        to={toDetails}
+                    />
+                )}
 
-                            {category == Categories.PRODUCTS && inventory.length > 0 && (
-                                    <BackButton />,
-                                    <InventoryTable
-                                        columns={columnsTable}
-                                        data={inventory}
-                                        to={toDetails}
-                                    />
-                                
-                            )}
+                {category === Categories.PRODUCTS && inventory.length > 0 && (
+                    <InventoryTable
+                        columns={columnsTable}
+                        data={ inventory}
+                        to={toDetails}
+                    />
+                )}
 
                             {category !== Categories.SUPPLIES && category !== Categories.PRODUCTS && inventory.length > 0 && (
                                     <BackButton />,

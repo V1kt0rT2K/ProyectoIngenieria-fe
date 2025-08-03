@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import InventoryTable from "../../components/InventoryTable";
 import SellerService from "../../utils/service/SellerService";
 import Pagination from "react-js-pagination";
+import { useDebounce } from "../../utils/debounce";
 
 const ProductCatalogPage = () => {
     const [productBatches, setProductBatches] = useState([]);
@@ -11,12 +12,22 @@ const ProductCatalogPage = () => {
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(3);
-
+    const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearchTerm = useDebounce(searchTerm, 500); // 500ms de debounce
+     const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        if (e.target.value) {
+            
+            setPage(1); // Resetear a la primera página al buscar
+        }
+    };
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchProducts = async (search="") => {
             setLoading(true);
             try {
-                const response = await SellerService.getAllProducts(page, size, sort);
+                const response = search
+                ?await SellerService.searchProducts(search, page, size, sort)
+                :await SellerService.getAllProducts(page, size, sort);
                 if (!response.hasError) {
                     setProductBatches(response.data.data || []);
                     setTotalItems(response.data.totalItems || 0);
@@ -28,8 +39,8 @@ const ProductCatalogPage = () => {
             }
         };
 
-        fetchProducts();
-    }, [page, size, sort]);
+        fetchProducts(debouncedSearchTerm);
+    }, [page, size, sort,debouncedSearchTerm]);
 
     const columns = [
         { label: "No.", field: "idProduct" },
@@ -54,11 +65,23 @@ const ProductCatalogPage = () => {
                             Regresar
                         </Link>
                     </div>
-                    <input
-                        className="border px-2 py-1 rounded text-orange-800 border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-300"
-                        style={{ width: "60%" }}
-                        placeholder="Filtrar"
+                    <div className="relative">
+                    <input 
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" 
+                        type="text" 
+                        placeholder="Filtrar..." 
                     />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm("")}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                            ×
+                        </button>
+                    )}
+                </div>
                     <div className="space-x-2">
                         <Link 
                             to="/inventory/new_product" 

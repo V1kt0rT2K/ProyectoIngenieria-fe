@@ -5,8 +5,7 @@ import registerInterceptor from "../Interceptor";
 registerInterceptor();
 class SupplyBatchService {
     static async getSupplyBatch(page, size, sort) {
-        const result = await fetch(`
-            ${Configuration.API_BASE_URL}/supply/batch/get/all/${page}/${size}/${sort}`, 
+        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/get/all/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {
@@ -54,6 +53,30 @@ class SupplyBatchService {
                 idSupplyBatch,
                 quantity
             })
+        });
+
+        return await result.json();
+    }
+    static async searchSupplyBatch(searchParam,page,size,sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/search/${searchParam}/${page}/${size}/${sort}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+    static async searchSupplyBatchbyType(searchParam,page,size,sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/type/search/${searchParam}/${page}/${size}/${sort}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
         });
 
         return await result.json();

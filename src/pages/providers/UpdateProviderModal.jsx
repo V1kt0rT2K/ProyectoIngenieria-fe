@@ -2,30 +2,53 @@ import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import ProviderService from '../../utils/service/ProviderService';
 
-const UpdateProviderModal = ({ isOpen, onClose, idProvider, isEnabled}) => {
+const UpdateProviderModal = ({ isOpen, onClose, idProvider, isEnabled, reloadProviders }) => {
     if (!isOpen) return null;
+    
 
-    const updateProvider = () => {
-
+    const updateProvider = async () => {
         const payload = {
             idProvider: idProvider,
             enabled: !isEnabled
-        }
+        };
 
-        console.log(payload);
-
-        ProviderService.updateProviderStatus(payload).then(response => {
+        try {
+            const response = await ProviderService.updateProviderStatus(payload);
             if (!response.hasError) {
-                console.log(response);
                 toast.success("Proveedor actualizado con éxito.");
                 onClose();
-
-                window.location.reload();
+                await reloadProviders();
             } else {
                 toast.error(response.meta.message);
             }
-        });
-    }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al actualizar proveedor.");
+        }
+    };
+
+
+    // const updateProvider = () => {
+
+    //     const payload = {
+    //         idProvider: idProvider,
+    //         enabled: !isEnabled
+    //     }
+
+    //     console.log(payload);
+
+    //     ProviderService.updateProviderStatus(payload).then(response => {
+    //         if (!response.hasError) {
+    //             console.log(response);
+    //             toast.success("Proveedor actualizado con éxito.");
+    //             onClose();
+
+    //             window.location.reload();
+    //         } else {
+    //             toast.error(response.meta.message);
+    //         }
+    //     });
+    // }
 
     return (
         <div
@@ -60,7 +83,7 @@ const UpdateProviderModal = ({ isOpen, onClose, idProvider, isEnabled}) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className='flex flex-col justify-center w-full'>
-                    <p className="text-center my-5">¿Está seguro de que desea deshabilitar el proveedor?</p>
+                    <p className="text-center my-5">¿Está seguro de que desea actualizar el proveedor?</p>
                     <div className="flex items-center justify-center space-x-4">
                         <button onClick={updateProvider} className="bg-orange-700 py-1 px-3 border text-white font-semibold rounded">Aceptar</button>
                         <button onClick={onClose} className="bg-orange-700 py-1 px-3 border text-white font-semibold rounded">Cancelar</button>

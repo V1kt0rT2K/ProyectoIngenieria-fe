@@ -47,7 +47,7 @@ const ProvidersPage = () => {
         return () => clearTimeout(timeOut);
     }, [searchBox]);
 
-        const loadProviders = async () => {
+    const loadProviders = async () => {
         setLoading(true);
 
         setProviders([]);
@@ -97,7 +97,13 @@ const ProvidersPage = () => {
 
     return (
         <>
-        <UpdateProviderModal isEnabled={enabled} idProvider={selectedProvider} onClose={handleCloseModal} isOpen={showModal}/> 
+            <UpdateProviderModal
+                isEnabled={enabled}
+                idProvider={selectedProvider}
+                onClose={handleCloseModal}
+                isOpen={showModal}
+                reloadProviders={loadProviders}
+            />
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div class="flex w-full space-x-24">

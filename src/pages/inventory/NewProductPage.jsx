@@ -43,13 +43,13 @@ const NewProductPage = () => {
     };
 
     return (
-        <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
+        <div style={{ maxHeight: "80vh", width: "75vw" }} className="flex flex-col pt-8 overflow-y-auto">
             <BackButton />
             <p className="mb-4 text-lg text-orange-800 font-semibold underline">
                 Nuevo Producto
             </p>
 
-            <div className="mt-6 bg-orange-200 border border-orange-300 p-6 rounded-xl shadow-md">
+            <div className="mt-6 bg-orange-200 border border-orange-300 p-6 rounded-xl shadow-md"style={{ maxHeight: "70vh" }}>
                 <form className="flex flex-col gap-4">
                     <div>
                         <label className="block text-orange-800 font-semibold mb-1">

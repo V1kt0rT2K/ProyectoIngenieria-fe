@@ -15,12 +15,13 @@ const NewProductBatch = () => {
     const [swineBatchData, setSwineBatchData] = useState(null);
 
     useEffect(() => {
-        SellerService.getAllProducts().then(response => {
+        SellerService.getAllProducts(1, 30, 0).then(response => {
+            console.log(response);
             if (!response.hasError) {
-                setProducts(response.data);
+                setProducts(response.data.data);
             }
-        });
 
+        });
         SwineBatchService.getSwineBatchByIdStage(5).then(response => {
             if (!response.hasError) {
                 setSwineBatches(response.data);

@@ -69,20 +69,37 @@ const NewProductBatch = () => {
         setEntries(updated);
     };
 
-    const executeSave = () => {
-        const payload = entries.map(entry => ({
-            idProduct: parseInt(entry.idProduct),
-            idSwineBatch: parseInt(entry.idSwineBatch),
-            entryQuantity: parseInt(entry.entryQuantity),
-            expirationDate: new Date(entry.expirationDate + "T00:00:00").toISOString(),
-        }));
+   const executeSave = async () => {
+    try {
+        const payload = {
+            idSwineBatch: parseInt(selectedBatch),
+            decrementSwine: selectquantitySwine, 
+            detail: entries.map(entry => ({
+                idProduct: parseInt(entry.idProduct),
+                entryQuantity: parseInt(entry.entryQuantity),
+                expirationDate: new Date(entry.expirationDate + "T00:00:00"),
+                generationDate: new Date() 
+            }))
+        };
 
-        SwineBatchService.updateStockQuantitySwineBatch(parseInt(selectedBatch), selectquantitySwine);
-        payload.forEach(ProductBatch => ProductBatchService.createProductBatch(ProductBatch));
-        toast.success("Lote de producto guardado correctamente.");
-        setEntries([]);
-    };
-
+        const response = await ProductBatchService.createProductBatch(payload);
+        
+        if (response && !response.hasError) {
+            toast.success("Lote de producto guardado correctamente");
+            setEntries([]);
+            setSelectedBatch("");
+            setSelectQuantitySwine(0);
+            setSwineBatchData(null);
+            setShowConfirmModal(false);
+        } else {
+            const errorMessage = response?.message || "Error al guardar el lote";
+            toast.error(errorMessage);
+        }
+    } catch (error) {
+        console.error("Error en executeSave:", error);
+        toast.error("Error inesperado al procesar la solicitud");
+    }
+};
     const handleSave = () => {
         if (entries.length === 0) {
             toast.error("Debe agregar al menos un producto al lote.");

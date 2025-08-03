@@ -4,10 +4,13 @@ import Spinner from "../../components/Spinner";
 import ProviderOptions from "../../components/ProviderOptions";
 import ProvidersService from "../../utils/service/ProviderService";
 import Pagination from "react-js-pagination";
+import UpdateProviderModal from "./UpdateProviderModal";
 
 const ProvidersPage = () => {
     const [loading, setLoading] = useState(true);
 
+    const [statusFilter, setStatusFilter] = useState(1);
+    const [searchBox, setSearchBox] = useState("");
     const [sort, setSort] = useState("0");
     const [size, setSize] = useState(5);
     const [page, setPage] = useState(1);
@@ -18,47 +21,114 @@ const ProvidersPage = () => {
     const [input, setInput] = useState(null);
 
     const [providers, setProviders] = useState([]);
+    const currentData = useRef([]);
+
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            if (searchBox === "") {
+                setProviders(currentData.current);
+            } else {
+                ProvidersService.searchProvider(searchBox).then(response => {
+                    if (!response.hasError) {
+                        setProviders(response.data);
+                    } else {
+                        setProviders([]);
+                    }
+                });
+            }
+        }, 500);
+
+        return () => clearTimeout(timeOut);
+    }, [searchBox]);
+
 
 
     useEffect(() => {
         const loadProviders = async () => {
             setLoading(true);
 
-            const response = await ProvidersService.getAllProviders(page, size, sort);
+            setProviders([]);
+            const response = await ProvidersService.getAllProviders(page, size, sort, statusFilter);
 
             if (!response.hasError && response.data) {
                 setProviders(response.data.data);
                 setTotalRows(response.data.totalItems);
+                currentData.current = response.data.data;
             }
 
             setLoading(false);
         };
-
         loadProviders();
-    }, [page, size, sort]);
- 
+    }, [page, size, sort, statusFilter]);
 
-    const deleteProvider = async (id) => {
 
-        const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este proveedor?");
+    // const deleteProvider = async (id) => {
+
+    //     const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este proveedor?");
+
+    //     if (!confirmed) return;
+
+    //     const payload = { idProvider: id };
+    //     const response = await ProvidersService.deleteProvider(payload);
+    //     if (!response.hasError) {
+    //         setProviders(prev => prev.filter(provider => provider.id !== id));
+    //     } else {
+    //         console.error("Error al eliminar proveedor:", response.meta?.message);
+    //     }
+    // };
+
+
+    const toggleProviderStatus = async (idProvider, enabled) => {
+        const confirmed = window.confirm(`¿Estás seguro que deseas ${enabled ? 'habilitar' : 'deshabilitar'} este proveedor?`);
 
         if (!confirmed) return;
 
-        const payload = { idProvider: id };
-        const response = await ProvidersService.deleteProvider(payload);
+        const payload = { idProvider, enabled };
+
+        const response = await ProvidersService.updateProviderStatus(payload);
+
         if (!response.hasError) {
-            setProviders(prev => prev.filter(provider => provider.id !== id));
+            // Actualiza la lista quitando al proveedor actualizado
+            const loadProviders = async () => {
+                setLoading(true);
+
+                setProviders([]);
+                const response = await ProvidersService.getAllProviders(page, size, sort, statusFilter);
+
+                if (!response.hasError && response.data) {
+                    setProviders(response.data.data);
+                    setTotalRows(response.data.totalItems);
+                    currentData.current = response.data.data;
+                }
+
+                setLoading(false);
+            };
+            loadProviders();
+            setProviders(prev => prev.filter(p => p.id !== idProvider));
         } else {
-            console.error("Error al eliminar proveedor:", response.meta?.message);
+            console.error("Error al cambiar estado del proveedor:", response.meta?.message);
         }
     };
 
+
+
+
     return (
         <>
+        <UpdateProviderModal/> 
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
-                    <div className="flex w-full">
-                        <input ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar proveedores" />
+                    <div class="flex w-full space-x-24">
+                        {/* <input ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar proveedores" /> */}
+                        <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por proveedor..." />
+                        <select
+                            className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md"
+                            value={statusFilter}
+                            onChange={e => { setStatusFilter(Number(e.target.value)) }}
+                        >
+                            <option value="1">Proveedores habilitados</option>
+                            <option value="0">Proveedores deshabilitados</option>
+                        </select>
                         <Link to="new_provider" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
                     </div>
                     <div>
@@ -103,7 +173,11 @@ const ProvidersPage = () => {
                                                             {prov.location}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
-                                                            <ProviderOptions id={prov.idProvider} onDelete={deleteProvider} />
+                                                            <ProviderOptions
+                                                                id={prov.idProvider}
+                                                                isEnabled={prov.isEnabled}
+                                                                onToggleStatus={toggleProviderStatus}
+                                                            />
                                                         </td>
                                                     </tr>
                                                 )

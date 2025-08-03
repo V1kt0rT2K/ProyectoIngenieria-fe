@@ -7,6 +7,10 @@ import Pagination from "react-js-pagination";
 import UpdateProviderModal from "./UpdateProviderModal";
 
 const ProvidersPage = () => {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedProvider, setSelectedProvider] = useState(null);
+    const [enabled, setEnabled] = useState(null);
+
     const [loading, setLoading] = useState(true);
 
     const [statusFilter, setStatusFilter] = useState(1);
@@ -22,6 +26,8 @@ const ProvidersPage = () => {
 
     const [providers, setProviders] = useState([]);
     const currentData = useRef([]);
+
+    const handleCloseModal = () => setShowModal(false);
 
     useEffect(() => {
         const timeOut = setTimeout(() => {
@@ -41,23 +47,24 @@ const ProvidersPage = () => {
         return () => clearTimeout(timeOut);
     }, [searchBox]);
 
+        const loadProviders = async () => {
+        setLoading(true);
+
+        setProviders([]);
+        const response = await ProvidersService.getAllProviders(page, size, sort, statusFilter);
+
+        if (!response.hasError && response.data) {
+            setProviders(response.data.data);
+            setTotalRows(response.data.totalItems);
+            currentData.current = response.data.data;
+        }
+
+        setLoading(false);
+    };
+
 
 
     useEffect(() => {
-        const loadProviders = async () => {
-            setLoading(true);
-
-            setProviders([]);
-            const response = await ProvidersService.getAllProviders(page, size, sort, statusFilter);
-
-            if (!response.hasError && response.data) {
-                setProviders(response.data.data);
-                setTotalRows(response.data.totalItems);
-                currentData.current = response.data.data;
-            }
-
-            setLoading(false);
-        };
         loadProviders();
     }, [page, size, sort, statusFilter]);
 
@@ -79,35 +86,10 @@ const ProvidersPage = () => {
 
 
     const toggleProviderStatus = async (idProvider, enabled) => {
-        const confirmed = window.confirm(`¿Estás seguro que deseas ${enabled ? 'habilitar' : 'deshabilitar'} este proveedor?`);
-
-        if (!confirmed) return;
-
-        const payload = { idProvider, enabled };
-
-        const response = await ProvidersService.updateProviderStatus(payload);
-
-        if (!response.hasError) {
-            // Actualiza la lista quitando al proveedor actualizado
-            const loadProviders = async () => {
-                setLoading(true);
-
-                setProviders([]);
-                const response = await ProvidersService.getAllProviders(page, size, sort, statusFilter);
-
-                if (!response.hasError && response.data) {
-                    setProviders(response.data.data);
-                    setTotalRows(response.data.totalItems);
-                    currentData.current = response.data.data;
-                }
-
-                setLoading(false);
-            };
-            loadProviders();
-            setProviders(prev => prev.filter(p => p.id !== idProvider));
-        } else {
-            console.error("Error al cambiar estado del proveedor:", response.meta?.message);
-        }
+        setSelectedProvider(idProvider);
+        setEnabled(enabled);
+        setShowModal(true);
+        console.log(enabled);
     };
 
 
@@ -115,7 +97,7 @@ const ProvidersPage = () => {
 
     return (
         <>
-        <UpdateProviderModal/> 
+        <UpdateProviderModal isEnabled={enabled} idProvider={selectedProvider} onClose={handleCloseModal} isOpen={showModal}/> 
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div class="flex w-full space-x-24">

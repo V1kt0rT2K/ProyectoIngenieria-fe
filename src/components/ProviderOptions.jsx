@@ -6,7 +6,7 @@ const ProviderOptions = ({ id, isEnabled, onToggleStatus }) => {
     if (!isEnabled) {
         return (
             <button
-                onClick={() => onToggleStatus(id, 1)}
+                onClick={() => onToggleStatus(id, isEnabled, 1)}
                 className="w-full px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:bg-orange-800 rounded"
             >
                 Habilitar
@@ -19,7 +19,7 @@ const ProviderOptions = ({ id, isEnabled, onToggleStatus }) => {
             <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="edit_provider" state={{ id: id }}>Editar</Link>,
             <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="/purchases/new_purchase_order" state={{ preSelectedProvider: id, prevPage: "/providers" }}>Hacer Pedido</Link>,
             <button
-                onClick={() => onToggleStatus(id, false)}
+                onClick={() => onToggleStatus(id, isEnabled, 0)}
                 className="w-full block px-4 py-2 font-semibold text-md text-white bg-red-700 hover:cursor-pointer hover:bg-orange-900">
                 Deshabilitar
             </button>

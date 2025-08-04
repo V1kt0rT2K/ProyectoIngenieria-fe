@@ -56,13 +56,13 @@ const NewProviderPage = () => {
         let obj = {};
 
         formRef.current.querySelectorAll('input').forEach(element => {
-            if (
-                !element.value
-                || element.name === "rtn" && !Validator.isRTN(element.value)
-                || element.name === "contact" && !Validator.isEmail(element.value)
-            ) {
-                isCorrect.current = false;
-            }
+            // if (
+            //     !element.value
+            //     || element.name === "rtn" && !Validator.isRTN(element.value)
+            //     || element.name === "contact" && !Validator.isEmail(element.value)
+            // ) {
+            //     isCorrect.current = false;
+            // }
 
             obj[element.name] = element.value;
         });

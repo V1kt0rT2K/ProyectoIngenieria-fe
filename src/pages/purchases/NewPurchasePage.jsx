@@ -70,10 +70,6 @@ const NewPurchasePage = () => {
             detail: selectedSupplies
         };
 
-        console.log("checkSupplies",checkSupplies);
-        
-        console.log("payload",payload);
-
         isLoading.current = true;
 
         PurchaseService.savePurchase(payload).then(response => {
@@ -84,9 +80,10 @@ const NewPurchasePage = () => {
             else{
                 toast.error(response.meta.message);
             }
+
+            isLoading.current = false;
         });
 
-        isLoading.current = false;
     }
 
     useEffect(() => {

@@ -11,6 +11,8 @@ const NewProviderPage = () => {
 
     const navigate = useNavigate();
     const formRef = useRef(null);
+    const [fieldErrors, setFieldErrors] = useState({});
+
     // const isLoading = useRef(false);
     // const isCorrect = useRef(true);
 
@@ -45,6 +47,7 @@ const NewProviderPage = () => {
     const isCorrect = useRef(true);
 
     const saveProvider = () => {
+
         if (isLoading.current)
             return;
 
@@ -68,6 +71,18 @@ const NewProviderPage = () => {
             toast.error("Informacion no valida");
             return;
         }
+        // const obj = providerData;
+
+        // if (
+        //     !obj.name ||
+        //     !obj.rtn || !Validator.isRTN(obj.rtn) ||
+        //     !obj.contact || !Validator.isEmail(obj.contact) ||
+        //     !obj.address
+        // ) {
+        //     toast.error("Información no válida");
+        //     return;
+        // }
+
 
         isLoading.current = true;
 
@@ -75,12 +90,15 @@ const NewProviderPage = () => {
         if (location.state?.id) {
             // Modo editar
             const payload = {
-                idProvider : location.state?.id,
-                values : obj
+                idProvider: location.state?.id,
+                values: obj
             }
+            console.log("Pasado la validacion.");
+            console.log(payload);
             ProviderService.updateProvider(payload).then((response) => {
                 if (!response.hasError) {
                     toast.success("Proveedor actualizado con éxito");
+                    navigate("/providers");
                 } else {
                     toast.error(response.meta.message);
                 }
@@ -120,14 +138,13 @@ const NewProviderPage = () => {
                 <div className="rounded overflow-y-auto p-0">
                     <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">
                         <div ref={formRef} className="flex flex-col flex-grow space-y-4">
-                            {/* <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p> */}
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Nombre del proveedor</p>
                                 <input
                                     name="name"
                                     className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                     value={providerData.name}
-                                    onChange={(e) => setProviderData({ ...providerData, name: e.target.value })}
+                                    onChange={(e) => setProviderData(prev => ({ ...prev, name: e.target.value }))}
                                 />
                             </div>
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
@@ -136,7 +153,7 @@ const NewProviderPage = () => {
                                     name="rtn"
                                     className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                     value={providerData.rtn}
-                                    onChange={(e) => setProviderData({ ...providerData, rtn: e.target.value })}
+                                    onChange={(e) => setProviderData(prev => ({ ...prev, rtn: e.target.value }))}
                                 />
                             </div>
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
@@ -145,7 +162,7 @@ const NewProviderPage = () => {
                                     name="contact"
                                     className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                     value={providerData.contact}
-                                    onChange={(e) => setProviderData({ ...providerData, contact: e.target.value })}
+                                    onChange={(e) => setProviderData(prev => ({ ...prev, contact: e.target.value }))}
                                 />
                             </div>
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
@@ -154,25 +171,25 @@ const NewProviderPage = () => {
                                     name="address"
                                     className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
                                     value={providerData.address}
-                                    onChange={(e) => setProviderData({ ...providerData, address: e.target.value})}
+                                    onChange={(e) => setProviderData(prev => ({ ...prev, address: e.target.value }))}
                                 />
                             </div>
                         </div>
 
                     </div>
                     {
-                        (location.pathname == '/providers/edit_provider' || location.pathname == '/providers/new_provider') && 
+                        (location.pathname == '/providers/edit_provider' || location.pathname == '/providers/new_provider') &&
                         (
                             <div className="mt-6 bg-orange-200 border border-orange-300 p-6">
-                            <div className="mt-2 flex justify-center">
-                                <button
-                                    className="bg-green-600 rounded px-3 py-1 font-semibold text-white mt-2"
-                                    onClick={() => saveProvider()}
-                                >
-                                    Guardar
-                                </button>
+                                <div className="mt-2 flex justify-center">
+                                    <button
+                                        className="bg-green-600 rounded px-3 py-1 font-semibold text-white mt-2"
+                                        onClick={() => saveProvider()}
+                                    >
+                                        Guardar
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         )
                     }
                 </div>

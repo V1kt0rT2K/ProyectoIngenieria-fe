@@ -99,7 +99,7 @@ const NewPurchasePage = () => {
             }
         });
 
-        ProvidersService.getAllProviders(1,30,0).then(response => {
+        ProvidersService.getAllProviders(1,30,0, 1).then(response => {
             console.log(response);
             if (!response.hasError) {
                 setProviders(response.data.data);

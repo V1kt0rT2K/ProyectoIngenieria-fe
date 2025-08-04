@@ -55,7 +55,7 @@ const fetchSupplyBatch = async (search, page, size, sort) => {
 const fetchSupplyBatchByType = async (type, search, page, size, sort) => {
   try {
     const response = search
-      ? await SupplyBatchService.searchSupplyBatchByType(type, search, page, size, sort)
+      ? await SupplyBatchService.searchSupplyBatchbyType(type, search, page, size, sort)
       : await SupplyBatchService.getSupplyBatchByType(type, page, size, sort);
 
     if (!response.hasError && response.data) {
@@ -119,11 +119,11 @@ export const useInventoryData = (category, subCategory, page, size, sort, search
     const fetchData = async () => {
       setLoading(true);
       let result = { data: [], totalItems: 0 };
-      if (category === "Insumos" && !subCategory) {
-      setInventory([]);
-      setTotalItems(0);
-      setLoading(false);
-      return;
+    if (category === "Insumos" && !subCategory && !search) {
+  setInventory([]);
+  setTotalItems(0);
+  setLoading(false);
+  return;
 }
       if (category === "Productos") {
         result = await fetchProductBatch(search, page, size, sort);

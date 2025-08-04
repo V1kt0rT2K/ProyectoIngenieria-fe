@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BackButton from "../../components/BackButton";
 import SellerService from "../../utils/service/SellerService";
+import toast, { Toaster } from 'react-hot-toast';
 
 const NewProductPage = () => {
     const [product, setProduct] = useState({
@@ -19,14 +20,14 @@ const NewProductPage = () => {
 
     const handleSave = async () => {
         if (!product.productName || !product.productDescription || !product.price || !product.orderPoint) {
-            alert("Debe llenar todos los campos antes de guardar.");
+            toast.error("Debe llenar todos los campos antes de guardar.");
             return;
         }
 
         try {
             const response = await SellerService.createProduct(product);
-            if (!response.hasError) {
-                alert("Producto guardado correctamente.");
+            if (response.data!=null) {
+                toast.success("Producto guardado correctamente.");
                 setProduct({
                     productName: "",
                     productDescription: "",
@@ -34,17 +35,20 @@ const NewProductPage = () => {
                     orderPoint: ""
                 });
             } else {
-                alert("Hubo un error al guardar el producto.");
+                toast.error("Hubo un error al guardar el producto.");
             }
         } catch (error) {
             console.error("Error al guardar el producto:", error);
-            alert("No se pudo guardar el producto. Intente nuevamente.");
+            toast.error("No se pudo guardar el producto. Intente nuevamente.");
         }
     };
 
     return (
         <div style={{ maxHeight: "80vh", width: "75vw" }} className="flex flex-col pt-8 overflow-y-auto">
             <BackButton />
+                        <div>
+                            <Toaster toastOptions={{ duration: 1500, removeDelay: 1000 }} />
+                        </div>
             <p className="mb-4 text-lg text-orange-800 font-semibold underline">
                 Nuevo Producto
             </p>

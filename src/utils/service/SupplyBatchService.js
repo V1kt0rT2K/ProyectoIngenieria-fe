@@ -69,8 +69,8 @@ class SupplyBatchService {
 
         return await result.json();
     }
-    static async searchSupplyBatchbyType(searchParam,page,size,sort) {
-        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/type/search/${searchParam}/${page}/${size}/${sort}`, 
+    static async searchSupplyBatchbyType(idSupplyType,searchParam,page,size,sort) {
+        const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/type/search/${idSupplyType}/${searchParam}/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {

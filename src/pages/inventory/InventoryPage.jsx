@@ -92,9 +92,9 @@ const InventoryPage = () => {
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
     setCategory(e.target.value);
-    setSubCategory("");
+    setSubCategory(null);
     setPage(1);
-    setSearchTerm("");
+    setSearchTerm(null);
 
     const categoryConfig = CATEGORY_CONFIG[selectedCategory];
     if (categoryConfig && categoryConfig.defaultSize) {

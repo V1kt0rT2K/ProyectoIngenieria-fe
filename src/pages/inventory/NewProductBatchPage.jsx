@@ -1,8 +1,8 @@
-// src/components/NewProductBatch.js
+
 import { Toaster } from 'react-hot-toast';
 import BackButton from "../../components/BackButton";
-import useProductBatch from "../../hooks/useProductBatchData"; // Hook para manejar la lógica del lote de productos
-import ProductEntryTable from "../../components/ProductEntryTable"; // Componente extraído
+import useProductBatch from "../../hooks/useProductBatchData"; 
+import ProductEntryTable from "../../components/ProductEntryTable"; 
 
 const NewProductBatch = () => {
     const {

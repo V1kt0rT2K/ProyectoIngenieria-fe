@@ -3,7 +3,7 @@ export const inventoryColumns = {
     { label: "No. Lote", field: "idproductBatch" },
     { label: "Producto", field: "nombreProducto" },
     { label: "Fecha de Expiracion", field: "fechaExpiracion" },
-    { label: "Cantidad", field: "CantidadRestante" },
+    { label: "Cantidad en Libras", field: "CantidadRestante" },
     { label: "Precio por libra", field: "precioProducto" },
     { label: "Punto de Reorden", field: "PuntodeReorden" },
   ],
@@ -21,5 +21,6 @@ export const inventoryColumns = {
     { label: "Tipo de Insumo", field: "tipo" },
     { label: "Cantidad", field: "cantidad" },
     { label: "Fecha de Vencimiento", field: "fecha" },
+    {label:"Etapa", field: "etapa" }
   ],
 };

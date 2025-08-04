@@ -14,40 +14,36 @@ import NoRecordsMessage from "../../components/NoRecordsMessage";
 const Categories = {
   PRODUCTS: "Productos",
   LOT: "Lotes",
-  SUPPLIES: "Insumos",
-  TOOLS: "Herramientas"
+  SUPPLIES: "Insumos"
 };
 const CATEGORY_CONFIG = {
   [Categories.PRODUCTS]: {
     columns: inventoryColumns.productos,
-    addRoute: "new_product_batch",
+    addRoute: null,
     hasTable: true,
     searchable: true,
+    defaultSize: 5
   },
   [Categories.LOT]: {
     columns: inventoryColumns.lotes,
-    addRoute: "new_lot",
+    addRoute: "lot",
     hasTable: true,
     searchable: true,
+    defaultSize: 3
   },
   [Categories.SUPPLIES]: {
     columns: inventoryColumns.insumos,
-    addRoute: "add_supply",
+    addRoute: null,
     hasTable: true,
     searchable: true,
-  },
-  [Categories.TOOLS]: {
-    columns: [],
-    addRoute: "add_tool",
-    hasTable: false,
-    searchable: false,
-  },
+    defaultSize: 4
+  }
 };
 const categories = Object.values(Categories);
-const TableOrMessage = ({ data, columns }) => {
+const TableOrMessage = ({ data, columns ,to }) => {
   return data.length > 0 ? (
     <div className="overflow-x-auto w-full">
-      <InventoryTable columns={columns} data={data} to="lot" />
+      <InventoryTable columns={columns} data={data} to={to} />
     </div>
   ) : (
     <NoRecordsMessage />
@@ -87,14 +83,20 @@ const InventoryPage = () => {
   };
 
   const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
     setCategory(e.target.value);
     setSubCategory("");
     setPage(1);
     setSearchTerm("");
-  };
 
-  const shouldShowAddButton = category && !loading && 
-    (category !== Categories.SUPPLIES || subCategory);
+    const categoryConfig = CATEGORY_CONFIG[selectedCategory];
+    if (categoryConfig && categoryConfig.defaultSize) {
+      setSize(categoryConfig.defaultSize);
+    }
+  };
+  
+
+
 
   const currentConfig = CATEGORY_CONFIG[category] || {};
   
@@ -105,11 +107,12 @@ const InventoryPage = () => {
     if (category === Categories.SUPPLIES && !subCategory) {
       return <SupplyOptions setSubCategory={setSubCategory} setPage={setPage} setSize={setSize} />;
     }
-
+   
     return shouldShowTable ? (
       <TableOrMessage 
         data={inventory} 
         columns={currentConfig.columns} 
+        to={currentConfig.addRoute}
       />
     ) : (
       <NoRecordsMessage />
@@ -128,30 +131,43 @@ const InventoryPage = () => {
 
         {category && !loading && (
           <>
+          
+
             {(category === Categories.PRODUCTS || (category === Categories.SUPPLIES && subCategory)) && (
               <SearchInput 
                 searchTerm={searchTerm} 
                 handleSearchChange={handleSearchChange} 
+                centered={category === Categories.SUPPLIES} 
               />
             )}
-
-            {category === Categories.PRODUCTS && (
-              <Link
-                to="/inventory/product_catalog"
-                className="bg-orange-700 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:bg-green-800 transition"
-              >
-                Ver Catálogo de producto
-              </Link>
-            )}
-
-            {shouldShowAddButton && (
-              <Link
-                to={currentConfig.addRoute}
-                className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:bg-orange-900 transition"
-              >
-                + Agregar
-              </Link>
-            )}
+    <div className="flex flex-direction gap-2 justify-start">
+              {category === Categories.PRODUCTS && (
+                <>
+                  <Link
+                    to="/inventory/product_catalog"
+                    className="bg-orange-700 px-3 py-1 text-sm xs:text-base xs:px-4 flex items-center text-white font-semibold rounded hover:bg-green-800 transition whitespace-nowrap"
+                  >
+                    <span className="hidden sm:inline">Ver Catálogo </span>
+                    <span className="sm:hidden">Catálogo</span>
+                  </Link>
+                  <Link
+                    to="/inventory/new_product_batch"
+                    className="bg-orange-800 px-3 py-1 text-sm xs:text-base xs:px-4 flex items-center text-white font-semibold rounded hover:bg-orange-900 transition whitespace-nowrap"
+                  >
+                    + Agregar
+                  </Link>
+                </>
+              )}
+              
+              {category === Categories.LOT && (
+                <Link
+                  to="/inventory/new_lot"
+                  className="bg-orange-800 px-3 py-1 text-sm xs:text-base xs:px-4 flex items-center text-white font-semibold rounded hover:bg-orange-900 transition whitespace-nowrap"
+                >
+                  + Nuevo Lote
+                </Link>
+              )}
+            </div>
           </>
         )}
       </div>

@@ -40,6 +40,7 @@ const fetchSupplyBatch = async (search, page, size, sort) => {
           tipo: item.Supply.SupplyType.nameSupplyType,
           cantidad: item.stockQuantity,
           fecha: new Date(item.expirationDate).toLocaleDateString(),
+          etapa: item.Supply.Stage.stageName || "Desconocida",
         })),
         totalItems: response.data.totalItems,
       };
@@ -65,6 +66,7 @@ const fetchSupplyBatchByType = async (type, search, page, size, sort) => {
           tipo: item.Supply.SupplyType.nameSupplyType,
           cantidad: item.stockQuantity,
           fecha: new Date(item.expirationDate).toLocaleDateString(),
+          etapa: item.Supply.Stage.stageName || "Desconocida",
         })),
         totalItems: response.data.totalItems,
       };

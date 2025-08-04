@@ -28,7 +28,7 @@ class SupplyBatchService {
 
         return await result.json();
     }
-    static async getSuppbyBatchbyMenorExpirationDate(){
+    static async getSuppbyBatchbyMayorExpirationDate(){
         const result = await fetch(`${Configuration.API_BASE_URL}/supply/batch/get/date/expiration`, 
         {
             method: "GET",

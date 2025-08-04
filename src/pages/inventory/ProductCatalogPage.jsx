@@ -11,7 +11,7 @@ const ProductCatalogPage = () => {
     const [totalItems, setTotalItems] = useState(0);
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
-    const [size, setSize] = useState(3);
+    const [size, setSize] = useState(4);
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearchTerm = useDebounce(searchTerm, 500); // 500ms de debounce
      const handleSearchChange = (e) => {
@@ -112,7 +112,7 @@ const ProductCatalogPage = () => {
                             <InventoryTable
                                 columns={columns}
                                 data={productBatches}
-                                to="/productos"
+            
                             />
                         
                             ) : (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDebounce } from "../../utils/debounce";
 import InventoryTable from "../../components/InventoryTable";
@@ -59,6 +59,7 @@ const PromptMessage = () => (
 );
 
 const InventoryPage = () => {
+  const [userRole, setUserRole] = useState(null);
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState(null);
   const [sort, setSort] = useState("0");
@@ -66,6 +67,12 @@ const InventoryPage = () => {
   const [size, setSize] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("session"));
+    if (userData && userData.idRole) {
+      setUserRole(userData.idRole);
+    }
+  }, []);
   const { loading, inventory, totalItems } = useInventoryData(
     category,
     subCategory,
@@ -94,7 +101,27 @@ const InventoryPage = () => {
       setSize(categoryConfig.defaultSize);
     }
   };
-  
+
+  const getAllowedCategories = () => {
+    if (userRole === 6) { 
+      return categories.filter(cat => 
+        cat !== Categories.PRODUCTS
+      );
+    }
+    return categories;
+  };
+
+  const canAddLots = () => {
+    return userRole === 4 || userRole === 6; 
+  };
+  const canSupply = () => {
+    return userRole === 4 || userRole === 6;
+  };
+
+  const canViewProducts = () => {
+    return userRole === 3 || userRole === 4; 
+  };
+
 
 
 
@@ -102,12 +129,13 @@ const InventoryPage = () => {
   
   const shouldShowTable = currentConfig.hasTable && !(category === Categories.SUPPLIES && !subCategory);
   
-
+const allowedCategories = getAllowedCategories();
   const renderContent = () => {
     if (category === Categories.SUPPLIES && !subCategory) {
-      return <SupplyOptions setSubCategory={setSubCategory} setPage={setPage} setSize={setSize} />;
+      return canSupply? <SupplyOptions setSubCategory={setSubCategory} setPage={setPage} setSize={setSize} />:
+      <NoRecordsMessage message="No tienes permisos para suministrar insumos." />;
     }
-   
+  
     return shouldShowTable ? (
       <TableOrMessage 
         data={inventory} 
@@ -124,7 +152,7 @@ const InventoryPage = () => {
       
       <div className="flex w-full space-x-24 h-8 justify-between">
         <CategorySelector 
-          categories={categories} 
+          categories={allowedCategories} 
           category={category} 
           onChange={handleCategoryChange} 
         />
@@ -141,7 +169,7 @@ const InventoryPage = () => {
               />
             )}
     <div className="flex flex-direction gap-2 justify-start">
-              {category === Categories.PRODUCTS && (
+              {category === Categories.PRODUCTS &&canViewProducts()&& (
                 <>
                   <Link
                     to="/inventory/product_catalog"
@@ -159,7 +187,7 @@ const InventoryPage = () => {
                 </>
               )}
               
-              {category === Categories.LOT && (
+              {category === Categories.LOT &&canAddLots()&& (
                 <Link
                   to="/inventory/new_lot"
                   className="bg-orange-800 px-3 py-1 text-sm xs:text-base xs:px-4 flex items-center text-white font-semibold rounded hover:bg-orange-900 transition whitespace-nowrap"
@@ -185,7 +213,7 @@ const InventoryPage = () => {
       </div>
 
       
-      {category === Categories.SUPPLIES && subCategory && (
+      {category === Categories.SUPPLIES && subCategory &&canAddLots()&& (
         <div className="flex flex-col w-full items-start mb-4 my-4">
           <button
             onClick={() => {

@@ -7,6 +7,8 @@ const Roles = {
 	CASHIER: 2,
 	WAREHOUSE_MANAGER: 3,
 	SYSADMIN: 4,
+	SALES_MANAGER: 5,
+	FARM_MANAGER: 6,
 };
 
 const SideBar = () => {
@@ -171,6 +173,9 @@ const SideBar = () => {
 			break;
 		case Roles.WAREHOUSE_MANAGER:
 			barElements = [navLinks.INVENTORY, navLinks.PROVIDERS, navLinks.PURCHASES];
+			break;
+		case Roles.FARM_MANAGER:
+			barElements = [navLinks.INVENTORY];
 			break;
 	}
 

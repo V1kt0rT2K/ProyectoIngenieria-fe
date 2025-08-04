@@ -1,17 +1,39 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import BackButton from "../../components/BackButton";
 import PurchaseService from "../../utils/service/PurchaseService";
 import toast, { Toaster } from 'react-hot-toast';
 
-const PurchaseInfoPage = () => {
+const AdminPurchaseInfoPage = () => {
     const location = useLocation();
     const { id } = location.state ?? false;
     const isLoading = useRef(true);
+    const navigate = useNavigate();
 
     const [purchase, setPurchase] = useState({});
 
     if (!id) return <></>;
+
+    const handleRequest = (idStatus) => {
+
+        isLoading.current = true;
+        const payload = {
+            idSupplyPurcharse : purchase.idSupplyPurcharse,
+            idStatus : idStatus
+        }
+
+        PurchaseService.approveOrRejectSupplyPurcharse(payload).then(response => {
+            if(!response.hasError){
+                toast.success("Orden gestionada exitósamente.");
+                purchase.idStatus = idStatus;
+                navigate(-1);
+            }else{
+                toast.error(response.meta.message);
+            }
+            isLoading.current = false;
+        });
+        
+    }
 
     useEffect(() => {        
         PurchaseService.getById(id).then(response => {
@@ -96,12 +118,24 @@ const PurchaseInfoPage = () => {
                                 <hr />
                                 <p className="flex justify-between"><span>Total</span><span className="font-extrabold">L. {purchase && (purchase.subTotal * 1.15).toFixed(2)}</span></p>
                             </div>
+                            <div className="flex justify-center space-x-2 mt-3 mb-1" >
+                                {
+                                    purchase.idStatus == 2 ?
+                                    (
+                                        <>
+                                            <button onClick={() => handleRequest(1)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-green-700">Aceptar</button>
+                                            <button onClick={() => handleRequest(3)} className="hover:cursor-pointer rounded text-md text-white font-semibold px-3 py-1 bg-red-700">Rechazar</button>
+                                        </>
+                                    ) : ("")
+                                }
+                            </div>
                         </div>
                     )
+                    
                 }
             </div>
         </>
     );
 };
 
-export default PurchaseInfoPage;
+export default AdminPurchaseInfoPage;

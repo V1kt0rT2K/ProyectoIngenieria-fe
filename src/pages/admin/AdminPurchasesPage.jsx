@@ -1,157 +1,75 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
+import PurchaseService from "../../utils/service/PurchaseService";
 import toast, { Toaster } from 'react-hot-toast';
 import dayjs from "dayjs";
 import Pagination from "react-js-pagination";
-import AdminService from "../../utils/service/AdminService";
-import BackButton from "../../components/BackButton";
+import DropDown from "../../components/DropDown";
 
+const PurchaseOptions = ({ idSupplyPurcharse, idStatus }) => {
 
-const NewRangeModal = ({ isOpen, onClose, idCaiCode}) => {
-  if (!isOpen) return null;
-
-  const [newRange, setNewRange] = useState(0);
-
-  const generateNewRange = () => {
-    const payload = {
-        idCaiCode : idCaiCode,
-        newRange : newRange
-    }
-
-    AdminService.generateNewCaiCodeRange(payload).then(response =>{
-        if(!response.hasError){
-            toast.success("Nuevo rango creado con éxito.");
-            onClose();
-
-            setTimeout(()=>{window.location.reload()},1000);
-
-        }else{
-            toast.error(response.meta.message);
-        }
-    });
-  }
-
-  return (
-    <div
-    style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-    }}
-    onClick={onClose}
-  >
-    <div
-      style={{
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        position: 'relative',
-        width: '80%', // Añade un ancho máximo
-        maxWidth: '400px', // Ancho máximo para no hacerlo muy ancho
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center', // Centra horizontalmente los elementos hijos
-        gap: '20px', // Espacio uniforme entre elementos
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className='flex flex-col justify-center w-full'> 
-        <p className="text-center my-5">Ingrese la cantidad de facturas para el nuevo rango:</p>
-        <input 
-            className="flex bg-orange-300 py-1 px-2 rounded w-16 text-orange-700 font-extrabold focus:outline-none"
-            type="number"
-            value={newRange}
-            onChange={(e)=>{setNewRange(e.target.value)}}
-        >
-        </input>
-      </div>
-
-      <div className="flex my-3 gap-2">
-        <button
-          className="flex-grow justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
-          onClick={() => {generateNewRange()}}
-        >
-          Generar Nuevo Rango
-        </button>
-      </div>
-
-      <button
-        onClick={onClose}
-        style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          background: 'none',
-          border: 'none',
-          fontSize: '1.2em',
-          cursor: 'pointer',
-        }}
-      >
-        &times;
-      </button>
-    </div>
-  </div>
-  );
+    return (
+        <>
+            <DropDown links={[
+                <Link
+                    to="purchase_information"
+                    state={{ id: idSupplyPurcharse }}
+                    className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+                >
+                    Ver detalles
+                </Link>
+            ]} />
+        </>
+    );
 };
 
-
-const CaiCodesPage = () => {
+const AdminPurchasesPage = () => {
     const [loading, setLoading] = useState(true);
-    const [codeRanges, setCodeRanges] = useState([]);
+    const [purchaseOrders, setPurchaseOrders] = useState([]);
 
-    const [isActive, setIsActive] = useState("2");
+    const [status, setStatus] = useState("0");
+    const[statusList, setStatusList] = useState([]);
 
     const [totalItems, setTotalItems] = useState(0);
     const [sort, setSort] = useState("0");
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(4);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
-
 
     useEffect(() => {
-        AdminService.getAllRangesByActiveStatus(isActive,page,size,sort).then(response =>{
+        PurchaseService.getStatusForPurcharses().then(response => {
+            if (!response.hasError) {
+                setStatusList(response.data);
+            }
+        });
+
+        PurchaseService.getPurcharsesByStatus(status,page,size,sort).then(response =>{
             if(!response.hasError){
-                setCodeRanges(response.data.data);
+                setPurchaseOrders(response.data.data);
                 setTotalItems(response.data.totalItems);
             }
         }).finally(() =>{
             setLoading(false);
         });
 
+        
     }, []);
 
     useEffect(() => {
         setLoading(true);
-        AdminService.getAllRangesByActiveStatus(isActive,page, size, sort).then(response => {
+        PurchaseService.getPurcharsesByStatus(status,page, size, sort).then(response => {
             if (!response.hasError) {
-                setCodeRanges(response.data.data);
+                setPurchaseOrders(response.data.data);
                 setTotalItems(response.data.totalItems);
 
             }else{
                 toast.error(response.meta.message);
-                setCodeRanges([]);
+                setPurchaseOrders([]);
             }
             setLoading(false);
         });
-    }, [isActive,page, size, sort]);
+    }, [status,page, size, sort]);
 
     return (
         <>
@@ -163,29 +81,26 @@ const CaiCodesPage = () => {
                 }}/>
             </div>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
-                <BackButton />
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
                         <select 
                         className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md"
-                        onChange={e=>{setIsActive(e.target.value)}} 
+                        onChange={e=>{setStatus(e.target.value)}} 
                         >
-                            <option key="0" value="2">
-                                Mostrar todos
+                            <option key="0" value="0">
+                                Mostrar todas
                             </option>
-                            <option key="1" value="1">
-                                Activos
-                            </option>
-                            <option key="2" value="0">
-                                No Activos
-                            </option>
+                            {
+                                statusList.map((s, idx) =>
+                                    <option
+                                        key={s.idStatus}
+                                        value={s.idStatus}
+                                    >
+                                        {s.statusName}
+                                    </option>
+                                )
+                            }
                         </select>
-                        <button 
-                            onClick={handleOpenModal}
-                            className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
-                        >
-                            Generar Nuevo Rango
-                        </button>
                     </div>
                 <div className="flex flex-row gap-3">
                     <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
@@ -194,7 +109,7 @@ const CaiCodesPage = () => {
                     </select>
                 </div>
                 </div>
-                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Rangos Emitidos</p>
+                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Historial de compras</p>
                 <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>
                     {
                         loading
@@ -204,27 +119,37 @@ const CaiCodesPage = () => {
                                     <thead>
                                         <tr>
                                             <th className="border border-orange-900 py-2 px-5 bg-orange-700 text-white text-md">Estado</th>
-                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Inicio Rango</th>
-                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Fin Rango</th>
-                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">F. Expiración</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">No. de compra</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Proveedor</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Monto estimado</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">F. de order</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
-                                            codeRanges
-                                                .map((range, idx) =>
+                                            purchaseOrders
+                                                .map((order, idx) =>
                                                     <tr key={idx}>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {range.isActive ? "Activo" : "No Activo"}
+                                                            <p className="">
+                                                                {order.Status.statusName}
+                                                            </p>
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {range.startRange}
+                                                            {order.idSupplyPurcharse}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {range.endRange}
+                                                            {order.Provider.providerName}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {new Date(range.expirationDate).toLocaleDateString()}
+                                                            L. {(order.subTotal + order.ISV).toLocaleString()}
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {new Date(order.generationDate).toLocaleDateString()}
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                                            <PurchaseOptions idSupplyPurcharse={order.idSupplyPurcharse} idStatus={order.idStatus} />
                                                         </td>
                                                     </tr>
                                                 )
@@ -259,10 +184,8 @@ const CaiCodesPage = () => {
                     )
                 }
             </div>
-
-            <NewRangeModal isOpen={isModalOpen} onClose={ handleCloseModal} idCaiCode={1}></NewRangeModal>
         </>
     );
 };
 
-export default CaiCodesPage;
+export default AdminPurchasesPage;

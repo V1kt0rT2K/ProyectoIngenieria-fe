@@ -42,6 +42,12 @@ import AdminSalesPage from "../pages/admin/AdminSalesPage";
 import CaiCodesPage from "../pages/admin/CaiCodesPage";
 import AdminSaleDetailPage from "../pages/admin/AdminSaleDetailPage";
 
+import AdminPurchasesPage from "../pages/admin/AdminPurchasesPage";
+import AdminPurchaseInfoPage from "../pages/admin/AdminPurchaseInfoPage";
+
+import AdminProvidersPage from "../pages/admin/AdminProvidersPage";
+import AdminNewProviderPage from "../pages/admin/AdminNewProviderPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 const Routes = () => {
@@ -86,16 +92,6 @@ const Routes = () => {
                         <Route index element={<HomePage />} />
                     </Route>
 
-                    <Route path="users" element={<MainLayout title="Usuarios" />} >
-                        <Route index element={<UsersPage />} />
-                        <Route path="requests" >
-                            <Route index element={<UsersRequestsPage />} />
-                            <Route path="user_request" element={<UserRequestPage />} />
-                        </Route>
-                        <Route path="user_information" element={<UserInfoPage />} />
-                        <Route path="user_activity" element={<UserActivityPage />} />
-                    </Route>
-
                     <Route path="sales" element={<MainLayout title="Ventas" />} >
                         <Route index element={<SalesPage />} />
                         <Route path="new_sale" element={<NewSalePage />} />
@@ -121,6 +117,29 @@ const Routes = () => {
                             <Route path="codes" element={<CaiCodesPage/>} />
                             <Route path="sale_detail" element={<AdminSaleDetailPage/>} />
                         </Route>
+
+                        <Route path="users" element={<MainLayout title="Usuarios" />} >
+                            <Route index element={<UsersPage />} />
+                            <Route path="requests" >
+                                <Route index element={<UsersRequestsPage />} />
+                                <Route path="user_request" element={<UserRequestPage />} />
+                            </Route>
+
+                            <Route path="user_information" element={<UserInfoPage />} />
+                        </Route>
+
+                        <Route path="purchases" element={<MainLayout title="Compras" />} >
+                            <Route index element={<AdminPurchasesPage />} />
+                            <Route path="purchase_information" element={<AdminPurchaseInfoPage />} />
+                        </Route>
+
+                        <Route path="providers" element={<MainLayout title="Proveedores" />} >
+                            <Route index element={<AdminProvidersPage />} />
+                            <Route path="new_provider" element={<AdminNewProviderPage />} />
+                            <Route path="edit_provider" element={<AdminNewProviderPage />} />
+                            <Route path="view_provider" element={<AdminNewProviderPage />} />
+                        </Route>
+
                     </Route>
 
                 </Route>

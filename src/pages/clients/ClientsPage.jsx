@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import ClientOptions from "../../components/ClientOptions";
@@ -8,7 +8,7 @@ import Pagination from "react-js-pagination";
 const ClientsPage = () => {
     const [loading, setLoading] = useState(true);
 
-    const [searchBox, setSearchBox] = useState(null);
+    const [searchBox, setSearchBox] = useState("");
 
     const [sort, setSort] = useState("0");
     const [size, setSize] = useState(4);
@@ -17,6 +17,7 @@ const ClientsPage = () => {
     const [totalRows, setTotalRows] = useState(0);
 
     const [clients, setClients] = useState([]);
+    const currentData = useRef([]); 
 
     useEffect(() => {
         setLoading(true);
@@ -25,18 +26,37 @@ const ClientsPage = () => {
             if (!response.hasError) {
                 setClients(response.data.data);
                 setTotalRows(response.data.totalItems);
+                currentData.current = response.data.data;
             }
         });
 
         setLoading(false);
     }, [page, size, sort]);
 
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            if (searchBox === "") {
+                setClients(currentData.current);
+            } else {
+                ClientService.searchClients(searchBox).then(response => {
+                    if (!response.hasError) {
+                        setClients(response.data);
+                    } else {
+                        setClients([]);
+                    }
+                });
+            }
+        }, 500);
+
+        return () => clearTimeout(timeOut);
+    }, [searchBox]);
+
     return (
         <>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
-                        <input value={searchBox} onInput={(e) => { }} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar clientes" />
+                        <input value={searchBox} onInput={(e) => { setSearchBox(e.target.value)}} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por identificacion, nombre, contacto..." />
                         <Link to="new_client" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Registar cliente</Link>
                     </div>
                     <div>
@@ -59,7 +79,7 @@ const ClientsPage = () => {
                                             <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Nombre</th>
                                             <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Contacto</th>
                                             <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Direccion</th>
-                                            <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2"></th>
+                                            {/* <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2"></th> */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -71,7 +91,7 @@ const ClientsPage = () => {
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.fullName ?? "_"}</td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.contact ?? "_"}</td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.address ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md"><ClientOptions id={client.idClient} /></td>
+                                                        {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md"><ClientOptions id={client.idClient} /></td> */}
                                                     </tr>
                                                 )
                                         }

@@ -52,7 +52,7 @@ class AdminService {
     static async getUserRequestsByIdStatus(status, page, size, sort) {
 
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/requests/get/status/${status}/${page}/${size}/${sort}`,
+            ${Configuration.API_BASE_URL}/users/requests/get/status/${status}/${page}/${size}/${sort}`,
             {
                 method: "GET",
                 headers: {
@@ -67,7 +67,7 @@ class AdminService {
     static async getUserRequestsById(idUserRequest) {
 
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/requests/get/${idUserRequest}`,
+            ${Configuration.API_BASE_URL}/users/requests/get/${idUserRequest}`,
             {
                 method: "GET",
                 headers: {
@@ -82,7 +82,7 @@ class AdminService {
     static async manageUserRequest(payload) {
 
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/requests/manage`,
+            ${Configuration.API_BASE_URL}/users/requests/manage`,
             {
                 method: "PUT",
                 headers: {

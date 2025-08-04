@@ -107,6 +107,10 @@ const InventoryPage = () => {
       return categories.filter(cat => 
         cat !== Categories.PRODUCTS
       );
+    } else if(userRole === 3){
+      return categories.filter(cat => 
+        cat !== Categories.LOT
+      );
     }
     return categories;
   };
@@ -119,7 +123,7 @@ const InventoryPage = () => {
   };
 
   const canViewProducts = () => {
-    return userRole === 3 || userRole === 4; 
+    return userRole === 4 || userRole === 3 || userRole === 6; 
   };
 
 

@@ -106,7 +106,7 @@ const UsersPage = () => {
             <div><Toaster/></div>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
-                    <Link to="requests" className="text-white rounded bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de crear usuario</Link>
+                    <Link to="requests" className="text-white rounded bg-orange-700 px-3 py-1 text-md font-semibold mb-4 hover:cursor-pointer">Solicitudes de Creación de Usuario</Link>
                     <div className="flex w-full">
                         <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar usuarios" />
                         <button onClick={clearInput} className="bg-red-600 mx-2 px-3 py-1 flex items-center justify-center text-xl text-white font-extrabold rounded hover:cursor-pointer">X</button>

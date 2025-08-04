@@ -153,6 +153,37 @@ class AdminService {
 
         return await result.json();
     }
+
+    static async generateNewCaiCodeRange(payload) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/code/generate`, 
+        {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body : JSON.stringify(payload)
+        });
+
+        return await result.json();
+    }
+
+    static async getAllRangesByActiveStatus(isActive, page,size,sort) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/code/get/active/${isActive}/${page}/${size}/${sort}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
 }
 
 export default AdminService;

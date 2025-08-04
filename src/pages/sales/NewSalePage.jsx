@@ -109,7 +109,7 @@ const NewSalePage = () => {
                             {/* <p className="text-orange-700 underline font-semibold">RTN: {Configuration.RTN_NUMBER}</p> */}
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p>Numero de identidad del cliente</p>
-                                <input ref={identity}  name="identification"  className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" defaultValue="000" />
+                                <input ref={identity}  name="identification"  className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none" defaultValue="000" placeholder="CLIENTE FINAL : 000" />
                             </div>
                         </div>
                         <div className="flex-grow space-y-4 justify-center rounded pl-2">

@@ -92,19 +92,19 @@ export const generateInvoicePdf = async (checkSaleData) => {
                         { text: 'Granja el Rancherito', style: 'header', alignment: 'right' },
                         { text: 'Sabanagrande, Francisco Morazán', style: 'header', alignment: 'right' },
                         { text: 'Teléfono: 2262-1565, Email:granjaracherito@gmail.com', style: 'header', alignment: 'right' },
-                        { text: 'CAI: 35DB45-58RFG5-34DF3R-23KGT5-98UIP4-2A', style: 'header', alignment: 'right' },
-                        { text: 'RTN: 2711-5621-12281',style: 'header', alignment: 'right' },
+                        { text: `CAI: ${checkSaleData.CaiCodeRange.CaiCode.code}`, style: 'header', alignment: 'right' },
+                        { text: `RTN: ${checkSaleData.CaiCodeRange.CaiCode.establishmentRTN}`,style: 'header', alignment: 'right' },
                         { text: `No. Factura: ${checkSaleData.saleCheckCode}`,style: 'header', alignment: 'right' },
                     ]
                 ]
             },
-            { text: `Cliente: ${checkSaleData.idClient == "000" ? checkSaleData.idClient : "CLEINTE FINAL"}`, margin: [0, 10, 0, 0] },
-            { text: `Fecha: ${dayjs(checkSaleData.generationDate).format('YYYY-MM-DD HH:mm:ss')}`, margin: [0, 0, 0, 10] },
-            // { text: `Rango Inicio: ${checkSaleData.CaiCodeRange.startRange}`, margin: [0, 0, 0, 10] },
-            // { text: `Rango Final: ${checkSaleData.CaiCodeRange.endRange}`, margin: [0, 0, 0, 10] },
+            { text: `Cliente: ${checkSaleData.Client.identification === "000" ? "CLIENTE FINAL" : checkSaleData.Client.identification}`, margin: [0, 10, 0, 0] },
+            { text: `Cajero: ${checkSaleData.User.Person.firstName}  ${checkSaleData.User.Person.lastName}`, margin: [0, 0, 0, 10] },
+            { text: `Fecha de Emisión: ${dayjs(checkSaleData.generationDate).format('YYYY-MM-DD HH:mm:ss')}`, margin: [0, 0, 0, 10] },
+            { text: "Rango Permitido: ", margin: [0, 10, 0, 10] },
             { text: `Rango Inicial: ${checkSaleData.CaiCodeRange.startRange}`, margin: [0, 0, 0, 10] },
             { text: `Rango Final: ${checkSaleData.CaiCodeRange.endRange}`, margin: [0, 0, 0, 10] },
-            { text: `Cajero: ${checkSaleData.User.Person.firstName}  ${checkSaleData.User.Person.lastName}`, margin: [0, 0, 0, 10] },
+            { text: `Fecha de Expiración: ${new Date(checkSaleData.CaiCodeRange.expirationDate).toLocaleDateString()}`, margin: [0, 0, 0, 10] },
 
             {
                 table: {

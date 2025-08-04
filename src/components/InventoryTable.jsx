@@ -10,7 +10,9 @@ const InventoryTable = ({ columns, data, to }) => {
                             {col.label}
                         </th>
                     ))}
-                    <th className="border border-orange-900 px-5 bg-orange-700 text-white"></th>
+                    {to && ( 
+                        <th className="border border-orange-900 px-5 bg-orange-700 text-white"></th>
+                    )}
                 </tr>
             </thead>
             <tbody>
@@ -25,9 +27,11 @@ const InventoryTable = ({ columns, data, to }) => {
                                         : row[col.field]}
                             </td>
                         ))}
-                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                            <InventoryOptions id={row.id} to={to} />
-                        </td>
+                        {to && (  
+                            <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                <InventoryOptions id={row.id} to={to} />
+                            </td>
+                        )}
                     </tr>
                 ))}
             </tbody>

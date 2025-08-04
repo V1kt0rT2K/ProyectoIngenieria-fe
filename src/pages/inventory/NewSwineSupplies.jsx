@@ -24,7 +24,7 @@ const NewSwineSupplies = () => {
                     setLoteData(loteResponse.data);
                 }
 
-                const suppliesResponse = await SupplyService.getAll();
+                const suppliesResponse = await SupplyService.getAllSuppliesbyStage(loteResponse.data.Stage.idStage);
                 if (!suppliesResponse.hasError) {
                     setSupplies(suppliesResponse.data);
                 }
@@ -44,48 +44,6 @@ const NewSwineSupplies = () => {
         updated[index][field] = value;
         setNewSupplies(updated);
     };
-const decrementarLotes = async (idSupply, quantityNeeded) => {
-    try {
-        // Traer todos los lotes del insumo ordenados por expiración
-        const response = await SupplyBatchService.getSuppbyBatchbyMenorExpirationDate();
-        if (response.hasError) {
-            toast.error("No se pudieron obtener los lotes de insumos.");
-            return false;
-        }
-        const lotes = response.data.filter(lote => lote.idSupply === idSupply);
-        let cantidadRestante = quantityNeeded;
-        console.log(lotes)
-        for (let lote of lotes) {
-            console.log(`Procesando lote con ID: ${lote.idSupplyBatch}, Stock: ${lote.stockQuantity}`);
-            if (cantidadRestante <= 0) break;
-
-            const disponible = parseFloat(lote.stockQuantity);
-            const aDescontar = Math.min(disponible, cantidadRestante);
-
-            // Llamar al backend para actualizar stock
-            const result = await SupplyBatchService.updateStckSupplyBatch(lote.idSupplyBatch, aDescontar);
-
-            if (result.hasError) {
-                toast.error(`Error al descontar del lote con id ${lote.idSupplyBatch}`);
-                return false;
-            }
-
-            cantidadRestante -= aDescontar;
-        }
-
-        if (cantidadRestante > 0) {
-            toast.error(`Stock insuficiente para el insumo con ID ${idSupply}.`);
-            return false;
-        }
-
-        return true;
-
-    } catch (error) {
-        console.error("Error en decrementarLotes:", error);
-        toast.error("Error al intentar decrementar lotes.");
-        return false;
-    }
-};
 const removeSupply = (idx) => {
     const updated = [...newSupplies];
     updated.splice(idx, 1);
@@ -94,49 +52,37 @@ const removeSupply = (idx) => {
 
 const executeSave = async () => {
     try {
-        const session = localStorage.getItem("session"); 
-        if (!session) {
-            toast.error("Debe iniciar sesión para realizar esta acción.");
-            return;
-        }
-        const User = JSON.parse(session);
-
-      
-        for (let supply of newSupplies) {
-            const idSupply = parseInt(supply.supplyId);
-            const quantity = parseInt(supply.quantity);
-            const decrementado = await decrementarLotes(idSupply, quantity);
-
-            if (!decrementado) {
-                toast.error(`No se pudo suministrar el insumo con ID ${idSupply}`);
-                return;
-            }
+        const currentUser = JSON.parse(localStorage.getItem("session"));
+        if (!currentUser?.idUser) {
+            throw new Error("Usuario no autenticado");
         }
 
         
-        const payload = newSupplies.map(supply => ({
+
+        const payload = {
             idSwineBatch: parseInt(idLote),
-            idSupply: parseInt(supply.supplyId),
-            quantity: parseInt(supply.quantity),
-            generationDate: new Date(supply.generationDate + "T00:00:00"),
-            idUser: User.idUser
-        }));
+            idUser: currentUser.idUser,
+            detail: newSupplies.map(s => ({
+                idSupply: parseInt(s.supplyId),
+                quantity: parseFloat(s.quantity),
+                generationDate: new Date(s.generationDate ).toISOString().split('T')[0]
+            }))
+        };
 
-        console.log("Payload to save:", payload);
-        const responses = await Promise.all(
-            payload.map(SwineSupplies => SwineSuppliesService.createSwineSupplies(SwineSupplies))
-        );
-
-        if (responses.some(r => r.hasError)) {
-            toast.error("Error al guardar uno o más insumos.");
+        
+        
+        const response = await SwineSuppliesService.createSwineSupplies(payload);
+        
+        if (response.hasError) {
+        toast.error( response.meta.message);
         } else {
             toast.success("Insumos suministrados correctamente.");
             setNewSupplies([]);
         }
-
     } catch (error) {
-        console.error("Error al guardar insumos:", error);
-        toast.error("No se pudo guardar. Intente nuevamente.");
+        console.error("Error en executeSave:", error);
+        const errorMessage = error.message || "Error inesperado en la aplicación";
+        toast.error(errorMessage);
     }
 };
 
@@ -180,8 +126,8 @@ const executeSave = async () => {
                             <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                                 <p><b>Cantidad Inicial:</b> {loteData.quantity}</p>
                                 <p><b>Stock:</b> {loteData.stockQuantity}</p>
-                                <p><b>Fecha Nacimiento:</b> {new Date(loteData.birthDate).toLocaleDateString()}</p>
-                                <p><b>Fecha Ingreso:</b> {new Date(loteData.generationDate).toLocaleDateString()}</p>
+                                <p><b>Fecha Nacimiento:</b> {new Date(loteData.birthDate).toISOString().split('T')[0]}</p>
+                                <p><b>Fecha Ingreso:</b> {new Date(loteData.generationDate).toISOString().split('T')[0]}</p>
                                 <p><b>Etapa:</b> {loteData.Stage?.stageName || "Desconocido"}</p>
                             </div>
                         </div>

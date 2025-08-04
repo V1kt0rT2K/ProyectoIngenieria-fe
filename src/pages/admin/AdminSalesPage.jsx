@@ -1,13 +1,49 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
-import SaleOptions from "../../components/SaleOptions";
 import SellerService from "../../utils/service/SellerService";
 import toast, { Toaster } from 'react-hot-toast';
 import dayjs from "dayjs";
 import Pagination from "react-js-pagination";
+import { generateInvoicePdf } from "../../utils/generateCheckUtils";
+import DropDown from "./../../components/DropDown";
 
-const SalesPage = () => {
+
+const SaleOptions = ({ idSalesCheck }) => {
+
+    const generateSalesCheck = () =>{
+        console.log(idSalesCheck);
+        SellerService.getSalesCheckById(idSalesCheck).then(response =>{
+            if(!response.hasError){
+                generateInvoicePdf(response.data)
+            }
+        });
+    };
+
+    return (
+        <>
+            <DropDown links={[
+                <Link
+                    to="sale_detail"
+                    state={{
+                        idSalesCheck: idSalesCheck
+                    }}
+                    className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+                >
+                    Ver detalles
+                </Link>
+            ,<button
+                onClick={()=>{generateSalesCheck()}}
+                className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+            >
+                Generar Factura
+            </button>]}
+            />
+        </>
+    );
+};
+
+const AdminSalesPage = () => {
     const [loading, setLoading] = useState(true);
 
     const [searchBox, setSearchBox] = useState("");
@@ -31,13 +67,13 @@ const SalesPage = () => {
             }
         });
 
-        SellerService.getAllSalesChecksForUserByClientType(typeSelected,page,size,sort).then(response => {
+        SellerService.getAllSalesChecksByClientType(typeSelected,page,size,sort).then(response => {
             if(!response.hasError){
                 setSales(response.data.data);
                 setTotalRows(response.data.totalItems);
                 currentData.current = response.data.data;
             }else{
-                //toast.error(response.meta.message);
+                toast.error(response.meta.message);
             }
         });
 
@@ -50,7 +86,7 @@ const SalesPage = () => {
             if (searchBox === "") {
                 setSales(currentData.current);
             } else {
-                SellerService.searchSalesCheckForUser(searchBox).then(response => {
+                SellerService.searchSalesCheck(searchBox).then(response => {
                     if (!response.hasError) {
                         setSales(response.data);
                     } else {
@@ -68,7 +104,7 @@ const SalesPage = () => {
 
         setLoading(true);
         setSales([]);
-        SellerService.getAllSalesChecksForUserByClientType(typeSelected,page,size,sort).then( response => {
+        SellerService.getAllSalesChecksByClientType(typeSelected,page,size,sort).then( response => {
             console.log(response);
             if(!response.hasError){
                 setSales(response.data.data);
@@ -95,7 +131,7 @@ const SalesPage = () => {
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
-                        <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por cliente..." />
+                        <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por usuario o código de factura..." />
                         <select 
                         className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md"
                         value={typeSelected}
@@ -115,7 +151,7 @@ const SalesPage = () => {
                                 )
                             }
                         </select>
-                        <Link to="new_sale" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Nueva venta</Link>
+                        <Link to="codes" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer"> Ver Códigos Cai</Link>
                     </div>
                 <div className="flex flex-row gap-3">
                     <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
@@ -135,9 +171,8 @@ const SalesPage = () => {
                                         <tr>
                                             <th className="border border-orange-900 py-2 px-5 bg-orange-700 text-white text-md">No. de factura</th>
                                             <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Id. Cliente</th>
-                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Monto</th>
                                             <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Fecha</th>
-                                            {/* <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Estado</th> */}
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Correo de Usuario</th>
                                             <th className="border border-orange-900 px-5 bg-orange-700 text-white"></th>
                                         </tr>
                                     </thead>
@@ -153,17 +188,11 @@ const SalesPage = () => {
                                                             {sale.Client?.identification == "000" ? "CLIENTE FINAL" : sale.Client?.identification}
                                                         </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {(sale.subTotal + sale.ISV).toLocaleString('en-US', {
-                                                            style: 'currency',
-                                                            currency: 'USD'
-                                                        })}
-                                                        </td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
                                                             {dayjs(sale.generationDate).format('YYYY-MM-DD HH:mm:ss')}
                                                         </td>
-                                                        {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                                            {sale.Status?.statusName}
-                                                        </td> */}
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {sale.User?.email}
+                                                        </td>
                                                         <td className="border border-orange-900 bg-orange-200 py-4 px-5">
                                                             <SaleOptions idSalesCheck={sale.idSalesCheck} />
                                                         </td>
@@ -203,4 +232,4 @@ const SalesPage = () => {
     );
 };
 
-export default SalesPage;
+export default AdminSalesPage;

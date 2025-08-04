@@ -17,7 +17,7 @@ const LotInfoPage = () => {
     const [supplies, setSupplies] = useState([]);
     const [filter, setFilter] = useState("todos");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 4
 
     const fetchLoteInfo = async () => {
         try {
@@ -70,8 +70,8 @@ const LotInfoPage = () => {
         { label: "Insumo", field: (row) => row.Supply.nameSupply },
         { label: "Tipo de Insumo", field: (row) => row.Supply.SupplyType.nameSupplyType },
         { label: "Cantidad", field: "quantity" },
-        { label: "Fecha de Generación", field: (row) => new Date(row.generationDate).toLocaleDateString() },
-        {label:"Operador de Granja", field: (row) => row.User?.Person.firstName || "Desconocido" }
+        { label: "Fecha de Generación", field: (row) => new Date(row.generationDate).toISOString().split('T')[0] },
+        {label:"Operador de Granja", field: (row) => row.User?.email || "Desconocido" }
     ];
 
     useEffect(() => {

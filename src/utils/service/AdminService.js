@@ -1,10 +1,41 @@
 import Configuration from "../../Configuration";
+import registerInterceptor from "../Interceptor";
+
+
+registerInterceptor();
 
 class AdminService {
-    constructor(){}
+
+    static async getAllRoles() {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/users/roles/get/all`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
+    static async getUserById(id) {
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/users/${id}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
 
     static async getAllUsers(page,size,sort) {
-        
         const result = await fetch(`
             ${Configuration.API_BASE_URL}/users/get/all/${page}/${size}/${sort}`, 
         {
@@ -79,10 +110,41 @@ class AdminService {
         return await result.json();
     }
 
-    static async getStatus() {
+    static async getStatusByIdType(idStatusType) {
         
         const result = await fetch(`
-            ${Configuration.API_BASE_URL}/asset/status/get/all`, 
+            ${Configuration.API_BASE_URL}/asset/status/get/type/${idStatusType}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
+    static async generateNewCaiCodeRange(payload) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/code/generate`, 
+        {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body : JSON.stringify(payload)
+        });
+
+        return await result.json();
+    }
+
+    static async getAllRangesByActiveStatus(isActive, page,size,sort) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/code/get/active/${isActive}/${page}/${size}/${sort}`, 
         {
             method: "GET",
             headers: {

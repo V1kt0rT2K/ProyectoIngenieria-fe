@@ -1,20 +1,26 @@
-import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import BackButton from "../../components/BackButton";
 import Spinner from "../../components/Spinner";
 import Configuration from "../../Configuration";
+import AdminService from "../../utils/service/AdminService";
+import PublicService from "../../utils/service/PublicService";
+import { useLocation } from "react-router-dom";
+import dayjs from "dayjs";
 
 const UserInfoPage = () => {
+  const location = useLocation();
+  const { id } = location.state;
+
   const fieldsRef = useRef(null);
   const roleRef = useRef(null);
   const enabledRef = useRef(null);
 
-  const location = useLocation();
+  const [userRoles, setUserRoles] = useState([]);
 
-  const [values, setValues] = useState(location.state);
-  const firstValues = { ...location.state };
+  const [values, setValues] = useState(null);
+  const firstValues = useRef(null);
 
-  const [checked, setChecked] = useState(firstValues.enabled);
+  const [checked, setChecked] = useState(false);
 
   const [editMode, setEditMode] = useState(false);
 
@@ -25,7 +31,7 @@ const UserInfoPage = () => {
     setSaving(true);
 
     try {
-      const res = await fetch(`${Configuration.API_BASE_URL}/user/update/${values.id}`, {
+      const res = await fetch(`${Configuration.API_BASE_URL}/users/update/${values.idUser}`, {
         method: "PUT",
         headers: {
           "Accept": "application/json",
@@ -50,6 +56,7 @@ const UserInfoPage = () => {
   }
 
   const handleMode = async (save) => {
+    console.log(values);
     setMsg({});
     setEditMode(!editMode);
 
@@ -67,8 +74,10 @@ const UserInfoPage = () => {
     obj["enabled"] = checked;
     obj["role"] = roleRef.current.value;
 
+    console.log(obj);
+
     if (!save) {
-      setValues(firstValues);
+      setValues(firstValues.current);
       return;
     }
 
@@ -76,8 +85,36 @@ const UserInfoPage = () => {
   }
 
   useEffect(() => {
-    roleRef.current.value = values.role;
-    enabledRef.current.checked = values.enabled;
+    AdminService.getAllRoles().then(response => {
+      if (!response.hasError)
+        setUserRoles(response.data);
+    });
+
+    AdminService.getUserById(id).then(response => {
+      if (!response.hasError) {
+        const data = response.data;
+
+        const obj = {
+          idUser: data.idUser,
+          firstName: data.Person.firstName,
+          secondName: data.Person.secondName,
+          lastName: data.Person.lastName,
+          secondLastName: data.Person.secondLastName,
+          idRole: data.idRole,
+          userName: data.UserRequests[0].userName,
+          identityNumber: data.Person.identityNumber,
+          date: data.UserRequests[0].generationDate,
+          email: data.email,
+          isEnabled: data.isEnabled,
+        };
+
+        setChecked(obj.isEnabled);
+        setValues(obj);
+        firstValues.current = { ...obj };
+
+        enabledRef.current.checked = obj.isEnabled;
+      }
+    });
   }, []);
 
   return (
@@ -115,7 +152,7 @@ const UserInfoPage = () => {
           <div ref={fieldsRef} className="pb-4 px-2 pr-6 ml-2 flex flex-col justify-center mt-2">
             <label className="text-md text-orange-900">Primer nombre</label>
             <input
-              value={values.firstName}
+              value={values ? values.firstName : ""}
               onChange={e => setValues({ ...values, ...{ firstName: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
@@ -124,7 +161,7 @@ const UserInfoPage = () => {
 
             <label className="mt-2 text-md text-orange-900">Segundo nombre</label>
             <input
-              value={values.secondName}
+              value={values ? values.secondName : ""}
               onChange={e => setValues({ ...values, ...{ secondName: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
@@ -133,7 +170,7 @@ const UserInfoPage = () => {
 
             <label className="mt-2 text-md text-orange-900">Primer apellido</label>
             <input
-              value={values.lastName}
+              value={values ? values.lastName : ""}
               onChange={e => setValues({ ...values, ...{ lastName: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
@@ -142,7 +179,7 @@ const UserInfoPage = () => {
 
             <label className="mt-2 text-md text-orange-900">Segundo apellido</label>
             <input
-              value={values.secondLastName}
+              value={values ? values.secondLastName : ""}
               onChange={e => setValues({ ...values, ...{ secondLastName: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
@@ -151,8 +188,8 @@ const UserInfoPage = () => {
 
             <label className="mt-2 text-md text-orange-900">Nombre de usuario</label>
             <input
-              value={values.username}
-              onChange={e => setValues({ ...values, ...{ username: e.target.value } })}
+              value={values ? values.userName : ""}
+              onChange={e => setValues({ ...values, ...{ userName: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
               name="username"
@@ -160,24 +197,25 @@ const UserInfoPage = () => {
 
             <label className="mt-2 text-md text-orange-900">Numero de identidad</label>
             <input
-              value={values.idNumber}
-              onChange={e => setValues({ ...values, ...{ idNumber: e.target.value } })}
+              value={values ? values.identityNumber : ""}
+              onChange={e => setValues({ ...values, ...{ identityNumber: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
               name="identityNumber"
+              type="text"
             />
 
             <label className="mt-2 text-md text-orange-900">Rol asignado</label>
-            <select disabled ref={roleRef} className="focus:outline-none flex-grow rounded py-1 px-3 text-md">
+            <select onChange={(e) => setValues({ ...values, idRole: parseInt(e.target.value) })} value={values ? values.idRole : ""} disabled ref={roleRef} className="focus:outline-none flex-grow rounded py-1 px-3 text-md">
               <option key={0} value={0}>Seleccionar rol</option>
-              <option key={1} value={1}>Administrador</option>
-              <option key={2} value={2}>Cajero</option>
-              <option key={3} value={3}>Encargado de almacen</option>
+              {
+                userRoles.map(role => <option value={role.idRole} key={role.idRole}>{ role.roleName }</option>)
+              }
             </select>
 
             <label className="mt-2 text-md text-orange-900">Fecha de creacion de usuario</label>
             <input
-              value={values.date}
+              value={dayjs(values ? values.generationDate : "").format('YYYY-MM-DD HH:mm:ss') ?? ""}
               onChange={e => setValues({ ...values, ...{ date: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"
@@ -187,7 +225,7 @@ const UserInfoPage = () => {
 
             <label className="mt-2 text-md text-orange-900">Email</label>
             <input
-              value={values.email}
+              value={values ? values.email : ""}
               onChange={e => setValues({ ...values, ...{ email: e.target.value } })}
               disabled
               className="focus:outline-none flex-grow rounded py-1 px-3 text-md"

@@ -1,209 +1,227 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDebounce } from "../../utils/debounce";
 import InventoryTable from "../../components/InventoryTable";
 import Spinner from "../../components/Spinner";
+import SupplyOptions from "../../components/SupplyOptions";
+import Pagination from "react-js-pagination";
+import { useInventoryData } from "../../hooks/useInventoryData";
+import { inventoryColumns } from "../../utils/inventoryColumns";
+import SearchInput from "../../components/SearchInput";
+import CategorySelector from "../../components/CategorySelector";
+import NoRecordsMessage from "../../components/NoRecordsMessage";
 
 const Categories = {
-    MEATS: "Carnes",
-    LOT: "Lotes",
-    SUPPLIES: "Insumos",
-    TOOLS: "Herramientas"
+  PRODUCTS: "Productos",
+  LOT: "Lotes",
+  SUPPLIES: "Insumos",
+  TOOLS: "Herramientas"
 };
-
+const CATEGORY_CONFIG = {
+  [Categories.PRODUCTS]: {
+    columns: inventoryColumns.productos,
+    addRoute: "new_product_batch",
+    hasTable: true,
+    searchable: true,
+  },
+  [Categories.LOT]: {
+    columns: inventoryColumns.lotes,
+    addRoute: "new_lot",
+    hasTable: true,
+    searchable: true,
+  },
+  [Categories.SUPPLIES]: {
+    columns: inventoryColumns.insumos,
+    addRoute: "add_supply",
+    hasTable: true,
+    searchable: true,
+  },
+  [Categories.TOOLS]: {
+    columns: [],
+    addRoute: "add_tool",
+    hasTable: false,
+    searchable: false,
+  },
+};
 const categories = Object.values(Categories);
-
-const inventarioCarnes = [
-    {
-        id: 1,
-        tipo: "R",
-        cantidadLibras: 50,
-        fechaIngreso: "2025-07-01",
-        precioPorLibra: 5.25
-    },
-    {
-        id: 2,
-        tipo: "C",
-        cantidadLibras: 30,
-        fechaIngreso: "2025-07-03",
-        precioPorLibra: 4.75
-    },
-    {
-        id: 3,
-        tipo: "P",
-        cantidadLibras: 60,
-        fechaIngreso: "2025-07-05",
-        precioPorLibra: 3.80
-    },
-    {
-        id: 4,
-        tipo: "L",
-        cantidadLibras: 20,
-        fechaIngreso: "2025-06-28",
-        precioPorLibra: 6.40
-    }
-];
-
-const registroCerdos = [
-    {
-        id: 1,
-        noLote: 101,
-        noCerdo: "1",
-        nacimiento: "2025-01-15",
-        desarrollo: "2025-03-01",
-        salida: "2025-06-20"
-    },
-    {
-        id: 2,
-        noLote: 111,
-        noCerdo: "2",
-        nacimiento: "2025-01-18",
-        desarrollo: "2025-03-05",
-        salida: "2025-06-22"
-    },
-    {
-        id: 3,
-        noLote: 102,
-        noCerdo: "3",
-        nacimiento: "2025-02-01",
-        desarrollo: "2025-03-20",
-        salida: "2025-07-01"
-    },
-    {
-        id: 4,
-        noLote: 103,
-        noCerdo: "4",
-        nacimiento: "2025-02-15",
-        desarrollo: "2025-04-01",
-        salida: "2025-07-15"
-    },
-    {
-        id: 5,
-        noLote: 112,
-        noCerdo: "1",
-        nacimiento: "2025-01-15",
-        desarrollo: "2025-03-01",
-        salida: "2025-06-20"
-    },
-    {
-        id: 6,
-        noLote: 121,
-        noCerdo: "2",
-        nacimiento: "2025-01-18",
-        desarrollo: "2025-03-05",
-        salida: "2025-06-22"
-    },
-    {
-        id: 7,
-        noLote: 132,
-        noCerdo: "3",
-        nacimiento: "2025-02-01",
-        desarrollo: "2025-03-20",
-        salida: "2025-07-01"
-    },
-    {
-        id: 8,
-        noLote: 143,
-        noCerdo: "4",
-        nacimiento: "2025-02-15",
-        desarrollo: "2025-04-01",
-        salida: "2025-07-15"
-    }
-];
+const TableOrMessage = ({ data, columns }) => {
+  return data.length > 0 ? (
+    <div className="overflow-x-auto w-full">
+      <InventoryTable columns={columns} data={data} to="lot" />
+    </div>
+  ) : (
+    <NoRecordsMessage />
+  );
+};
+const PromptMessage = () => (
+  <div 
+    style={{ height: "55vh" }} 
+    className="w-full flex justify-center items-center font-extrabold text-3xl text-orange-700"
+  >
+    Escoja una categoría para obtener registros
+  </div>
+);
 
 const InventoryPage = () => {
-    const inputRef = useRef(null);
-    const [input, setInput] = useState(null);
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState(null);
+  const [sort, setSort] = useState("0");
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(3);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const { loading, inventory, totalItems } = useInventoryData(
+    category,
+    subCategory,
+    page,
+    size,
+    sort,
+    debouncedSearchTerm
+  );
 
-    const [loading, setLoading] = useState(false);
+  
 
-    const [category, setCategory] = useState("");
-    const [addNew, setAddNew] = useState(null);
-    const [toDetails, setToDetails] = useState(null);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    if (e.target.value) setPage(1);
+  };
 
-    const [inventory, setInventory] = useState([]);
-    const [columnsTable, setColumnsTable] = useState([]);
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    setSubCategory("");
+    setPage(1);
+    setSearchTerm("");
+  };
 
-    useEffect(() => {
-        setLoading(true);
-        let inv = [];
+  const shouldShowAddButton = category && !loading && 
+    (category !== Categories.SUPPLIES || subCategory);
 
-        switch (category) {
-            case Categories.MEATS:
-                setColumnsTable(["Tipo de carne", "Cantidad (en libras)", "Fecha de ingreso", "Precio por libra"]);
-                setAddNew("new_meat_type");
-                setToDetails("meat_type_information");
-                inv = inventarioCarnes;
-                break;
-            case Categories.LOT:
-                setColumnsTable(["No. de lote", "No. de cerdo", "Nacimiento", "Desarrollo", "Salida"]);
-                setAddNew("new_lot");
-                setToDetails("lot_information");
-                inv = registroCerdos;
-                break;
-            case Categories.SUPPLIES:
-                setCategory(null);
-                setAddNew("new_supply");
-                setToDetails(null);
-                break;
-            case Categories.TOOLS:
-                setCategory(null);
-                setAddNew("new_tool");
-                setToDetails(null);
-                break;
-        };
+  const currentConfig = CATEGORY_CONFIG[category] || {};
+  
+  const shouldShowTable = currentConfig.hasTable && !(category === Categories.SUPPLIES && !subCategory);
+  
 
-        setInventory(inv);
+  const renderContent = () => {
+    if (category === Categories.SUPPLIES && !subCategory) {
+      return <SupplyOptions setSubCategory={setSubCategory} setPage={setPage} setSize={setSize} />;
+    }
 
-        setTimeout(() => setLoading(false), 1000);
-    }, [category]);
-
-    return (
-        <>
-            <div style={{ height: "80vh" }} className="flex flex-col pt-8">
-                <div className="flex flex-col items-start mb-6">
-                    <div className="flex w-full space-x-24 h-8 justify-between">
-                        <select className="py-1 px-3 bg-orange-200 rounded text-leading text-orange-700 border border-orange-700 hover:cursor-pointer">
-                            <option key={0} onClick={() => { setCategory(null); setAddNew(null); }}>Escoja una categoria</option>
-                            {
-                                categories.map((cat, idx) =>
-                                    <option
-                                        key={idx}
-                                        onClick={() => setCategory(cat)}
-                                    >
-                                        {cat}
-                                    </option>
-                                )
-                            }
-                        </select>
-                        {
-                            category
-                            && !loading
-                            && (
-                                <>
-                                    {category != Categories.LOT && <input ref={inputRef} onInput={() => setInput(inputRef.current.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar" />}
-                                    <Link to={`/inventory/${addNew}`} className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Agregar</Link>
-                                </>
-                            )
-                        }
-                    </div>
-                </div>
-                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${!category || loading ? "" : "border border-orange-700 bg-orange-200"}`}>
-                    {
-                        !category
-                            ? <div style={{ height: "55vh" }} className="w-full flex justify-center items-center font-extrabold text-3xl text-orange-700">Escoja una categoria para obtener registros</div>
-                            : (loading
-                                ? <Spinner loading={loading} />
-                                : <InventoryTable
-                                    columns={columnsTable}
-                                    data={inventory.filter(item => !input ? true : (new RegExp(`.*${input}.*`, "i")).test(item.tipo))}
-                                    to={toDetails}
-                                />
-                            )
-                    }
-                </div>
-            </div>
-        </>
+    return shouldShowTable ? (
+      <TableOrMessage 
+        data={inventory} 
+        columns={currentConfig.columns} 
+      />
+    ) : (
+      <NoRecordsMessage />
     );
+  };
+
+  return (
+    <div style={{ height: "80vh" }} className="flex flex-col pt-8">
+      
+      <div className="flex w-full space-x-24 h-8 justify-between">
+        <CategorySelector 
+          categories={categories} 
+          category={category} 
+          onChange={handleCategoryChange} 
+        />
+
+        {category && !loading && (
+          <>
+            {(category === Categories.PRODUCTS || (category === Categories.SUPPLIES && subCategory)) && (
+              <SearchInput 
+                searchTerm={searchTerm} 
+                handleSearchChange={handleSearchChange} 
+              />
+            )}
+
+            {category === Categories.PRODUCTS && (
+              <Link
+                to="/inventory/product_catalog"
+                className="bg-orange-700 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:bg-green-800 transition"
+              >
+                Ver Catálogo de producto
+              </Link>
+            )}
+
+            {shouldShowAddButton && (
+              <Link
+                to={currentConfig.addRoute}
+                className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:bg-orange-900 transition"
+              >
+                + Agregar
+              </Link>
+            )}
+          </>
+        )}
+      </div>
+
+      
+      <div className="flex flex-row gap-3">
+        <select
+          className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold"
+          onChange={(e) => setSort(e.target.value)}
+          value={sort}
+        >
+          <option value="0">Descendente</option>
+          <option value="1">Ascendente</option>
+        </select>
+      </div>
+
+      
+      {category === Categories.SUPPLIES && subCategory && (
+        <div className="flex flex-col w-full items-start mb-4 my-4">
+          <button
+            onClick={() => {
+              setSubCategory(null);
+              setPage(1);
+              setSearchTerm("");
+            }}
+            className="bg-orange-700 text-white font-semibold py-1 px-4 rounded hover:bg-orange-800 transition"
+          >
+            ← Regresar a Insumos
+          </button>
+        </div>
+      )}
+
+      
+      <div
+        style={{ width: "75vw", maxHeight: "55vh" }}
+        className={`rounded mt-2 mb-6 overflow-x-auto overflow-y-auto ${
+          !category || loading ? "" : "border border-orange-700 bg-orange-200"
+        }`}
+      >
+      {!category ? (
+          <PromptMessage />
+        ) : loading ? (
+          <Spinner />
+        ) : (
+          renderContent()
+        )}
+      </div>
+      {!loading && totalItems > 0 && (
+        <div className="flex justify-center space-x-4">
+          <Pagination
+            activePage={page}
+            itemsCountPerPage={size}
+            totalItemsCount={totalItems}
+            pageRangeDisplayed={5}
+            onChange={setPage}
+            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+            itemClass="flex items-center justify-center"
+            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            activeClass="bg-green-500"
+            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+            disabledClass="opacity-50 cursor-not-allowed"
+            prevPageText="<<"
+            nextPageText=">>"
+            firstPageText="Primera"
+            lastPageText="Última"
+          />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default InventoryPage;

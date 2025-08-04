@@ -1,0 +1,29 @@
+import DropDown from "./DropDown";
+import { Link } from "react-router-dom";
+
+const ProviderOptions = ({ id, isEnabled, onToggleStatus }) => {
+
+    if (!isEnabled) {
+        return (
+            <button
+                onClick={() => onToggleStatus(id, isEnabled, 1)}
+                className="w-full px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:bg-orange-800 rounded"
+            >
+                Habilitar
+            </button>
+        );
+    }
+    return (
+        <DropDown links={[
+            <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="view_provider" state={{ id: id }}>Ver Detalles</Link>,
+            <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="edit_provider" state={{ id: id }}>Editar</Link>,
+            <Link className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900" to="/purchases/new_purchase_order" state={{ preSelectedProvider: id, prevPage: "/providers" }}>Hacer Pedido</Link>,
+            <button
+                onClick={() => onToggleStatus(id, isEnabled, 0)}
+                className="w-full block px-4 py-2 font-semibold text-md text-white bg-red-700 hover:cursor-pointer hover:bg-orange-900">
+                Deshabilitar
+            </button>
+        ]} />
+    );
+};
+export default ProviderOptions;

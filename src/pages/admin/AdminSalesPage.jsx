@@ -1,0 +1,235 @@
+import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import Spinner from "../../components/Spinner";
+import SellerService from "../../utils/service/SellerService";
+import toast, { Toaster } from 'react-hot-toast';
+import dayjs from "dayjs";
+import Pagination from "react-js-pagination";
+import { generateInvoicePdf } from "../../utils/generateCheckUtils";
+import DropDown from "./../../components/DropDown";
+
+
+const SaleOptions = ({ idSalesCheck }) => {
+
+    const generateSalesCheck = () =>{
+        console.log(idSalesCheck);
+        SellerService.getSalesCheckById(idSalesCheck).then(response =>{
+            if(!response.hasError){
+                generateInvoicePdf(response.data)
+            }
+        });
+    };
+
+    return (
+        <>
+            <DropDown links={[
+                <Link
+                    to="sale_detail"
+                    state={{
+                        idSalesCheck: idSalesCheck
+                    }}
+                    className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+                >
+                    Ver detalles
+                </Link>
+            ,<button
+                onClick={()=>{generateSalesCheck()}}
+                className="flex justify-center block px-4 py-2 font-semibold text-md text-white bg-orange-800 hover:cursor-pointer hover:bg-orange-900"
+            >
+                Generar Factura
+            </button>]}
+            />
+        </>
+    );
+};
+
+const AdminSalesPage = () => {
+    const [loading, setLoading] = useState(true);
+
+    const [searchBox, setSearchBox] = useState("");
+    const [clientTypes, setClientTypes] = useState([]);
+    const [typeSelected, setTypeSelected] = useState("0");
+    const [size, setSize] = useState(4);
+    const [page, setPage] = useState(1);
+    const [sort, setSort] = useState("0");
+    const [totalRows, setTotalRows] = useState(0);
+
+    const [sales, setSales] = useState([]);
+    const currentData = useRef([]); 
+
+    useEffect(() => {
+
+        SellerService.getClientTypes().then( response => {
+            console.log("response ", response);
+            if(!response.hasError){
+                setClientTypes(response.data);
+                //setTypeSelected(response.data[0].idClientType);
+            }
+        });
+
+        SellerService.getAllSalesChecksByClientType(typeSelected,page,size,sort).then(response => {
+            if(!response.hasError){
+                setSales(response.data.data);
+                setTotalRows(response.data.totalItems);
+                currentData.current = response.data.data;
+            }else{
+                toast.error(response.meta.message);
+            }
+        });
+
+        setLoading(false);
+        
+    },[]);
+
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            if (searchBox === "") {
+                setSales(currentData.current);
+            } else {
+                SellerService.searchSalesCheck(searchBox).then(response => {
+                    if (!response.hasError) {
+                        setSales(response.data);
+                    } else {
+                        setSales([]);
+                    }
+                });
+            }
+        }, 500);
+
+        return () => clearTimeout(timeOut);
+    }, [searchBox]);
+
+    useEffect(() => {
+        if(!typeSelected) return;
+
+        setLoading(true);
+        setSales([]);
+        SellerService.getAllSalesChecksByClientType(typeSelected,page,size,sort).then( response => {
+            console.log(response);
+            if(!response.hasError){
+                setSales(response.data.data);
+                setTotalRows(response.data.totalItems);
+                currentData.current = response.data.data;
+            }else{
+                toast.error(response.meta.message);
+                setSales([]);
+            }
+        });
+
+        setLoading(false);
+    }, [typeSelected,page,size,sort]);
+
+    return (
+        <>
+            <div><Toaster 
+              toastOptions={{
+                className: '',
+                duration: 1500,
+                removeDelay: 1000
+                }}/>
+            </div>
+            <div style={{ height: "80vh" }} className="flex flex-col pt-8">
+                <div className="flex flex-col items-start">
+                    <div className="flex w-full space-x-24">
+                        <input value={searchBox} onInput={(e) => setSearchBox(e.target.value)} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por usuario o código de factura..." />
+                        <select 
+                        className="focus:outline-none flex-grow bg-orange-200 border border-orange-700 rounded py-1 px-3 text-md"
+                        value={typeSelected}
+                        onChange={e=>{setTypeSelected(e.target.value)}} 
+                        >
+                            <option key="0" value="0">
+                                Mostrar todas
+                            </option>
+                            {
+                                clientTypes.map((type, idx) =>
+                                    <option
+                                        key={idx}
+                                        value={type.idClientType}
+                                    >
+                                        {type.clientTypeName}
+                                    </option>
+                                )
+                            }
+                        </select>
+                        <Link to="codes" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer"> Ver Códigos Cai</Link>
+                    </div>
+                <div className="flex flex-row gap-3">
+                    <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
+                        <option value="0">Descendente</option>
+                        <option value="1">Ascendente</option>
+                    </select>
+                </div>
+                </div>
+                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Historial de ventas</p>
+                <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>
+                    {
+                        loading
+                            ? <Spinner loading={loading} />
+                            : (
+                                <table className="flex-grow w-full table-auto justify-self-center">
+                                    <thead>
+                                        <tr>
+                                            <th className="border border-orange-900 py-2 px-5 bg-orange-700 text-white text-md">No. de factura</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Id. Cliente</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Fecha</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white text-md">Correo de Usuario</th>
+                                            <th className="border border-orange-900 px-5 bg-orange-700 text-white"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            sales
+                                                .map((sale, idx) =>
+                                                    <tr key={idx}>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {sale.saleCheckCode  }
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {sale.Client?.identification == "000" ? "CLIENTE FINAL" : sale.Client?.identification}
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {dayjs(sale.generationDate).format('YYYY-MM-DD HH:mm:ss')}
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            {sale.User?.email}
+                                                        </td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5">
+                                                            <SaleOptions idSalesCheck={sale.idSalesCheck} />
+                                                        </td>
+                                                    </tr>
+                                                )
+                                        }
+                                    </tbody>
+                                </table>
+                            )
+                    }
+                </div>
+                {
+                    !loading
+                    && (
+                        <div className="flex justify-center space-x-4">
+                            <Pagination
+                            activePage={page}
+                            itemsCountPerPage={size}
+                            totalItemsCount={totalRows}
+                            pageRangeDisplayed={5}
+                            onChange={(pageNumber)=>{setPage(pageNumber)}}
+                            innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
+                            itemClass="flex items-center justify-center"
+                            linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                            activeLinkClass="px-3 py-2 border border-blue-500 bg-blue-500 text-white hover:bg-blue-600"
+                            disabledClass="opacity-50 cursor-not-allowed"
+                            prevPageText="<<"
+                            nextPageText=">>"
+                            firstPageText="Primera"
+                            lastPageText="Última"
+                            />
+                        </div>
+                    )
+                }
+            </div>
+        </>
+    );
+};
+
+export default AdminSalesPage;

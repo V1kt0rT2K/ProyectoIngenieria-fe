@@ -13,7 +13,7 @@ const ProvidersPage = () => {
 
     const [loading, setLoading] = useState(true);
 
-    const [statusFilter, setStatusFilter] = useState(1);
+    const [statusFilter, setStatusFilter] = useState(2);
     const [searchBox, setSearchBox] = useState("");
     const [sort, setSort] = useState("0");
     const [size, setSize] = useState(5);
@@ -114,6 +114,7 @@ const ProvidersPage = () => {
                             value={statusFilter}
                             onChange={e => { setStatusFilter(Number(e.target.value)) }}
                         >
+                            <option value="2">Mostrar Todos</option>
                             <option value="1">Proveedores habilitados</option>
                             <option value="0">Proveedores deshabilitados</option>
                         </select>

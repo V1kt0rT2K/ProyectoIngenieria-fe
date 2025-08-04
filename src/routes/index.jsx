@@ -37,6 +37,10 @@ import NewClientPage from "../pages/clients/NewClientPage";
 import OrdersWholesalerPage from "../pages/orders/OrdersWholesalerPage";
 import OrderWholesalerInfoPage from "../pages/orders/OrderWholesalerInfoPage";
 
+
+import ReportsPage from "../pages/admin/ReportsPage";
+import NewReportPage from "../pages/admin/NewReportPage";
+
 //VISTAS DE ADMINISTRADOR
 import AdminSalesPage from "../pages/admin/AdminSalesPage";
 import CaiCodesPage from "../pages/admin/CaiCodesPage";
@@ -47,6 +51,7 @@ import AdminPurchaseInfoPage from "../pages/admin/AdminPurchaseInfoPage";
 
 import AdminProvidersPage from "../pages/admin/AdminProvidersPage";
 import AdminNewProviderPage from "../pages/admin/AdminNewProviderPage";
+
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -89,7 +94,8 @@ const Routes = () => {
                     </Route>
 
                     <Route path="reports" element={<MainLayout title="Informes" />} >
-                        <Route index element={<HomePage />} />
+                        <Route index element={<ReportsPage />} />
+                        <Route path="new_report" element={<NewReportPage />} />
                     </Route>
 
                     <Route path="sales" element={<MainLayout title="Ventas" />} >

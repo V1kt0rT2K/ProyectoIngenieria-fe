@@ -20,6 +20,21 @@ class ClientService {
         return await result.json();
     }
 
+    static async searchClients(searchParam) {
+        
+        const result = await fetch(`
+            ${Configuration.API_BASE_URL}/sales/client/search/${searchParam}`, 
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+
+        return await result.json();
+    }
+
     static async saveClient(payload) {
         const result = await fetch(`${Configuration.API_BASE_URL}/sales/client/create`,
             {

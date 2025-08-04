@@ -86,9 +86,9 @@ const NewSalePage = () => {
             }else{
                 toast.error(response.meta.message);
             }
+            isLoading.current = false;
         });
 
-        isLoading.current = false
     };
 
     return (

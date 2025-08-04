@@ -30,9 +30,9 @@ class ProviderService {
     //     return await result.json();
     // }
 
-    static async getAllProviders(page, size, sort, enabled) {
+    static async getAllProviders(page, size, sort, isEnabled) {
         const result = await 
-        fetch(`${Configuration.API_BASE_URL}/order/provider/get/all/${page}/${size}/${sort}?enabled=${enabled}`,
+        fetch(`${Configuration.API_BASE_URL}/order/provider/get/all/${isEnabled}/${page}/${size}/${sort}`,
             {
                 method: "GET",
                 headers: {

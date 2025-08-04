@@ -34,7 +34,6 @@ const EntryPurcharsePage = () => {
     const location = useLocation();
 
     const isLoading = useRef(true);
-    
 
     const removeProduct = (idx) => {
         const currentProducts = [...checkSupplies];
@@ -80,9 +79,10 @@ const EntryPurcharsePage = () => {
             }else {
                 toast.error(response.meta.message);
             }
+
+            isLoading.current = false;
         });
 
-        isLoading.current = false;
     }
 
     // useEffect(() => {

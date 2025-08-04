@@ -70,10 +70,6 @@ const NewPurchasePage = () => {
             detail: selectedSupplies
         };
 
-        console.log("checkSupplies",checkSupplies);
-        
-        console.log("payload",payload);
-
         isLoading.current = true;
 
         PurchaseService.savePurchase(payload).then(response => {
@@ -84,9 +80,10 @@ const NewPurchasePage = () => {
             else{
                 toast.error(response.meta.message);
             }
+
+            isLoading.current = false;
         });
 
-        isLoading.current = false;
     }
 
     useEffect(() => {
@@ -102,7 +99,7 @@ const NewPurchasePage = () => {
             }
         });
 
-        ProvidersService.getAllProviders(1,30,0).then(response => {
+        ProvidersService.getAllProviders(1,30,0, 1).then(response => {
             console.log(response);
             if (!response.hasError) {
                 setProviders(response.data.data);

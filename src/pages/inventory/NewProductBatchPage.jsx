@@ -1,139 +1,27 @@
-import { useEffect, useState } from "react";
+
+import { Toaster } from 'react-hot-toast';
 import BackButton from "../../components/BackButton";
-import SellerService from "../../utils/service/SellerService";
-import SwineBatchService from "../../utils/service/SwineBatchService";
-import ProductBatchService from "../../utils/service/ProductBatchService";
-import toast, { Toaster } from 'react-hot-toast';
+import useProductBatch from "../../hooks/useProductBatchData"; 
+import ProductEntryTable from "../../components/ProductEntryTable"; 
 
 const NewProductBatch = () => {
-    const [swineBatches, setSwineBatches] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [entries, setEntries] = useState([]);
-    const [selectedBatch, setSelectedBatch] = useState("");
-    const [selectquantitySwine, setSelectQuantitySwine] = useState(0);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [swineBatchData, setSwineBatchData] = useState(null);
-
-    useEffect(() => {
-        SellerService.getAllProducts(1, 30, 0).then(response => {
-            console.log(response);
-            if (!response.hasError) {
-                setProducts(response.data.data);
-            }
-
-        });
-        SwineBatchService.getSwineBatchByIdStage(5).then(response => {
-            if (!response.hasError) {
-                setSwineBatches(response.data);
-            }
-        });
-
-        if (selectedBatch) {
-            SwineBatchService.getSwineBatchById(selectedBatch).then(response => {
-                if (!response.hasError) {
-                    setSwineBatchData(response.data);
-                } else {
-                    setSwineBatchData(null);
-                    toast.error("Error al obtener el lote seleccionado.");
-                }
-            });
-        } else {
-            setSwineBatchData(null);
-        }
-    }, [selectedBatch]);
-
-    const handleAddEntry = () => {
-        if (!selectedBatch) {
-            toast.error("Debe seleccionar un lote de cerdos antes de añadir productos.");
-            return;
-        }
-
-        const newEntry = {
-            idSwineBatch: selectedBatch,
-            idProduct: "",
-            entryQuantity: "",
-            expirationDate: ""
-        };
-        setEntries([...entries, newEntry]);
-    };
-
-    const handleChangeEntry = (idx, field, value) => {
-        const updated = [...entries];
-        updated[idx] = { ...updated[idx], [field]: value };
-        setEntries(updated);
-    };
-
-    const removeEntry = (idx) => {
-        const updated = [...entries];
-        updated.splice(idx, 1);
-        setEntries(updated);
-    };
-
-   const executeSave = async () => {
-    try {
-        const payload = {
-            idSwineBatch: parseInt(selectedBatch),
-            decrementSwine: selectquantitySwine, 
-            detail: entries.map(entry => ({
-                idProduct: parseInt(entry.idProduct),
-                entryQuantity: parseInt(entry.entryQuantity),
-                expirationDate: new Date(entry.expirationDate + "T00:00:00"),
-                generationDate: new Date() 
-            }))
-        };
-
-        const response = await ProductBatchService.createProductBatch(payload);
-        
-        if (response && !response.hasError) {
-            toast.success("Lote de producto guardado correctamente");
-            setEntries([]);
-            setSelectedBatch("");
-            setSelectQuantitySwine(0);
-            setSwineBatchData(null);
-            setShowConfirmModal(false);
-        } else {
-            const errorMessage = response?.message || "Error al guardar el lote";
-            toast.error(errorMessage);
-        }
-    } catch (error) {
-        console.error("Error en executeSave:", error);
-        toast.error("Error inesperado al procesar la solicitud");
-    }
-};
-    const handleSave = () => {
-        if (entries.length === 0) {
-            toast.error("Debe agregar al menos un producto al lote.");
-            return;
-        }
-
-        if (selectquantitySwine === 0) {
-            toast.error("Debe ingresar una cantidad de cerdos procesados.");
-            return;
-        }
-
-        const invalidEntry = entries.find(entry =>
-            !entry.idProduct || !entry.entryQuantity || !entry.expirationDate
-        );
-
-        if (invalidEntry) {
-            toast.error("Debe completar todos los campos de cada producto antes de guardar.");
-            return;
-        }
-
-        if (!swineBatchData) {
-            toast.error("No se ha podido obtener el lote seleccionado.");
-            return;
-        }
-
-        const stock = Number(swineBatchData.stockQuantity);
-        const processed = Number(selectquantitySwine);
-        if (processed > stock) {
-            toast.error("La cantidad de cerdos procesados no puede ser mayor que la cantidad de cerdos en el lote seleccionado.");
-            return;
-        }
-
-        setShowConfirmModal(true);
-    };
+    const {
+        swineBatches,
+        products,
+        entries,
+        selectedBatch,
+        setSelectedBatch,
+        selectquantitySwine,
+        setSelectQuantitySwine,
+        showConfirmModal,
+        setShowConfirmModal,
+        isLoading,
+        handleAddEntry,
+        handleChangeEntry,
+        removeEntry,
+        executeSave,
+        handleSave
+    } = useProductBatch();
 
     return (
         <div style={{ height: "80vh", width: "75vw" }} className="flex flex-col pt-8">
@@ -144,14 +32,15 @@ const NewProductBatch = () => {
             <p className="mb-2 text-lg text-orange-800 font-semibold underline">Nuevo Lote de Producto</p>
 
             <div className="rounded overflow-y-auto p-0">
-                
                 <div className="bg-orange-200 border border-orange-300 px-4 py-6 flex space-x-5 justify-between">
                     <div className="flex flex-col flex-grow space-y-4">
                         <div className="flex flex-col bg-orange-100 text-md text-orange-800 px-4 py-2 space-y-2 rounded">
                             <p>Lote de Cerdos</p>
                             <select
                                 className="bg-orange-200 px-3 py-1 rounded font-bold focus:outline-none"
+                                value={selectedBatch}
                                 onChange={(e) => setSelectedBatch(e.target.value)}
+                                disabled={isLoading}
                             >
                                 <option value="">Seleccionar lote</option>
                                 {swineBatches.map(batch => (
@@ -165,9 +54,10 @@ const NewProductBatch = () => {
                                 <input
                                     className="bg-orange-200 rounded px-3 py-2"
                                     type="number"
-                                    defaultValue={0}
+                                    value={selectquantitySwine}
                                     onChange={(e) => setSelectQuantitySwine(Number(e.target.value))}
                                     min="0"
+                                    disabled={isLoading}
                                 />
                             </div>
                         </div>
@@ -178,75 +68,29 @@ const NewProductBatch = () => {
                                     className="bg-orange-200 rounded px-3 py-2"
                                     type="date"
                                     defaultValue={new Date().toISOString().split("T")[0]}
+                                    disabled={true} 
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
                 <div className="mt-6 bg-orange-200 border border-orange-300 p-6">
                     <p className="text-xl font-semibold text-orange-800 underline">Productos</p>
-                    <table className="flex-grow w-full table-auto justify-self-center mt-4">
-                        <thead>
-                            <tr>
-                                <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Producto</th>
-                                <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Cantidad</th>
-                                <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Fecha de Expiración</th>
-                                <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {entries.map((entry, idx) => (
-                                <tr key={idx}>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        <select
-                                            className="bg-orange-300 px-2 py-1 rounded font-semibold text-orange-700"
-                                            value={entry.idProduct || ""}
-                                            onChange={(e) => handleChangeEntry(idx, "idProduct", e.target.value)}
-                                        >
-                                            <option value="">Seleccionar producto</option>
-                                            {products.map(p => (
-                                                <option key={p.idProduct} value={p.idProduct}>
-                                                    {p.productName}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </td>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        <input
-                                            className="bg-orange-300 py-1 px-2 rounded w-16 text-orange-700 font-extrabold focus:outline-none"
-                                            type="number"
-                                            min="1"
-                                            value={entry.entryQuantity || ""}
-                                            onChange={(e) => handleChangeEntry(idx, "entryQuantity", e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
-                                        <input
-                                            className="bg-orange-300 py-1 px-2 rounded w-full text-orange-700 font-semibold focus:outline-none"
-                                            type="date"
-                                            value={entry.expirationDate || ""}
-                                            onChange={(e) => handleChangeEntry(idx, "expirationDate", e.target.value)}
-                                        />
-                                    </td>
-                                    <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md text-center">
-                                        <button
-                                            onClick={() => removeEntry(idx)}
-                                            className="bg-orange-800 hover:bg-orange-900 text-white font-semibold rounded px-3 py-1"
-                                        >
-                                            Borrar
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
+                    
+                    <ProductEntryTable 
+                        entries={entries}
+                        products={products}
+                        handleChangeEntry={handleChangeEntry}
+                        removeEntry={removeEntry}
+                        isLoading={isLoading}
+                    />
+                    
                     <div className="flex justify-center">
                         <button
                             onClick={handleAddEntry}
                             className="bg-orange-700 rounded px-3 py-1 font-semibold text-white mt-2"
+                            disabled={isLoading}
                         >
                             + Añadir producto
                         </button>
@@ -256,13 +100,13 @@ const NewProductBatch = () => {
                         <button
                             className="px-3 py-1 bg-green-600 rounded text-md text-white font-semibold"
                             onClick={handleSave}
+                            disabled={isLoading}
                         >
-                            Guardar
+                            {isLoading ? "Guardando..." : "Guardar"}
                         </button>
                     </div>
                 </div>
             </div>
-
             
             {showConfirmModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
@@ -279,9 +123,9 @@ const NewProductBatch = () => {
                                 No
                             </button>
                             <button
-                                onClick={() => {
-                                    executeSave();
-                                    setShowConfirmModal(false);
+                                onClick={async () => {
+                                    const success = await executeSave();
+                                    if (success) setShowConfirmModal(false);
                                 }}
                                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                             >

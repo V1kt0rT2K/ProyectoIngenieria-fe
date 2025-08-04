@@ -1,63 +1,46 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
-import ClientOptions from "../../components/ClientOptions";
-import ClientService from "../../utils/service/ClientService";
+import AdminService from "../../utils/service/AdminService";
 import Pagination from "react-js-pagination";
 
-const ClientsPage = () => {
+const ReportsPage = () => {
     const [loading, setLoading] = useState(true);
 
-    const [searchBox, setSearchBox] = useState("");
-
+    const [searchBox, setSearchBox] = useState(null);
     const [sort, setSort] = useState("0");
     const [size, setSize] = useState(4);
     const [page, setPage] = useState(1);
-
     const [totalRows, setTotalRows] = useState(0);
-
-    const [clients, setClients] = useState([]);
-    const currentData = useRef([]); 
+    const [reports, setReports] = useState([]);
+    const [selectedReport, setSelectedReport] = useState(null);
+    const [status, setStatus] = useState(null);
 
     useEffect(() => {
         setLoading(true);
 
-        ClientService.getAll(page, size, sort).then(response => {
+        AdminService.getAllReports(page, size, sort).then(response => {
             if (!response.hasError) {
-                setClients(response.data.data);
+                setReports(response.data.data);
                 setTotalRows(response.data.totalItems);
-                currentData.current = response.data.data;
             }
         });
 
         setLoading(false);
     }, [page, size, sort]);
 
-    useEffect(() => {
-        const timeOut = setTimeout(() => {
-            if (searchBox === "") {
-                setClients(currentData.current);
-            } else {
-                ClientService.searchClients(searchBox).then(response => {
-                    if (!response.hasError) {
-                        setClients(response.data);
-                    } else {
-                        setClients([]);
-                    }
-                });
-            }
-        }, 500);
-
-        return () => clearTimeout(timeOut);
-    }, [searchBox]);
+    const deleteReport = async (idReport, status) => {
+        setSelectedReport(idReport);
+        setStatus(status);
+    }
 
     return (
         <>
             <div style={{ height: "80vh" }} className="flex flex-col pt-8">
                 <div className="flex flex-col items-start">
                     <div className="flex w-full space-x-24">
-                        <input value={searchBox} onInput={(e) => { setSearchBox(e.target.value)}} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Buscar por identificacion, nombre, contacto..." />
-                        <Link to="new_client" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Registar cliente</Link>
+                        <input value={searchBox} onInput={(e) => { }} className="focus:outline-none flex-grow border border-orange-700 rounded py-1 px-3 text-md" type="text" placeholder="Filtrar reportes" />
+                        <Link to="new_report" className="bg-orange-800 mx-2 px-4 py-1 flex items-center justify-center text-lg text-white font-semibold rounded hover:cursor-pointer">+ Generar Reporte</Link>
                     </div>
                     <div>
                         <select className="bg-orange-700 mt-3 rounded px-2 py-1 text-white font-semibold" onChange={e => { setSort(e.target.value) }} value={sort}>
@@ -66,7 +49,7 @@ const ClientsPage = () => {
                         </select>
                     </div>
                 </div>
-                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Clientes</p>
+                <p className="mt-6 text-lg text-orange-800 font-semibold underline">Reportes</p>
                 <div style={{ width: "75vw" }} className={`rounded mt-2 mb-6 flex overflow-y-scroll ${loading ? "" : "border border-orange-700 bg-orange-200"}`}>
                     {
                         loading
@@ -75,23 +58,29 @@ const ClientsPage = () => {
                                 <table className="flex-grow w-full table-auto justify-self-center">
                                     <thead>
                                         <tr>
-                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Identidad</th>
-                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Nombre</th>
-                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Contacto</th>
-                                            <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Direccion</th>
-                                            {/* <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2"></th> */}
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">No. Reporte</th>
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Nombre del Reporte</th>
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Tipo de Reporte</th>
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-48 px-2">Fecha de Generación</th>
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2">Usuario</th>
+                                            <th className="border border-orange-900 bg-orange-700 text-white w-32 px-2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
-                                            clients
-                                                .map((client, idx) =>
+                                            reports
+                                                .map((report, idx) =>
                                                     <tr key={idx}>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.identification ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.fullName ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.contact ?? "_"}</td>
-                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{client.address ?? "_"}</td>
-                                                        {/* <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md"><ClientOptions id={client.idClient} /></td> */}
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{report.idReport ?? "_"}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{report.reportType ?? "_"}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{report.generationDate ?? "_"}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">{report.name ?? "_"}</td>
+                                                        <td className="border border-orange-900 bg-orange-200 py-4 px-5 text-md">
+                                                            <ReportOptions
+                                                                id={report.idReport}
+                                                                onDelete={deleteReport}
+                                                            />
+                                                        </td>
                                                     </tr>
                                                 )
                                         }
@@ -109,7 +98,7 @@ const ClientsPage = () => {
                                 itemsCountPerPage={size}
                                 totalItemsCount={totalRows}
                                 pageRangeDisplayed={5}
-                                onChange={(pageNumber)=>{setPage(pageNumber)}}
+                                onChange={(pageNumber) => { setPage(pageNumber) }}
                                 innerClass="flex list-none rounded-md overflow-hidden shadow-sm"
                                 itemClass="flex items-center justify-center"
                                 linkClass="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
@@ -128,4 +117,4 @@ const ClientsPage = () => {
     );
 };
 
-export default ClientsPage;
+export default ReportsPage;

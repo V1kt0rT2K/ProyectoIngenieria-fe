@@ -29,7 +29,7 @@ const NewLotPage = () => {
             lots.forEach(element => {
                 SwineBatchService.createSwineBatch(element);
             });
-            toast.error("Lotes guardados correctamente.");
+            toast.success("Lotes guardados correctamente.");
             setLots([]);
         }
     };

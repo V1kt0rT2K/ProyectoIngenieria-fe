@@ -24,7 +24,7 @@ const NewSwineSupplies = () => {
                     setLoteData(loteResponse.data);
                 }
 
-                const suppliesResponse = await SupplyService.getAll();
+                const suppliesResponse = await SupplyService.getAllSuppliesbyStage(loteResponse.data.Stage.idStage);
                 if (!suppliesResponse.hasError) {
                     setSupplies(suppliesResponse.data);
                 }
@@ -69,7 +69,7 @@ const executeSave = async () => {
             }))
         };
 
-        console.log("Payload corregido:", JSON.stringify(payload, null, 2));
+        
         
         const response = await SwineSuppliesService.createSwineSupplies(payload);
         
